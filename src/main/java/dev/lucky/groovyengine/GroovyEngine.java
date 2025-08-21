@@ -3,9 +3,7 @@ package dev.lucky.groovyengine;
 import dev.lucky.groovyengine.impl.config.Config;
 import net.minecraft.server.packs.PackType;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
-import org.slf4j.Logger;
 
-import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;

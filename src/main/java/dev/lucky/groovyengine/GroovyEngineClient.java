@@ -1,6 +1,5 @@
 package dev.lucky.groovyengine;
 
-import net.minecraft.data.DataGenerator;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;

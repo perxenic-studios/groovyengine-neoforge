@@ -19,7 +19,10 @@ build
 
 # other
 eclipse
-run
+run/*
+!run/groovyengine/
+run/groovyengine/*
+!run/groovyengine/**
 runs
 run-data
 
