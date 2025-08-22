@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.internal.packs;
+package dev.lucky.groovyengine.internal.packs.loader;
 
 import net.minecraft.server.packs.PackType;
 

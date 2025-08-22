@@ -1,6 +1,7 @@
 package dev.lucky.groovyengine;
 
 import dev.lucky.groovyengine.impl.config.Config;
+import dev.lucky.groovyengine.internal.packs.generator.GroovyDatagen;
 import net.minecraft.server.packs.PackType;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
@@ -13,6 +14,8 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
+import java.io.IOException;
+
 @Mod(GE.MODID)
 public class GroovyEngine {
 
@@ -23,6 +26,12 @@ public class GroovyEngine {
         modEventBus.addListener(this::addPackRepoSource);
 
         NeoForge.EVENT_BUS.register(this);
+
+        try {
+            GroovyDatagen.run();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }

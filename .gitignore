@@ -27,3 +27,5 @@ runs
 run-data
 
 repo
+/run/groovyengine/src/resources/.cache
+/logs

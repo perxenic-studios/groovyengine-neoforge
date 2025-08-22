@@ -21,6 +21,32 @@ def groovyLibs = fileTree(dir: 'libs', include: ['groovy-*.jar'])
 
 repositories {
     // Add here additional repositories if required by some of the dependencies below.
+
+
+    mavenLocal()
+    mavenCentral()
+
+}
+
+dependencies {
+
+    jarJar.setEnabled(true)
+
+    implementation (groovyLibs)
+    jarJar(groovyLibs)
+
+    implementation "io.github.spair:imgui-java-binding:${imgui_version}"
+    implementation("io.github.spair:imgui-java-lwjgl3:${imgui_version}") {
+        exclude group: 'org.lwjgl'
+    }
+
+    // jarjar them too
+    jarJar("io.github.spair:imgui-java-binding:${imgui_version}")
+    jarJar("io.github.spair:imgui-java-lwjgl3:${imgui_version}") {
+        exclude group: 'org.lwjgl'
+    }
+
+    implementation "dev.perxenic.acidapi:acidapi-neoforge:${acid_version}"
 }
 
 base {
@@ -113,9 +139,7 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
-dependencies {
-    implementation (groovyLibs)
-}
+
 
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
