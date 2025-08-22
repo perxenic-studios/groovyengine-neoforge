@@ -3,11 +3,9 @@ package dev.lucky.groovyengine.internal.packs.generator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.lucky.groovyengine.GE;
-import dev.lucky.groovyengine.internal.packs.generator.block.ModBlockStateProvider;
-import dev.lucky.groovyengine.internal.packs.generator.block.ModBlockTagProvider;
-import dev.lucky.groovyengine.internal.packs.generator.item.ModItemModelProvider;
-import dev.lucky.groovyengine.internal.packs.generator.item.ModItemTagProvider;
-import dev.lucky.groovyengine.internal.packs.generator.recipe.ModRecipeProvider;
+import dev.lucky.groovyengine.internal.packs.generator.block.*;
+import dev.lucky.groovyengine.internal.packs.generator.item.*;
+import dev.lucky.groovyengine.internal.packs.generator.recipe.*;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -24,7 +22,6 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
 public class GroovyDatagen {
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static void run() throws IOException {
 
