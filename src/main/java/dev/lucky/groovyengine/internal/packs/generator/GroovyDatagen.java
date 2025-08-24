@@ -15,6 +15,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -32,11 +33,11 @@ public class GroovyDatagen {
         GE.LOG.info("Starting Datagen Runtime");
         Path outputPath = new File(FMLPaths.GAMEDIR.get().toFile(),
                 GE.MODID + "/src/resources").toPath();
-        boolean includeClient = true;
+        boolean includeClient = FMLEnvironment.dist.isClient();
 
         DataGeneratorHelper generator = new DataGeneratorHelper(
                 true,
-                true,
+                includeClient,
                 new DataGenerator(outputPath, SharedConstants.getCurrentVersion(), includeClient),
                 new ExistingFileHelper(
                         Collections.emptyList(),
