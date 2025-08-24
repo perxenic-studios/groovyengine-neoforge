@@ -10,6 +10,7 @@ public class ModBlockLootTableProvider extends AcidBlockLootTableProvider {
         super(registries);
     }
 
+    //TODO: This WILL cause crashes, this needs to be changed
     @Override
     protected DeferredRegister<Block> getBlockRegistry() {
         return null;
