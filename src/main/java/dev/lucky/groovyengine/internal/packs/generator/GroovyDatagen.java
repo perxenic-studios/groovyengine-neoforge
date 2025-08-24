@@ -34,30 +34,31 @@ public class GroovyDatagen {
                 GE.MODID + "/src/resources").toPath();
         boolean includeClient = true;
 
-        DataGenerator generator = new DataGenerator(outputPath, SharedConstants.getCurrentVersion(), includeClient);
-
-        CompletableFuture<HolderLookup.Provider> lookupProvider = CompletableFuture.completedFuture(VanillaRegistries.createLookup());
-        ExistingFileHelper existingFileHelper = new ExistingFileHelper(
-                Collections.emptyList(),
-                Collections.emptySet(),
-                false,
-                null,
-                null
+        DataGeneratorHelper generator = new DataGeneratorHelper(
+                true,
+                true,
+                new DataGenerator(outputPath, SharedConstants.getCurrentVersion(), includeClient),
+                new ExistingFileHelper(
+                        Collections.emptyList(),
+                        Collections.emptySet(),
+                        false,
+                        null,
+                        null
+                ),
+                CompletableFuture.completedFuture(VanillaRegistries.createLookup())
         );
 
-        DataGeneratorHelper generatorHelper = new DataGeneratorHelper(true, true, generator, existingFileHelper, lookupProvider);
+        generator.addLootTableProvider(ModBlockLootTableProvider::new);
 
-        generatorHelper.addLootTableProvider(ModBlockLootTableProvider::new);
+        generator.addRecipeProvider(ModRecipeProvider::new);
 
-        generatorHelper.addRecipeProvider(ModRecipeProvider::new);
+        generator.addBlockTagsProvider(ModBlockTagProvider::new);
 
-        generatorHelper.addBlockTagsProvider(ModBlockTagProvider::new);
+        generator.addItemTagsProvider(ModItemTagProvider::new);
 
-        generatorHelper.addItemTagsProvider(ModItemTagProvider::new);
+        generator.addItemModelProvider(ModItemModelProvider::new);
 
-        generatorHelper.addItemModelProvider(ModItemModelProvider::new);
-
-        generatorHelper.addBlockStateProvider(ModBlockStateProvider::new);
+        generator.addBlockStateProvider(ModBlockStateProvider::new);
 
         generator.run();
     }
