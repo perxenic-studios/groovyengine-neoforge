@@ -11,7 +11,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -19,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class GroovyDatagen {
@@ -43,10 +46,9 @@ public class GroovyDatagen {
 
         PackOutput packOutput = generator.getPackOutput();
 
-        /*
-        generator.addProvider(true, (DataProvider.Factory<DataProvider>) output ->
-                new ModBlockLootTableProvider(lookupProvider.join()));
-        */ // TODO: ModBlockLootTableProvider is broken
+        generator.addProvider(true, new LootTableProvider(packOutput, Collections.emptySet(),
+                List.of(new LootTableProvider.SubProviderEntry(
+                        ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
 
         generator.addProvider(true, (DataProvider.Factory<DataProvider>) output ->
                 new ModRecipeProvider(output, lookupProvider));
