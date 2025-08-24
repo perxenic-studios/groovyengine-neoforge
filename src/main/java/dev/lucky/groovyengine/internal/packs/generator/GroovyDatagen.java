@@ -6,6 +6,7 @@ import dev.lucky.groovyengine.GE;
 import dev.lucky.groovyengine.internal.packs.generator.block.*;
 import dev.lucky.groovyengine.internal.packs.generator.item.*;
 import dev.lucky.groovyengine.internal.packs.generator.recipe.*;
+import dev.perxenic.acidapi.common.datagen.DataGeneratorHelper;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -44,26 +45,19 @@ public class GroovyDatagen {
                 null
         );
 
-        PackOutput packOutput = generator.getPackOutput();
+        DataGeneratorHelper generatorHelper = new DataGeneratorHelper(true, true, generator, existingFileHelper, lookupProvider);
 
-        generator.addProvider(true, new LootTableProvider(packOutput, Collections.emptySet(),
-                List.of(new LootTableProvider.SubProviderEntry(
-                        ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
+        generatorHelper.addLootTableProvider(ModBlockLootTableProvider::new);
 
-        generator.addProvider(true, (DataProvider.Factory<DataProvider>) output ->
-                new ModRecipeProvider(output, lookupProvider));
+        generatorHelper.addRecipeProvider(ModRecipeProvider::new);
 
-        generator.addProvider(true, (DataProvider.Factory<DataProvider>) output ->
-                new ModBlockTagProvider(output, lookupProvider, existingFileHelper));
+        generatorHelper.addBlockTagsProvider(ModBlockTagProvider::new);
 
-        generator.addProvider(true, (DataProvider.Factory<DataProvider>) output ->
-                new ModItemTagProvider(output, lookupProvider, CompletableFuture.completedFuture(null), existingFileHelper));
+        generatorHelper.addItemTagsProvider(ModItemTagProvider::new);
 
-        generator.addProvider(true, (DataProvider.Factory<DataProvider>) output ->
-                new ModItemModelProvider(output, existingFileHelper));
+        generatorHelper.addItemModelProvider(ModItemModelProvider::new);
 
-        generator.addProvider(true, (DataProvider.Factory<DataProvider>) output ->
-                new ModBlockStateProvider(output, existingFileHelper));
+        generatorHelper.addBlockStateProvider(ModBlockStateProvider::new);
 
         generator.run();
     }
