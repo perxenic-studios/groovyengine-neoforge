@@ -8,9 +8,6 @@ import java.io.File;
 import java.util.Locale;
 import java.util.function.Function;
 
-/**
- * Defines the different types of pack files that can be handled by openloader.
- */
 public enum PackFileType {
 
     /**

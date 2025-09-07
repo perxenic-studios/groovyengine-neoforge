@@ -1,6 +1,6 @@
 package dev.lucky.groovyengine.internal.packs.generator.block;
 
-import dev.perxenic.acidapi.common.datagen.AcidBlockStateProvider;
+import dev.perxenic.acidapi.api.datagen.AcidBlockStateProvider;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 

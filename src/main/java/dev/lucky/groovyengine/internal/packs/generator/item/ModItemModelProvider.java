@@ -1,6 +1,6 @@
 package dev.lucky.groovyengine.internal.packs.generator.item;
 
-import dev.perxenic.acidapi.common.datagen.AcidItemModelProvider;
+import dev.perxenic.acidapi.api.datagen.AcidItemModelProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;

@@ -2,7 +2,7 @@ package dev.lucky.groovyengine.internal.packs.generator.item;
 
 
 import dev.lucky.groovyengine.GE;
-import dev.perxenic.acidapi.common.datagen.AcidItemTagProvider;
+import dev.perxenic.acidapi.api.datagen.AcidItemTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;

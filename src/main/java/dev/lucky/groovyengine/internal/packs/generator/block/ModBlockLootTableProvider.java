@@ -1,7 +1,9 @@
 package dev.lucky.groovyengine.internal.packs.generator.block;
 
-import dev.perxenic.acidapi.common.datagen.AcidBlockLootTableProvider;
+
+import dev.perxenic.acidapi.api.datagen.AcidBlockLootTableProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -10,10 +12,14 @@ public class ModBlockLootTableProvider extends AcidBlockLootTableProvider {
         super(registries);
     }
 
-    //TODO: This WILL cause crashes, this needs to be changed
+
+    //TODO: Fix, this is just temp for not crashing
+    public static final DeferredRegister<Block> TEMPORAROY =
+            DeferredRegister.create(Registries.BLOCK, "temp");
+
     @Override
     protected DeferredRegister<Block> getBlockRegistry() {
-        return null;
+        return TEMPORAROY;
     }
 
     @Override

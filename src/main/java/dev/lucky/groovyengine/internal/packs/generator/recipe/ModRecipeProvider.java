@@ -1,6 +1,7 @@
 package dev.lucky.groovyengine.internal.packs.generator.recipe;
 
-import dev.perxenic.acidapi.common.datagen.AcidRecipeProvider;
+
+import dev.perxenic.acidapi.api.datagen.AcidRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 

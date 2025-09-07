@@ -6,7 +6,7 @@ import dev.lucky.groovyengine.GE;
 import dev.lucky.groovyengine.internal.packs.generator.block.*;
 import dev.lucky.groovyengine.internal.packs.generator.item.*;
 import dev.lucky.groovyengine.internal.packs.generator.recipe.*;
-import dev.perxenic.acidapi.common.datagen.DataGeneratorHelper;
+import dev.perxenic.acidapi.api.datagen.DataGeneratorHelper;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;

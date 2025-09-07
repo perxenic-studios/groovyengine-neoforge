@@ -1,7 +1,7 @@
 package dev.lucky.groovyengine.internal.packs.generator.block;
 
 
-import dev.perxenic.acidapi.common.datagen.AcidBlockTagProvider;
+import dev.perxenic.acidapi.api.datagen.AcidBlockTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
