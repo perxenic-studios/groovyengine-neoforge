@@ -5,6 +5,7 @@ import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import org.lwjgl.glfw.GLFW;
 
 public class ImGuiImpl {
     private final static ImGuiImplGlfw imGuiImplGlfw = new ImGuiImplGlfw();
@@ -47,7 +48,7 @@ public class ImGuiImpl {
         // defaultFont = generatedFonts.get(30); // Font scale is 30
         // How you can apply the font then, you can see in ExampleMixin
 
-        data.setConfigFlags(ImGuiConfigFlags.DockingEnable);
+        data.setConfigFlags(ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.ViewportsEnable);
 
         // In case you want to enable Viewports on Windows, you have to do this instead of the above line:
         // data.setConfigFlags(ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.ViewportsEnable);
@@ -69,14 +70,13 @@ public class ImGuiImpl {
         ImGui.render();
         imGuiImplGl3.renderDrawData(ImGui.getDrawData());
 
-// Add this code if you have enabled Viewports in the create method
-//        if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
-//            final long pointer = GLFW.glfwGetCurrentContext();
-//            ImGui.updatePlatformWindows();
-//            ImGui.renderPlatformWindowsDefault();
-//
-//            GLFW.glfwMakeContextCurrent(pointer);
-//        }
+        if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+            final long pointer = GLFW.glfwGetCurrentContext();
+            ImGui.updatePlatformWindows();
+            ImGui.renderPlatformWindowsDefault();
+
+            GLFW.glfwMakeContextCurrent(pointer);
+        }
     }
 
     public static void dispose() {
