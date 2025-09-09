@@ -1,6 +1,12 @@
 package dev.lucky.groovyengine.core.impl.imgui;
 
+import com.mojang.blaze3d.platform.Window;
+import dev.lucky.groovyengine.core.impl.editor.EditorState;
+import dev.lucky.groovyengine.core.impl.editor.GroovyEngineEditor;
 import imgui.ImGui;
+import imgui.flag.ImGuiDockNodeFlags;
+import imgui.flag.ImGuiWindowFlags;
+import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
@@ -10,9 +16,42 @@ public class ImGuiRenderer {
     @SubscribeEvent
     public static void onRender(RenderGuiEvent.Post event) {
         ImGuiImpl.draw(io -> {
-            ImGui.showAboutWindow();
-            ImGui.showDemoWindow();
-            ImGui.showMetricsWindow();
+
+            if(GroovyEngineEditor.getEditorState().equals(EditorState.ENABLED)) {
+                    Minecraft mc = Minecraft.getInstance();
+                    Window window = mc.getWindow();
+
+                    // Setup docking
+                    ImGui.setNextWindowBgAlpha(0);
+                    int mainDock = ImGui.dockSpaceOverViewport(ImGui.getMainViewport(), ImGuiDockNodeFlags.NoDockingInCentralNode);
+                    imgui.internal.ImGui.dockBuilderGetCentralNode(mainDock).addLocalFlags(imgui.internal.flag.ImGuiDockNodeFlags.NoTabBar);
+
+                    ImGui.setNextWindowDockID(mainDock);
+
+                    if (ImGui.begin("Main", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoNavInputs | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse |
+                            ImGuiWindowFlags.NoSavedSettings)) {
+                        ImGui.end();
+                    }
+
+
+                    ImGui.showAboutWindow();
+                    ImGui.showDemoWindow();
+                    ImGui.showMetricsWindow();
+            }
+
+            if(ImGui.begin("EditorDebugging")) {
+                if (ImGui.button("Enable ImGui")) {
+                    GroovyEngineEditor.setEditorState(EditorState.ENABLED);
+                }
+                if (ImGui.button("Disable ImGui")) {
+                    GroovyEngineEditor.setEditorState(EditorState.DISABLED);
+                }
+                if (ImGui.button("Set screen to correct screen")) {
+                    Minecraft.getInstance().setScreen(new EditorScreen());
+                }
+                ImGui.end();
+            }
+
         });
     }
 }

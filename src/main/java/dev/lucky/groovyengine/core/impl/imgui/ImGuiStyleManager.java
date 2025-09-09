@@ -11,9 +11,6 @@ public class ImGuiStyleManager {
 
         style.setColor(ImGuiCol.Text,                    0.98f, 0.98f, 0.98f, 1.00f);
         style.setColor(ImGuiCol.TextDisabled,            0.55f, 0.55f, 0.56f, 1.00f);
-        style.setColor(ImGuiCol.WindowBg,                0.15f, 0.15f, 0.15f, 0.92f);
-        style.setColor(ImGuiCol.ChildBg,                 0.00f, 0.00f, 0.00f, 0.00f);
-        style.setColor(ImGuiCol.PopupBg,                 0.08f, 0.08f, 0.08f, 0.94f);
         style.setColor(ImGuiCol.Border,                  0.35f, 0.35f, 0.35f, 0.50f);
         style.setColor(ImGuiCol.BorderShadow,            0.12f, 0.12f, 0.13f, 0.27f);
         style.setColor(ImGuiCol.FrameBg,                 0.12f, 0.13f, 0.13f, 0.94f);
