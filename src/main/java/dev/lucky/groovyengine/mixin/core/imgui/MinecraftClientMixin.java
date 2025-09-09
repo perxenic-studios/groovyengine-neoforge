@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core.mixin.imgui;
+package dev.lucky.groovyengine.mixin.core.imgui;
 
 import com.mojang.blaze3d.platform.Window;
 import dev.lucky.groovyengine.core.impl.imgui.ImGuiImpl;

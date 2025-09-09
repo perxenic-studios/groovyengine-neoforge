@@ -1,12 +1,12 @@
 {
   "required": true,
-  "package": "dev.lucky.groovyengine.core.mixin",
+  "package": "dev.lucky.groovyengine.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
 
   ],
   "client": [
-    "imgui.MinecraftClientMixin"
+    "core.imgui.MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1
