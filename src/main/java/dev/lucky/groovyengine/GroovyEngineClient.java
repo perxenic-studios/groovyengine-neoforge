@@ -1,6 +1,5 @@
 package dev.lucky.groovyengine;
 
-import dev.lucky.groovyengine.lens.systems.coloredlights.ColoredLightPostEffect;
 import dev.perxenic.acidapi.api.rendering.effect.PostEffect;
 import dev.perxenic.acidapi.api.rendering.effect.PostEffectManager;
 import net.neoforged.api.distmarker.Dist;
@@ -23,6 +22,5 @@ public class GroovyEngineClient {
 
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
-        PostEffectManager.addInstance(ColoredLightPostEffect.INSTANCE);
     }
 }
