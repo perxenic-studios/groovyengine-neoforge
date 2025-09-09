@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class EditorScreen extends Screen {
 
-    protected EditorScreen() {
+    public EditorScreen() {
         super(Component.literal("EditorScreen"));
     }
 

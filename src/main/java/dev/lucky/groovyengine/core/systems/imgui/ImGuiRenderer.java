@@ -1,6 +1,7 @@
 package dev.lucky.groovyengine.core.systems.imgui;
 
 import com.mojang.blaze3d.platform.Window;
+import dev.lucky.groovyengine.core.systems.editor.EditorScreen;
 import dev.lucky.groovyengine.core.systems.editor.EditorState;
 import dev.lucky.groovyengine.core.systems.editor.GroovyEngineEditor;
 import imgui.ImGui;
