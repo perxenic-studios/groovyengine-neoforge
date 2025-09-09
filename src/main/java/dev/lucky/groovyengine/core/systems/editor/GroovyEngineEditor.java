@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core.impl.editor;
+package dev.lucky.groovyengine.core.systems.editor;
 
 public class GroovyEngineEditor {
 

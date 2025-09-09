@@ -1,7 +1,7 @@
 package dev.lucky.groovyengine.mixin.core.imgui;
 
 import com.mojang.blaze3d.platform.Window;
-import dev.lucky.groovyengine.core.impl.imgui.ImGuiImpl;
+import dev.lucky.groovyengine.core.systems.imgui.ImGuiImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.main.GameConfig;
 import org.spongepowered.asm.mixin.Final;

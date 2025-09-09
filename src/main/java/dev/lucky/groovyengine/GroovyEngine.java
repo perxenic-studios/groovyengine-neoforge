@@ -1,8 +1,8 @@
 package dev.lucky.groovyengine;
 
 import dev.lucky.groovyengine.construct.Construct;
-import dev.lucky.groovyengine.core.impl.config.Config;
-import dev.lucky.groovyengine.core.internal.packs.generator.GroovyDatagen;
+import dev.lucky.groovyengine.core.config.Config;
+import dev.lucky.groovyengine.core.systems.packs.generator.GroovyDatagen;
 import dev.lucky.groovyengine.lens.Lens;
 import dev.lucky.groovyengine.scribe.Scribe;
 import dev.lucky.groovyengine.threads.Threads;

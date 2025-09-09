@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core.internal.packs.generator.block;
+package dev.lucky.groovyengine.core.systems.packs.generator.block;
 
 
 import dev.perxenic.acidapi.api.datagen.AcidBlockTagProvider;

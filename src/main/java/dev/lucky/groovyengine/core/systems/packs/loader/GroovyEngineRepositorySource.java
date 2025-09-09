@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core.internal.packs.loader;
+package dev.lucky.groovyengine.core.systems.packs.loader;
 
 import dev.lucky.groovyengine.GE;
 import net.minecraft.network.chat.Component;

@@ -1,7 +1,7 @@
-package dev.lucky.groovyengine.core.impl.imgui;
+package dev.lucky.groovyengine.core.systems.imgui;
 
-import dev.lucky.groovyengine.core.impl.editor.EditorState;
-import dev.lucky.groovyengine.core.impl.editor.GroovyEngineEditor;
+import dev.lucky.groovyengine.core.systems.editor.EditorState;
+import dev.lucky.groovyengine.core.systems.editor.GroovyEngineEditor;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;

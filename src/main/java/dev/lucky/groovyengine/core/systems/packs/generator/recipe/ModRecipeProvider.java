@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core.internal.packs.generator.recipe;
+package dev.lucky.groovyengine.core.systems.packs.generator.recipe;
 
 
 import dev.perxenic.acidapi.api.datagen.AcidRecipeProvider;

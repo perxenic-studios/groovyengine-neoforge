@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core.internal.packs.generator.item;
+package dev.lucky.groovyengine.core.systems.packs.generator.item;
 
 
 import dev.lucky.groovyengine.GE;

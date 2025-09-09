@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core.internal.structure;
+package dev.lucky.groovyengine.core.systems.structure;
 
 import dev.lucky.groovyengine.GE;
 import net.neoforged.fml.loading.FMLPaths;

@@ -1,6 +1,6 @@
 package dev.lucky.groovyengine;
 
-import dev.lucky.groovyengine.core.internal.packs.loader.GroovyEngineRepositorySource;
+import dev.lucky.groovyengine.core.systems.packs.loader.GroovyEngineRepositorySource;
 import dev.lucky.groovyengine.core.util.CachedSupplier;
 import dev.lucky.groovyengine.core.util.DecoratedLogger;
 import net.minecraft.server.packs.PackType;

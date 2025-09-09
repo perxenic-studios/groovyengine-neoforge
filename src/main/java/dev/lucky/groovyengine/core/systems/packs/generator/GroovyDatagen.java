@@ -1,9 +1,9 @@
-package dev.lucky.groovyengine.core.internal.packs.generator;
+package dev.lucky.groovyengine.core.systems.packs.generator;
 
 import dev.lucky.groovyengine.GE;
-import dev.lucky.groovyengine.core.internal.packs.generator.block.*;
-import dev.lucky.groovyengine.core.internal.packs.generator.item.*;
-import dev.lucky.groovyengine.core.internal.packs.generator.recipe.*;
+import dev.lucky.groovyengine.core.systems.packs.generator.block.*;
+import dev.lucky.groovyengine.core.systems.packs.generator.item.*;
+import dev.lucky.groovyengine.core.systems.packs.generator.recipe.*;
 import dev.perxenic.acidapi.api.datagen.DataGeneratorHelper;
 import net.minecraft.SharedConstants;
 import net.minecraft.data.DataGenerator;

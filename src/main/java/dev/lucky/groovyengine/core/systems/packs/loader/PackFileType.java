@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core.internal.packs.loader;
+package dev.lucky.groovyengine.core.systems.packs.loader;
 
 import net.minecraft.server.packs.FilePackResources;
 import net.minecraft.server.packs.PathPackResources;

@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core.impl.imgui;
+package dev.lucky.groovyengine.core.systems.imgui;
 
 import imgui.ImGuiIO;
 

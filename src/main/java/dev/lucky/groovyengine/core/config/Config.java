@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core.impl.config;
+package dev.lucky.groovyengine.core.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
