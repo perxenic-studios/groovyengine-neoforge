@@ -10,7 +10,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.concurrent.CompletableFuture;
 
-import static dev.lucky.groovyengine.core.GE.MODID;
+import static dev.lucky.groovyengine.GE.MODID;
 
 public class ModBlockTagProvider extends AcidBlockTagProvider {
     public ModBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {

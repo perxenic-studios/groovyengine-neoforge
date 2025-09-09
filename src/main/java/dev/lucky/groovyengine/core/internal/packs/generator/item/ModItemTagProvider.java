@@ -1,7 +1,7 @@
 package dev.lucky.groovyengine.core.internal.packs.generator.item;
 
 
-import dev.lucky.groovyengine.core.GE;
+import dev.lucky.groovyengine.GE;
 import dev.perxenic.acidapi.api.datagen.AcidItemTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -12,7 +12,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.concurrent.CompletableFuture;
 
-import static dev.lucky.groovyengine.core.GE.MODID;
+import static dev.lucky.groovyengine.GE.MODID;
 
 public class ModItemTagProvider extends AcidItemTagProvider {
     public ModItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTags, ExistingFileHelper existingFileHelper) {

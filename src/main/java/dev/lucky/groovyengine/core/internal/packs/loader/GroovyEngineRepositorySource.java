@@ -1,6 +1,6 @@
 package dev.lucky.groovyengine.core.internal.packs.loader;
 
-import dev.lucky.groovyengine.core.GE;
+import dev.lucky.groovyengine.GE;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackSelectionConfig;

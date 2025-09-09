@@ -1,11 +1,15 @@
-package dev.lucky.groovyengine.core;
+package dev.lucky.groovyengine;
 
+import dev.lucky.groovyengine.lens.systems.coloredlights.ColoredLightPostEffect;
+import dev.perxenic.acidapi.api.rendering.effect.PostEffect;
+import dev.perxenic.acidapi.api.rendering.effect.PostEffectManager;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
@@ -19,5 +23,6 @@ public class GroovyEngineClient {
 
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
+        PostEffectManager.addInstance(ColoredLightPostEffect.INSTANCE);
     }
 }

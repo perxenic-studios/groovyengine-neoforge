@@ -1,6 +1,6 @@
 package dev.lucky.groovyengine.core.internal.structure;
 
-import dev.lucky.groovyengine.core.GE;
+import dev.lucky.groovyengine.GE;
 import net.neoforged.fml.loading.FMLPaths;
 
 import java.nio.file.Path;

@@ -1,6 +1,6 @@
 package dev.lucky.groovyengine.core.internal.packs.generator;
 
-import dev.lucky.groovyengine.core.GE;
+import dev.lucky.groovyengine.GE;
 import dev.lucky.groovyengine.core.internal.packs.generator.block.*;
 import dev.lucky.groovyengine.core.internal.packs.generator.item.*;
 import dev.lucky.groovyengine.core.internal.packs.generator.recipe.*;

@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core;
+package dev.lucky.groovyengine;
 
 import dev.lucky.groovyengine.construct.Construct;
 import dev.lucky.groovyengine.core.impl.config.Config;

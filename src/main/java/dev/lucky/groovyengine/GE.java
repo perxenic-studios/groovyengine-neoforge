@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.core;
+package dev.lucky.groovyengine;
 
 import dev.lucky.groovyengine.core.internal.packs.loader.GroovyEngineRepositorySource;
 import dev.lucky.groovyengine.core.util.CachedSupplier;
