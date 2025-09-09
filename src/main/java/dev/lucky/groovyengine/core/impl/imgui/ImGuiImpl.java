@@ -16,7 +16,7 @@ public class ImGuiImpl {
         ImPlot.createContext();
 
         final ImGuiIO data = ImGui.getIO();
-        data.setIniFilename("modid.ini"); // TODO; Change this to your modid
+        data.setIniFilename("groovyengine.ini");
         data.setFontGlobalScale(1F);
 
         // If you want to have custom fonts, you can use the following code here
