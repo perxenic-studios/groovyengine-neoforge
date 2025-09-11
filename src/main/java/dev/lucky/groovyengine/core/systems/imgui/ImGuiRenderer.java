@@ -8,9 +8,11 @@ import imgui.ImGui;
 import imgui.flag.ImGuiDockNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import org.w3c.dom.Text;
 
 @EventBusSubscriber
 public class ImGuiRenderer {
@@ -50,6 +52,8 @@ public class ImGuiRenderer {
                 if (ImGui.button("Set screen to correct screen")) {
                     Minecraft.getInstance().setScreen(new EditorScreen());
                 }
+
+                int dirtTextureId = TextureHelper.loadMinecraftTexture(ResourceLocation.fromNamespaceAndPath("minecraft", "textures/block/dirt.png"));
                 ImGui.end();
             }
 

@@ -48,6 +48,8 @@ public class ImGuiImpl {
         // defaultFont = generatedFonts.get(30); // Font scale is 30
         // How you can apply the font then, you can see in ExampleMixin
 
+        ImGuiStyleManager.initStyles();
+
         data.setConfigFlags(ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.ViewportsEnable);
 
         // In case you want to enable Viewports on Windows, you have to do this instead of the above line:

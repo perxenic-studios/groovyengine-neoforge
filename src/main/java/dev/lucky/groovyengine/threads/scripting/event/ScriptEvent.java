@@ -1,13 +1,12 @@
-package dev.lucky.groovyengine.threads.shell.events;
+package dev.lucky.groovyengine.threads.scripting.event;
 
 import groovy.lang.GroovyShell;
 import net.neoforged.bus.api.Event;
 
-public abstract class ShellEvent extends Event {
-
+public abstract class ScriptEvent extends Event {
     private final GroovyShell shell;
 
-    public ShellEvent(GroovyShell shell) {
+    public ScriptEvent(GroovyShell shell) {
         this.shell = shell;
     }
 
@@ -15,10 +14,10 @@ public abstract class ShellEvent extends Event {
         return shell;
     }
 
-    public static class ShellRunPreEvent extends ShellEvent {
+    public static class PreExecutionEvent extends ScriptEvent {
         private final String script;
 
-        public ShellRunPreEvent(GroovyShell shell, String script) {
+        public PreExecutionEvent(GroovyShell shell, String script) {
             super(shell);
             this.script = script;
         }
@@ -28,10 +27,10 @@ public abstract class ShellEvent extends Event {
         }
     }
 
-    public static class ShellRunPostEvent extends ShellRunPreEvent {
+    public static class PostExecutionEvent extends PreExecutionEvent {
         private final Object result;
 
-        public ShellRunPostEvent(GroovyShell shell, String script, Object result) {
+        public PostExecutionEvent(GroovyShell shell, String script, Object result) {
             super(shell, script);
             this.result = result;
         }
@@ -41,11 +40,9 @@ public abstract class ShellEvent extends Event {
         }
     }
 
-    public static class AddShellBindingEvent extends ShellEvent {
-
-        public AddShellBindingEvent(GroovyShell shell) {
+    public static class BindingSetupEvent extends ScriptEvent {
+        public BindingSetupEvent(GroovyShell shell) {
             super(shell);
         }
-
     }
 }

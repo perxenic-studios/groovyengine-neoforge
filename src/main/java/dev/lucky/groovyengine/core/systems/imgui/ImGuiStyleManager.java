@@ -3,6 +3,7 @@ package dev.lucky.groovyengine.core.systems.imgui;
 import imgui.ImGui;
 import imgui.ImGuiStyle;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiDir;
 
 public class ImGuiStyleManager {
 
@@ -87,6 +88,7 @@ public class ImGuiStyleManager {
         style.setLogSliderDeadzone(4f);
         style.setTabRounding(1f);
 
-        style.setWindowMenuButtonPosition(3);
+
+        style.setWindowMenuButtonPosition(ImGuiDir.Right);
     }
 }
