@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.threads.scripting;
+package dev.lucky.groovyengine.threads.scripting.core;
 
 import dev.lucky.groovyengine.GE;
 import dev.lucky.groovyengine.threads.scripting.event.ScriptEvent;
@@ -6,7 +6,6 @@ import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;

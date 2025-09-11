@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.threads.scripting;
+package dev.lucky.groovyengine.threads.scripting.core;
 
 import dev.lucky.groovyengine.GE;
 import dev.lucky.groovyengine.threads.scripting.event.ScriptEvent;

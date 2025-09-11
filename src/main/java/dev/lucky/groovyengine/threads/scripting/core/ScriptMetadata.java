@@ -1,4 +1,4 @@
-package dev.lucky.groovyengine.threads.scripting;
+package dev.lucky.groovyengine.threads.scripting.core;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
