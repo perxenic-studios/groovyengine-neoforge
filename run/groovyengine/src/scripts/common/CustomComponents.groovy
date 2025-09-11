@@ -1,5 +1,5 @@
-import dev.lucky.groovyengine.api.components.types.ItemComponent
-import dev.lucky.groovyengine.api.components.ComponentManager
+import io.github.luckymcdev.groovyengine.api.components.types.ItemComponent
+import io.github.luckymcdev.groovyengine.api.components.ComponentManager
 import net.minecraft.world.item.Items
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
