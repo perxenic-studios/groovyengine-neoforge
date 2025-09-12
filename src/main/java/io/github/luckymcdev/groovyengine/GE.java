@@ -1,8 +1,8 @@
 package io.github.luckymcdev.groovyengine;
 
 import io.github.luckymcdev.groovyengine.core.core.systems.packs.loader.GroovyEngineRepositorySource;
-import io.github.luckymcdev.groovyengine.core.util.CachedSupplier;
-import io.github.luckymcdev.groovyengine.core.util.DecoratedLogger;
+import io.github.luckymcdev.groovyengine.util.CachedSupplier;
+import io.github.luckymcdev.groovyengine.util.DecoratedLogger;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.RepositorySource;
 

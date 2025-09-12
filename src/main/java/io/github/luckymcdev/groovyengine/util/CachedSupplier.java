@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.core.util;
+package io.github.luckymcdev.groovyengine.util;
 
 import org.jetbrains.annotations.Nullable;
 
