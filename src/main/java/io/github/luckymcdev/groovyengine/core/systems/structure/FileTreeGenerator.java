@@ -46,21 +46,21 @@ public class FileTreeGenerator {
         // Create a sample script in each environment
         createSampleScript(FileConstants.COMMON_SCRIPTS_DIR, "CommonMain.groovy",
                 "//priority=0\n" +
-                        "import groovyengine.luckymcdev.io.GE;\n" +
+                        "import io.github.luckymcdev.groovyengine.GE;\n" +
                         "GE.LOG.info('Hello from common scripts!')\n" +
                         "// Add your common script logic here"
         );
 
         createSampleScript(FileConstants.CLIENT_SCRIPTS_DIR, "ClientMain.groovy",
                 "//priority=0\n" +
-                        "import groovyengine.luckymcdev.io.GE;\n" +
+                        "import io.github.luckymcdev.groovyengine.GE;\n" +
                         "GE.LOG.info('Hello from client scripts!')\n" +
                         "// Add your client-side script logic here"
         );
 
         createSampleScript(FileConstants.SERVER_SCRIPTS_DIR, "ServerMain.groovy",
                 "//priority=0\n" +
-                        "import groovyengine.luckymcdev.io.GE;\n" +
+                        "import io.github.luckymcdev.groovyengine.GE;\n" +
                         "GE.LOG.info('Hello from server scripts!')\n" +
                         "// Add your server-side script logic here"
         );
