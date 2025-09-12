@@ -2,7 +2,7 @@
 package io.github.luckymcdev.groovyengine.api.components;
 
 import io.github.luckymcdev.groovyengine.api.components.types.BaseComponent;
-import io.github.luckymcdev.groovyengine.threads.scripting.component.ComponentManagerImpl;
+import io.github.luckymcdev.groovyengine.threads.core.scripting.component.ComponentManagerImpl;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;

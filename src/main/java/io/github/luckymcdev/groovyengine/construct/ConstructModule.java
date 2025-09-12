@@ -1,6 +1,6 @@
 package io.github.luckymcdev.groovyengine.construct;
 
-import io.github.luckymcdev.groovyengine.core.systems.module.Module;
+import io.github.luckymcdev.groovyengine.core.core.systems.module.Module;
 import net.neoforged.bus.api.IEventBus;
 
 public class ConstructModule implements Module {
