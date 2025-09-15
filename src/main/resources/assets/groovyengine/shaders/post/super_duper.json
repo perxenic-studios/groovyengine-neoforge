@@ -1,0 +1,18 @@
+{
+  "targets": [
+    "temp1"
+  ],
+  "passes": [
+    {
+      "name": "groovyengine:super_duper",
+      "intarget": "minecraft:main",
+      "outtarget": "temp1",
+      "uniforms": []
+    },
+    {
+      "name": "blit",
+      "intarget": "temp1",
+      "outtarget": "minecraft:main"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "targets": [
+    "final",
+    "depthMain"
+  ],
+  "passes": [
+    {
+      "name": "groovyengine:lighting_post",
+      "intarget": "minecraft:main",
+      "outtarget": "final",
+      "auxtargets": [
+        {
+          "name": "DepthSampler",
+          "id": "depthMain"
+        }
+      ]
+    },
+    {
+      "name": "blit",
+      "intarget": "final",
+      "outtarget": "minecraft:main"
+    }
+  ]
+}

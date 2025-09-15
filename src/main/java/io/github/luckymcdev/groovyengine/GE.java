@@ -3,6 +3,7 @@ package io.github.luckymcdev.groovyengine;
 import io.github.luckymcdev.groovyengine.core.core.systems.packs.loader.GroovyEngineRepositorySource;
 import io.github.luckymcdev.groovyengine.util.CachedSupplier;
 import io.github.luckymcdev.groovyengine.util.DecoratedLogger;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.RepositorySource;
 
@@ -18,4 +19,9 @@ public class GE {
 
     public static final CachedSupplier<RepositorySource> DATA_SOURCE = CachedSupplier.cache(() -> new GroovyEngineRepositorySource(PackType.SERVER_DATA));
     public static final CachedSupplier<RepositorySource> RESOURCE_SOURCE = CachedSupplier.cache(() -> new GroovyEngineRepositorySource(PackType.CLIENT_RESOURCES));
+
+
+    public static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    }
 }
