@@ -1,15 +1,19 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.perxenic.acidapi.api.guardian.Api;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Handles world-space post-processing.
@@ -17,18 +21,27 @@ import java.util.List;
  */
 @EventBusSubscriber(value = Dist.CLIENT)
 public class PostProcessManager {
-    private static final List<PostProcessShader> instances = new ArrayList<>();
+    private static final List<PostProcessShader> finalInstances = new ArrayList<>();
+    private static final Map<Stage, List<PostProcessShader>> stageInstances = new HashMap<>();
 
     private static boolean didCopyDepth = false;
 
     /**
-     * Add an {@link PostProcessShader} for it to be handled automatically.
-     * IMPORTANT: processors has to be added in the right order!!!
-     * There's no way of getting an instance, so you need to keep the instance yourself.
+     * Add an {@link PostProcessShader} for final composition (after all rendering)
      */
     public static void addInstance(PostProcessShader instance) {
-        instances.add(instance);
+        finalInstances.add(instance);
     }
+
+    /**
+     *
+     * Add an {@link PostProcessShader} for a specific rendering stage
+     */
+    @Api(status = Api.Status.EXPERIMENTAL)
+    public static void addStageInstance(Stage stage, PostProcessShader instance) {
+        stageInstances.computeIfAbsent(stage, k -> new ArrayList<>()).add(instance);
+    }
+
     public static void addInstances(List<PostProcessShader> instances) {
         for(PostProcessShader shader : instances) {
             addInstance(shader);
@@ -36,31 +49,64 @@ public class PostProcessManager {
     }
 
     public static void render() {
-        instances.forEach(PostProcessShader::applyPostProcess);
+        finalInstances.forEach(PostProcessShader::applyPostProcess);
         Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
+    }
+
+    /**
+     * Render shaders for a specific stage
+     */
+    public static void renderAtStage(Stage stage) {
+        List<PostProcessShader> stageShaders = stageInstances.get(stage);
+        if (stageShaders != null && !stageShaders.isEmpty()) {
+            // Copy depth buffer for stage-specific shaders
+            copyDepthBuffer();
+
+            for (PostProcessShader shader : stageShaders) {
+                if (shader.isActive()) {
+                    shader.applyPostProcess();
+                }
+            }
+            Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
+        }
+    }
+
+    private static void _render() {
+        copyDepthBuffer();
+        render();
+        didCopyDepth = false;
     }
 
     public static void copyDepthBuffer() {
         if (didCopyDepth) return;
-        instances.forEach(PostProcessShader::copyDepthBuffer);
+        // Copy depth for both final and stage shaders
+        finalInstances.forEach(PostProcessShader::copyDepthBuffer);
+        stageInstances.values().forEach(shaders ->
+                shaders.forEach(PostProcessShader::copyDepthBuffer)
+        );
         didCopyDepth = true;
     }
 
     public static void resize(int width, int height) {
-        instances.forEach(i -> i.resize(width, height));
+        finalInstances.forEach(i -> i.resize(width, height));
+        stageInstances.values().forEach(shaders ->
+                shaders.forEach(shader -> shader.resize(width, height))
+        );
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onWorldRenderLast(RenderLevelStageEvent event) {
-        if (event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_PARTICLES)) {
-            PostProcessShader.viewModelMatrix = RenderSystem.getModelViewMatrix(); // Copy viewModelMatrix from RenderSystem
+        Stage stage = event.getStage();
+
+        if (stage.equals(Stage.AFTER_PARTICLES)) {
+            PostProcessShader.viewModelMatrix = RenderSystem.getModelViewMatrix();
         }
-        if (event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_LEVEL)) {
-            copyDepthBuffer(); // copy the depth buffer if the mixin didn't trigger
 
-            render();
+        // Render stage-specific shaders
+        renderAtStage(stage);
 
-            didCopyDepth = false; // reset for next frame
+        if (stage.equals(Stage.AFTER_LEVEL)) {
+            _render();
         }
     }
 }

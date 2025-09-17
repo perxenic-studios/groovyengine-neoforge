@@ -1,45 +1,40 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 
 import java.io.IOException;
 
+/**
+ * Base class for registering core shaders.
+ * Handles registration and initialization only.
+ */
 public abstract class CoreShader {
-    private static final Minecraft MC = Minecraft.getInstance();
+    protected ShaderInstance shader;
 
-    protected static ShaderInstance shader;
-
-    /**
-     * Example: "foo:bar" points to shaders/core/bar.json
-     */
+    // Force subclasses to expose a static INSTANCE
     public abstract ResourceLocation getShaderLocation();
-
     public abstract VertexFormat getVertexFormat();
 
-    public abstract void setUniforms();
+    // Called after shader is created and assigned
+    public abstract void init();
 
-    public void init(ShaderInstance instance) {
+    private void _init(ShaderInstance instance) {
         this.shader = instance;
-        setUniforms();
+        init();
     }
 
-    public static ShaderInstance getShader() {
+    public ShaderInstance getShader() {
         return shader;
     }
 
-    public ShaderInstance register(RegisterShadersEvent event) throws IOException {
-        shader = new ShaderInstance(event.getResourceProvider(), getShaderLocation(), getVertexFormat());
-
+    public final void register(RegisterShadersEvent event) throws IOException {
         event.registerShader(
-                shader,
-                this::init // store it
+                new ShaderInstance(event.getResourceProvider(), getShaderLocation(), getVertexFormat()),
+                this::_init
         );
-        return getShader();
     }
-
 }
 

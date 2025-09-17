@@ -1,8 +1,19 @@
 {
-  "vertex": "position",
-  "fragment": "position_color",
-  "samplers": [],
+  "blend": {
+    "func": "add",
+    "srcrgb": "one",
+    "dstrgb": "zero"
+  },
+  "vertex": "groovyengine:test",
+  "fragment": "groovyengine:test",
+  "attributes": [ "Position", "UV0" ],
+  "samplers": [
+    { "name": "DiffuseSampler" }
+  ],
   "uniforms": [
-    { "name": "ColorModulator", "type": "float", "count": 4, "values": [1.0, 0.0, 0.0, 1.0] }
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "InSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "OutSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] }
   ]
 }

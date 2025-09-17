@@ -1,6 +1,7 @@
 package io.github.luckymcdev.groovyengine.core.client.imgui;
 
 import com.mojang.blaze3d.platform.Window;
+import io.github.luckymcdev.groovyengine.construct.client.FlightController;
 import io.github.luckymcdev.groovyengine.core.client.editor.EditorScreen;
 import io.github.luckymcdev.groovyengine.core.client.editor.EditorState;
 import io.github.luckymcdev.groovyengine.core.client.editor.GroovyEngineEditor;
@@ -55,8 +56,18 @@ public class ImGuiRenderer {
                 if (ImGui.button("Set screen to correct screen")) {
                     Minecraft.getInstance().setScreen(new EditorScreen());
                 }
+            } ImGui.end();
+
+            final float[] flySpeedArray = new float[]{FlightController.CUSTOM_FLY_SPEED};
+
+            if (ImGui.begin("Movement Debugging")) {
+                if (ImGui.sliderFloat("Fly Speed", flySpeedArray, 0.05f, 5.0f)) {
+                    // Update the flight speed whenever the slider moves
+                    FlightController.CUSTOM_FLY_SPEED = flySpeedArray[0];
+                }
             }
             ImGui.end();
+
 
             if(ImGui.begin("Rendering Debugging")) {
                 if (ImGui.button("Toggle CrtPostShader")) {
@@ -142,8 +153,7 @@ public class ImGuiRenderer {
 
                     ImGui.endTabBar();
                 }
-            }
-            ImGui.end();
+            } ImGui.end();
 
         });
     }
