@@ -44,6 +44,15 @@ public class ImGuiRenderer {
                 ImGui.showAboutWindow();
                 ImGui.showDemoWindow();
                 ImGui.showMetricsWindow();
+
+                int[] flySpeedInt = new int[]{(int)(FlightController.CUSTOM_FLY_SPEED * 100)};
+                if (ImGui.begin("Movement Debugging")) {
+                    if (ImGui.sliderInt("Fly Speed", flySpeedInt, 0, 100)) {
+                        FlightController.CUSTOM_FLY_SPEED = flySpeedInt[0] / 100.0f;
+                    }
+                }
+                ImGui.end();
+
             }
 
             if(ImGui.begin("EditorDebugging")) {
@@ -58,15 +67,7 @@ public class ImGuiRenderer {
                 }
             } ImGui.end();
 
-            final float[] flySpeedArray = new float[]{FlightController.CUSTOM_FLY_SPEED};
 
-            if (ImGui.begin("Movement Debugging")) {
-                if (ImGui.sliderFloat("Fly Speed", flySpeedArray, 0.05f, 5.0f)) {
-                    // Update the flight speed whenever the slider moves
-                    FlightController.CUSTOM_FLY_SPEED = flySpeedArray[0];
-                }
-            }
-            ImGui.end();
 
 
             if(ImGui.begin("Rendering Debugging")) {
