@@ -6,7 +6,8 @@
   ],
   "client": [
     "core.imgui.MinecraftClientMixin",
-    "lens.rendering.GameRendererMixin"
+    "lens.rendering.GameRendererMixin",
+    "lens.rendering.LightTextureMixin"
   ],
   "injectors": {
     "defaultRequire": 1

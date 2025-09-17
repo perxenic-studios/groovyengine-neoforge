@@ -11,9 +11,10 @@ import imgui.flag.ImGuiWindowFlags;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.rendertarget.LensRenderTargets;
+import io.github.luckymcdev.groovyengine.mixin.lens.rendering.LightTextureMixin;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.GrassBlock;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
@@ -152,8 +153,20 @@ public class ImGuiRenderer {
                         ImGui.endTabItem();
                     }
 
-                    ImGui.endTabBar();
-                }
+
+                } ImGui.endTabBar();
+
+
+                if (ImGui.beginTabBar("LightTexture")) {
+                    LightTexture lightText = Minecraft.getInstance().gameRenderer.lightTexture();
+                    float widht = 500;
+                    float heihgt = 500;
+
+                    ImGui.image(lightText.lightTexture.getId(), widht, heihgt);
+
+                } ImGui.endTabBar();
+
+
             } ImGui.end();
 
         });
