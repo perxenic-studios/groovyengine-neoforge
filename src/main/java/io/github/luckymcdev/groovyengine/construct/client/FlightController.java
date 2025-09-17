@@ -38,27 +38,5 @@ public class FlightController {
             player.setDeltaMovement(Vec3.ZERO);
             return;
         }
-
-        // For more responsive movement, modify the movement vector directly
-        if (player.getAbilities().flying) {
-            Vec3 look = player.getLookAngle();
-            Vec3 right = look.cross(new Vec3(0, 1, 0)).normalize();
-            Vec3 forward = look.multiply(1, 0, 1).normalize(); // Remove Y component for horizontal movement
-            Vec3 up = new Vec3(0, 1, 0);
-
-            Vec3 moveDirection = Vec3.ZERO;
-
-            if (player.input.up) moveDirection = moveDirection.add(forward);
-            if (player.input.down) moveDirection = moveDirection.subtract(forward);
-            if (player.input.left) moveDirection = moveDirection.subtract(right);
-            if (player.input.right) moveDirection = moveDirection.add(right);
-            if (player.input.jumping) moveDirection = moveDirection.add(up);
-            if (player.input.shiftKeyDown) moveDirection = moveDirection.subtract(up);
-
-            if (moveDirection.length() > 0) {
-                moveDirection = moveDirection.normalize().scale(CUSTOM_FLY_SPEED);
-                player.setDeltaMovement(moveDirection);
-            }
-        }
     }
 }
