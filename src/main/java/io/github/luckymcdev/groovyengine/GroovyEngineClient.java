@@ -10,9 +10,7 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.tes
 import io.github.luckymcdev.groovyengine.lens.client.rendering.vertex.ExtendedPoseStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -134,7 +132,7 @@ public class GroovyEngineClient {
     }
 
     public static void setUpPoseForWorld(PoseStack stack) {
-        Vec3 pos = Minecraft.getInstance().player.getEyePosition();
+        Vec3 pos =Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         stack.translate(-pos.x, -pos.y, -pos.z);
     }
 
