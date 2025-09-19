@@ -5,7 +5,7 @@ import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
-import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGuiStyleManager;
+import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
 import org.lwjgl.glfw.GLFW;
 
 public class ImGuiImpl {
@@ -49,7 +49,7 @@ public class ImGuiImpl {
         // defaultFont = generatedFonts.get(30); // Font scale is 30
         // How you can apply the font then, you can see in ExampleMixin
 
-        ImGuiStyleManager.initStyles();
+        ImGraphics.INSTANCE.pushRootStack();
 
         data.setConfigFlags(ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.ViewportsEnable);
 

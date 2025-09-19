@@ -1,0 +1,38 @@
+package io.github.luckymcdev.groovyengine.core.client.imgui.styles;
+
+import io.github.luckymcdev.groovyengine.util.Color;
+
+public enum ImColorVariant {
+    DEFAULT(new Color(0.26f, 0.59f, 0.98f, 0.40f),
+            new Color(0.26f, 0.59f, 0.98f, 1.00f),
+            new Color(0.06f, 0.53f, 0.98f, 1.00f),
+            new Color(1.0f, 1.0f, 1.0f, 1.0f)),
+    RED(new Color(0.78f, 0.17f, 0.17f, 0.40f),
+            new Color(0.78f, 0.17f, 0.17f, 1.00f),
+            new Color(0.88f, 0.27f, 0.27f, 1.00f),
+            new Color(1.0f, 0.5f, 0.5f, 1.0f)),
+    GREEN(new Color(0.17f, 0.78f, 0.17f, 0.40f),
+            new Color(0.17f, 0.78f, 0.17f, 1.00f),
+            new Color(0.27f, 0.88f, 0.27f, 1.00f),
+            new Color(0.5f, 1.0f, 0.5f, 1.0f)),
+    BLUE(new Color(0.17f, 0.17f, 0.78f, 0.40f),
+            new Color(0.17f, 0.17f, 0.78f, 1.00f),
+            new Color(0.27f, 0.27f, 0.88f, 1.00f),
+            new Color(0.5f, 0.5f, 1.0f, 1.0f)),
+    YELLOW(new Color(0.78f, 0.78f, 0.17f, 0.40f),
+            new Color(0.78f, 0.78f, 0.17f, 1.00f),
+            new Color(0.88f, 0.88f, 0.27f, 1.00f),
+            new Color(1.0f, 1.0f, 0.5f, 1.0f));
+
+    public final Color color;
+    public final Color hoverColor;
+    public final Color activeColor;
+    public final Color textColor;
+
+    ImColorVariant(Color color, Color hoverColor, Color activeColor, Color textColor) {
+        this.color = color;
+        this.hoverColor = hoverColor;
+        this.activeColor = activeColor;
+        this.textColor = textColor;
+    }
+}
