@@ -10,7 +10,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT)
-public class FlightController {
+public class MovementController {
 
     @SubscribeEvent
     public static void onClientTick(PlayerTickEvent.Pre event) {

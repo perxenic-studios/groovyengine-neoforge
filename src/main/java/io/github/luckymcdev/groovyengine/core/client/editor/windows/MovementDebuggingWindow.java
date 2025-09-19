@@ -2,7 +2,6 @@ package io.github.luckymcdev.groovyengine.core.client.editor.windows;
 
 import imgui.ImGui;
 import imgui.ImGuiIO;
-import io.github.luckymcdev.groovyengine.construct.client.FlightController;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.core.registry.ModAttachmentTypes;
 import net.minecraft.client.Minecraft;
