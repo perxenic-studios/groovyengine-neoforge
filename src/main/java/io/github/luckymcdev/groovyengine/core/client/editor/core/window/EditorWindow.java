@@ -2,6 +2,8 @@ package io.github.luckymcdev.groovyengine.core.client.editor.core.window;
 
 import imgui.ImGuiIO;
 
+import javax.xml.stream.events.Characters;
+
 public abstract class EditorWindow {
     protected boolean enabled = false;
     protected final String title;
@@ -13,7 +15,7 @@ public abstract class EditorWindow {
     }
 
     public EditorWindow(String title) {
-        this(title, title);
+        this(title, title.toLowerCase().replace(' ', '_'));
     }
 
     /**
