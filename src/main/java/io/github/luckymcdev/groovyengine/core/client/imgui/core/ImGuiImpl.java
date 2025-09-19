@@ -1,10 +1,11 @@
-package io.github.luckymcdev.groovyengine.core.client.imgui;
+package io.github.luckymcdev.groovyengine.core.client.imgui.core;
 
 import imgui.*;
 import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGuiStyleManager;
 import org.lwjgl.glfw.GLFW;
 
 public class ImGuiImpl {
@@ -118,4 +119,11 @@ public class ImGuiImpl {
 //
 //        return texture;
 //    }
+
+    @FunctionalInterface
+    public static interface RenderInterface {
+
+        void render(final ImGuiIO io);
+
+    }
 }

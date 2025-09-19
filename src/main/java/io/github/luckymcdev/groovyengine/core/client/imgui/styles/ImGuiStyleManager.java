@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.core.client.imgui;
+package io.github.luckymcdev.groovyengine.core.client.imgui.styles;
 
 import imgui.ImGui;
 import imgui.ImGuiStyle;

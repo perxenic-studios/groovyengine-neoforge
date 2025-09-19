@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.core.client.editor;
+package io.github.luckymcdev.groovyengine.core.client.editor.core;
 
 public class GroovyEngineEditor {
 

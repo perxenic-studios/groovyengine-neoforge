@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.core.client.imgui;
+package io.github.luckymcdev.groovyengine.core.client.imgui.util;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
