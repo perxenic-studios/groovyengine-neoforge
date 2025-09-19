@@ -2,6 +2,7 @@ package io.github.luckymcdev.groovyengine;
 
 import io.github.luckymcdev.groovyengine.construct.ConstructModule;
 import io.github.luckymcdev.groovyengine.core.config.Config;
+import io.github.luckymcdev.groovyengine.core.core.registry.ModRegistry;
 import io.github.luckymcdev.groovyengine.core.core.systems.module.Module;
 import io.github.luckymcdev.groovyengine.core.core.systems.packs.generator.GroovyDatagen;
 import io.github.luckymcdev.groovyengine.core.core.systems.structure.FileTreeGenerator;
@@ -42,6 +43,8 @@ public class GroovyEngine {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::addPackRepoSource);
         NeoForge.EVENT_BUS.register(this);
+
+        ModRegistry.register(modEventBus);
 
         try {
             GroovyDatagen.run();

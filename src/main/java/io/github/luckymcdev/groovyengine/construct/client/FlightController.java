@@ -1,5 +1,6 @@
 package io.github.luckymcdev.groovyengine.construct.client;
 
+import io.github.luckymcdev.groovyengine.core.core.registry.ModAttachmentTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.Vec3;
@@ -11,8 +12,6 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 @EventBusSubscriber(value = Dist.CLIENT)
 public class FlightController {
 
-    public static float CUSTOM_FLY_SPEED = 0.2f;
-
     @SubscribeEvent
     public static void onClientTick(PlayerTickEvent.Pre event) {
         Minecraft mc = Minecraft.getInstance();
@@ -22,7 +21,7 @@ public class FlightController {
         if (!player.getAbilities().flying) return;
 
         // Modify fly speed
-        player.getAbilities().setFlyingSpeed(CUSTOM_FLY_SPEED);
+        player.getAbilities().setFlyingSpeed(player.getData(ModAttachmentTypes.FLY_SPEED));
 
         handleClientSideMovement(player);
     }
