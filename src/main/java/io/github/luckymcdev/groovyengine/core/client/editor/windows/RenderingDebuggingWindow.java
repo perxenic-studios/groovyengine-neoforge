@@ -3,7 +3,7 @@ package io.github.luckymcdev.groovyengine.core.client.editor.windows;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
-import io.github.luckymcdev.groovyengine.core.client.imgui.util.TextureHelper;
+import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.rendertarget.LensRenderTargets;
@@ -37,13 +37,10 @@ public class RenderingDebuggingWindow extends EditorWindow {
             if (ImGui.collapsingHeader("Texture Preview")) {
                 ImGui.text("Render Minecraft Textures in imgui:");
 
-                int dirtTextureId = TextureHelper.loadMinecraftTexture(
-                        ResourceLocation.fromNamespaceAndPath("minecraft", "textures/block/dirt.png"));
-
                 float width = 64;
                 float height = 64;
 
-                ImGui.image(dirtTextureId, width, height);
+                ImGraphics.texture(ResourceLocation.withDefaultNamespace("textures/block/dirt.png"), width, height);
             }
 
             ImGui.separator();
