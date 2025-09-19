@@ -1,6 +1,8 @@
 package io.github.luckymcdev.groovyengine.core.client.imgui.core;
 
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.datafixers.types.templates.Const;
+import io.github.luckymcdev.groovyengine.construct.client.editor.ConstructEditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.EditorScreen;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.EditorState;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.GroovyEngineEditor;
@@ -24,9 +26,13 @@ public class ImGuiRenderer {
         if (initialized) return;
 
         // Register debugging windows
-        WindowManager.registerWindow(new MovementDebuggingWindow(), "Debug");
+
         WindowManager.registerWindow(new EditorControlWindow(), "Debug");
-        WindowManager.registerWindow(new RenderingDebuggingWindow(), "Debug");
+
+        WindowManager.registerWindow(new RenderingDebuggingWindow(), "Lens");
+
+        WindowManager.registerWindow(new ConstructEditorWindow(), "Construct");
+        WindowManager.registerWindow(new MovementDebuggingWindow(), "Construct");
 
         // Register demo windows
         WindowManager.registerWindow(new DemoWindows.AboutWindow(), "ImGui");
