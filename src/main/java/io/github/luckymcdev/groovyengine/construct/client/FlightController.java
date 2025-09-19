@@ -36,7 +36,6 @@ public class FlightController {
         if (!isMoving && player.getAbilities().flying) {
             // Stop all movement when no input is pressed
             player.setDeltaMovement(Vec3.ZERO);
-            return;
         }
     }
 }
