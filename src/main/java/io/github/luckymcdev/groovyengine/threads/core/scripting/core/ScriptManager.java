@@ -1,11 +1,17 @@
 package io.github.luckymcdev.groovyengine.threads.core.scripting.core;
 
 import io.github.luckymcdev.groovyengine.GE;
+import io.github.luckymcdev.groovyengine.threads.client.screen.ThreadsErrorScreen;
+import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.event.ScriptEvent;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
+import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
@@ -62,18 +68,19 @@ public class ScriptManager {
         GE.LOG.info("Evaluating script: {}", scriptPath.getFileName());
 
         try {
-            // Fire pre-execution event
             NeoForge.EVENT_BUS.post(new ScriptEvent.PreExecutionEvent(shell, scriptPath.toString()));
-
             Script compiledScript = shell.parse(scriptPath.toFile());
             Object result = compiledScript.run();
-
-            // Fire post-execution event
             NeoForge.EVENT_BUS.post(new ScriptEvent.PostExecutionEvent(shell, scriptPath.toString(), result));
         } catch (Exception ex) {
             GE.LOG.error("Script error in {}", scriptPath.getFileName(), ex);
+
+            // Add to common error list
+            String description = ScriptErrors.generateErrorDescription(ex);
+            ScriptErrors.addError(scriptPath.getFileName().toString(), ex.getMessage(), description);
         }
     }
+
 
     public static GroovyShell getShell() {
         return shell;
