@@ -1,7 +1,6 @@
-package io.github.luckymcdev.groovyengine.lens.client.rendering.rendertarget;
+package io.github.luckymcdev.groovyengine.lens.client.rendering.target;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.vertex.*;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderTargetUtil;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;

@@ -6,7 +6,7 @@ import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWi
 import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.rendertarget.LensRenderTargets;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.target.LensRenderTargets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
