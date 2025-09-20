@@ -22,8 +22,11 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Mod(GE.MODID)
 public class GroovyEngine {
@@ -45,6 +48,10 @@ public class GroovyEngine {
         NeoForge.EVENT_BUS.register(this);
 
         ModRegistry.register(modEventBus);
+
+        String gc = ManagementFactory.getGarbageCollectorMXBeans().stream().map(Object::toString).collect(Collectors.joining(", "));
+        GE.LOG.info("Current Garbage Collector: "+gc);
+
 
         try {
             GroovyDatagen.run();
