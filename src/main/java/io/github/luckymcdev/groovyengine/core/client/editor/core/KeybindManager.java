@@ -7,6 +7,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import org.codehaus.groovy.ant.Groovy;
 import org.lwjgl.glfw.GLFW;
 
 @EventBusSubscriber
@@ -45,6 +46,7 @@ public class KeybindManager {
 
         if (OPEN_EDITOR_SCREEN.consumeClick()) {
             openEditorScreen();
+            enableImGui();
         }
     }
 
@@ -55,6 +57,10 @@ public class KeybindManager {
         } else {
             GroovyEngineEditor.setEditorState(EditorState.ENABLED);
         }
+    }
+
+    private static void enableImGui() {
+        GroovyEngineEditor.setEditorState(EditorState.ENABLED);
     }
 
     private static void openEditorScreen() {
