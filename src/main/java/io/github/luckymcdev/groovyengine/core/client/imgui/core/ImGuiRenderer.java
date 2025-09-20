@@ -12,6 +12,7 @@ import io.github.luckymcdev.groovyengine.core.client.editor.windows.*;
 import imgui.ImGui;
 import imgui.flag.ImGuiDockNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
+import io.github.luckymcdev.groovyengine.threads.client.editor.ThreadsWindow;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -25,14 +26,14 @@ public class ImGuiRenderer {
     private static void initializeWindows() {
         if (initialized) return;
 
-        // Register debugging windows
-
         WindowManager.registerWindow(new EditorControlWindow(), "Debug");
 
         WindowManager.registerWindow(new RenderingDebuggingWindow(), "Lens");
 
         WindowManager.registerWindow(new ConstructEditorWindow(), "Construct");
         WindowManager.registerWindow(new MovementDebuggingWindow(), "Construct");
+
+        WindowManager.registerWindow(new ThreadsWindow(), "Threads");
 
         // Register demo windows
         WindowManager.registerWindow(new DemoWindows.AboutWindow(), "ImGui");
