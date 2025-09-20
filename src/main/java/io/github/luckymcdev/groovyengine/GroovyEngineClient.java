@@ -1,20 +1,22 @@
 package io.github.luckymcdev.groovyengine;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.GERenderTypes;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.test.TestShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.PostProcessManager;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.vertex.ExtendedPoseStack;
-import net.minecraft.client.Camera;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.util.GeometryBuilder;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -25,9 +27,6 @@ import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import org.apache.logging.log4j.core.config.DefaultAdvertiser;
-import org.apache.logging.log4j.core.config.plugins.util.ResolverUtil;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.io.IOException;
@@ -43,17 +42,10 @@ public class GroovyEngineClient {
 
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
-        PostProcessManager.addInstances(
-                List.of(
-                        SuperDuperPostShader.INSTANCE
-                )
-        );
-
+        PostProcessManager.addInstances(List.of(SuperDuperPostShader.INSTANCE));
         PostProcessManager.addStageInstance(RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS, CrtPostShader.INSTANCE);
-
         CrtPostShader.INSTANCE.setActive(false);
         SuperDuperPostShader.INSTANCE.setActive(false);
-
     }
 
     @SubscribeEvent
@@ -67,97 +59,65 @@ public class GroovyEngineClient {
 
     @SubscribeEvent
     static void onRenderLevelStageEvent(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_SKY) {
-            return;
-        }
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_SKY) return;
+
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        if (player == null || player.getY() < 200) return;
 
         PoseStack poseStack = event.getPoseStack();
-        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+        MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
 
         poseStack.pushPose();
-        setUpPoseForWorld(poseStack);
-        poseStack.translate(0, 100, 0);
+        RenderUtils.setupWorldRendering(poseStack);
 
-        ShaderInstance shader = TestShader.INSTANCE.getShader();
-        if (shader != null) {
-            shader.safeGetUniform("ModelViewMat").set(poseStack.last().pose());
-        }
+        // Render the huge quad
+        poseStack.translate(0, -65, 0);
+
+        renderHugeQuad(poseStack, bufferSource, 2000f);
+
+        // Render other geometry
+        poseStack.translate(0, 165, 0);
 
         renderGraphicsWithCustomShader(poseStack, bufferSource);
 
         renderGraphicsTriangleThing(poseStack, bufferSource);
 
+        RenderUtils.setPoseStackPosition(poseStack, new Vec3(0,75,0));
+
         poseStack.popPose();
     }
 
     static void renderGraphicsWithCustomShader(PoseStack poseStack, MultiBufferSource bufferSource) {
-        VertexConsumer consumer = bufferSource.getBuffer(GERenderTypes.CUSTOM_QUADS);
-        Matrix4f matrix = poseStack.last().pose();
-
-        float size = 40f;
-
-        renderCubeWithUv(consumer, matrix, size);
+        GeometryBuilder.renderCube(
+                RenderUtils.getConsumer(bufferSource),
+                poseStack.last().pose(),
+                0, 0, 0, // Position
+                40f, // Size
+                0f, 0f, 1f, 1f // UV coordinates
+        );
     }
 
-    public static void setUpPoseForWorld(PoseStack stack) {
-        Vec3 pos =Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        stack.translate(-pos.x, -pos.y, -pos.z);
-    }
-
-    static void renderCubeWithUv(VertexConsumer consumer, Matrix4f matrix, float size) {
-
-        float minX = -size;
-        float minY = -size;
-        float minZ = -size;
-        float maxX = size;
-        float maxY = size;
-        float maxZ = size;
-
-        consumer.addVertex(matrix, minX, minY, maxZ).setUv(0.0f, 0.0f);
-        consumer.addVertex(matrix, maxX, minY, maxZ).setUv(1.0f, 0.0f);
-        consumer.addVertex(matrix, maxX, maxY, maxZ).setUv(1.0f, 1.0f);
-        consumer.addVertex(matrix, minX, maxY, maxZ).setUv(0.0f, 1.0f);
-
-        consumer.addVertex(matrix, maxX, minY, minZ).setUv(0.0f, 0.0f);
-        consumer.addVertex(matrix, minX, minY, minZ).setUv(1.0f, 0.0f);
-        consumer.addVertex(matrix, minX, maxY, minZ).setUv(1.0f, 1.0f);
-        consumer.addVertex(matrix, maxX, maxY, minZ).setUv(0.0f, 1.0f);
-
-        consumer.addVertex(matrix, minX, maxY, maxZ).setUv(0.0f, 0.0f);
-        consumer.addVertex(matrix, maxX, maxY, maxZ).setUv(1.0f, 0.0f);
-        consumer.addVertex(matrix, maxX, maxY, minZ).setUv(1.0f, 1.0f);
-        consumer.addVertex(matrix, minX, maxY, minZ).setUv(0.0f, 1.0f);
-
-        consumer.addVertex(matrix, minX, minY, minZ).setUv(0.0f, 0.0f);
-        consumer.addVertex(matrix, maxX, minY, minZ).setUv(1.0f, 0.0f);
-        consumer.addVertex(matrix, maxX, minY, maxZ).setUv(1.0f, 1.0f);
-        consumer.addVertex(matrix, minX, minY, maxZ).setUv(0.0f, 1.0f);
-
-        consumer.addVertex(matrix, maxX, minY, maxZ).setUv(0.0f, 0.0f);
-        consumer.addVertex(matrix, maxX, minY, minZ).setUv(1.0f, 0.0f);
-        consumer.addVertex(matrix, maxX, maxY, minZ).setUv(1.0f, 1.0f);
-        consumer.addVertex(matrix, maxX, maxY, maxZ).setUv(0.0f, 1.0f);
-
-        consumer.addVertex(matrix, minX, minY, minZ).setUv(0.0f, 0.0f);
-        consumer.addVertex(matrix, minX, minY, maxZ).setUv(1.0f, 0.0f);
-        consumer.addVertex(matrix, minX, maxY, maxZ).setUv(1.0f, 1.0f);
-        consumer.addVertex(matrix, minX, maxY, minZ).setUv(0.0f, 1.0f);
+    static void renderHugeQuad(PoseStack poseStack, MultiBufferSource bufferSource, float size) {
+        GeometryBuilder.renderPlane(
+                RenderUtils.getConsumer(bufferSource),
+                poseStack.last().pose(),
+                0, 0, 0, // Position
+                size, size, // Width and height
+                new Vector3f(0, 1, 0), // Normal (facing up)
+                0f, 0f, 1f, 1f // UV coordinates
+        );
     }
 
     static void renderGraphicsTriangleThing(PoseStack poseStack, MultiBufferSource bufferSource) {
-        VertexConsumer consumer = bufferSource.getBuffer(GERenderTypes.CUSTOM_QUADS);
-        Matrix4f matrix = poseStack.last().pose();
-
-        consumer.addVertex(matrix, 0.0f, 1.0f, 0.0f)
-                .setColor(1.0f, 0.0f, 0.0f, 1.0f).setUv(0.0f, 0.0f);
-
-        consumer.addVertex(matrix, -1.0f, -1.0f, 0.0f)
-                .setColor(0.0f, 1.0f, 0.0f, 1.0f).setUv(1.0f, 0.0f);
-
-        consumer.addVertex(matrix, 1.0f, -1.0f, 0.0f)
-                .setColor(0.0f, 0.0f, 1.0f, 1.0f).setUv(1.0f, 1.0f);
-
-        consumer.addVertex(matrix, 0.0f, 1.0f, 0.0f)
-                .setColor(1.0f, 0.0f, 0.0f, 1.0f).setUv(0.0f, 1.0f);
+        GeometryBuilder.renderTriangle(
+                RenderUtils.getConsumer(bufferSource),
+                poseStack.last().pose(),
+                0.0f, 1.0f, 0.0f, // Vertex 1
+                -1.0f, -1.0f, 0.0f, // Vertex 2
+                1.0f, -1.0f, 0.0f, // Vertex 3
+                0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, // UV coordinates
+                new Vector3f(0, 0, 1) // Normal
+        );
     }
 }
