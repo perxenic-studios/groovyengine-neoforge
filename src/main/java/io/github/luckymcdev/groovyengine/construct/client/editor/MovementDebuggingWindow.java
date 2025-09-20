@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.core.client.editor.windows;
+package io.github.luckymcdev.groovyengine.construct.client.editor;
 
 import imgui.ImGui;
 import imgui.ImGuiIO;

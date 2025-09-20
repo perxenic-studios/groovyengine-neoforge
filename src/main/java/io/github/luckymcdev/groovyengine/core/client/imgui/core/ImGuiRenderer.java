@@ -1,8 +1,8 @@
 package io.github.luckymcdev.groovyengine.core.client.imgui.core;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.datafixers.types.templates.Const;
 import io.github.luckymcdev.groovyengine.construct.client.editor.ConstructEditorWindow;
+import io.github.luckymcdev.groovyengine.construct.client.editor.MovementDebuggingWindow;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.EditorScreen;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.EditorState;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.GroovyEngineEditor;
@@ -12,6 +12,7 @@ import io.github.luckymcdev.groovyengine.core.client.editor.windows.*;
 import imgui.ImGui;
 import imgui.flag.ImGuiDockNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
+import io.github.luckymcdev.groovyengine.lens.client.editor.RenderingDebuggingWindow;
 import io.github.luckymcdev.groovyengine.scribe.client.editor.ScribeWindow;
 import io.github.luckymcdev.groovyengine.threads.client.editor.ThreadsWindow;
 import net.minecraft.client.Minecraft;
