@@ -85,6 +85,8 @@ public class GroovyEngineClient {
 
         renderGraphicsWithCustomShader(poseStack, bufferSource);
 
+        renderGraphicsTriangleThing(poseStack, bufferSource);
+
         poseStack.popPose();
     }
 
@@ -92,7 +94,18 @@ public class GroovyEngineClient {
         VertexConsumer consumer = bufferSource.getBuffer(GERenderTypes.CUSTOM_QUADS);
         Matrix4f matrix = poseStack.last().pose();
 
-        float size = 100f;
+        float size = 40f;
+
+        renderCubeWithUv(consumer, matrix, size);
+    }
+
+    public static void setUpPoseForWorld(PoseStack stack) {
+        Vec3 pos =Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+        stack.translate(-pos.x, -pos.y, -pos.z);
+    }
+
+    static void renderCubeWithUv(VertexConsumer consumer, Matrix4f matrix, float size) {
+
         float minX = -size;
         float minY = -size;
         float minZ = -size;
@@ -131,25 +144,20 @@ public class GroovyEngineClient {
         consumer.addVertex(matrix, minX, maxY, minZ).setUv(0.0f, 1.0f);
     }
 
-    public static void setUpPoseForWorld(PoseStack stack) {
-        Vec3 pos =Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        stack.translate(-pos.x, -pos.y, -pos.z);
-    }
-
     static void renderGraphicsTriangleThing(PoseStack poseStack, MultiBufferSource bufferSource) {
-        VertexConsumer consumer = bufferSource.getBuffer(RenderType.debugQuads());
+        VertexConsumer consumer = bufferSource.getBuffer(GERenderTypes.CUSTOM_QUADS);
         Matrix4f matrix = poseStack.last().pose();
 
         consumer.addVertex(matrix, 0.0f, 1.0f, 0.0f)
-                .setColor(1.0f, 0.0f, 0.0f, 1.0f);
+                .setColor(1.0f, 0.0f, 0.0f, 1.0f).setUv(0.0f, 0.0f);
 
         consumer.addVertex(matrix, -1.0f, -1.0f, 0.0f)
-                .setColor(0.0f, 1.0f, 0.0f, 1.0f);
+                .setColor(0.0f, 1.0f, 0.0f, 1.0f).setUv(1.0f, 0.0f);
 
         consumer.addVertex(matrix, 1.0f, -1.0f, 0.0f)
-                .setColor(0.0f, 0.0f, 1.0f, 1.0f);
+                .setColor(0.0f, 0.0f, 1.0f, 1.0f).setUv(1.0f, 1.0f);
 
         consumer.addVertex(matrix, 0.0f, 1.0f, 0.0f)
-                .setColor(1.0f, 0.0f, 0.0f, 1.0f);
+                .setColor(1.0f, 0.0f, 0.0f, 1.0f).setUv(0.0f, 1.0f);
     }
 }
