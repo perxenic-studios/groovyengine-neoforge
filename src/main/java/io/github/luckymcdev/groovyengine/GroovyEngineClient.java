@@ -1,8 +1,7 @@
 package io.github.luckymcdev.groovyengine;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute.ComputeShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.test.TestShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.PostProcessManager;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
@@ -10,19 +9,16 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.tes
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.GeometryBuilder;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
@@ -30,6 +26,8 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.joml.Vector3f;
 
 import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.util.Arrays;
 import java.util.List;
 
 @Mod(value = GE.MODID, dist = Dist.CLIENT)
@@ -43,9 +41,37 @@ public class GroovyEngineClient {
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         PostProcessManager.addInstances(List.of(SuperDuperPostShader.INSTANCE));
+
         PostProcessManager.addStageInstance(RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS, CrtPostShader.INSTANCE);
+
         CrtPostShader.INSTANCE.setActive(false);
         SuperDuperPostShader.INSTANCE.setActive(false);
+
+        Minecraft.getInstance().execute(() -> {
+            ResourceLocation shaderPath = GE.id("shaders/compute/test.csh");
+            float[] data = new float[128 * 4];
+            // Initialize with some test values
+            for (int i = 0; i < data.length; i++) {
+                data[i] = i * 0.1f; // 0.0, 0.1, 0.2, 0.3, etc.
+            }
+
+            ComputeShader shader = new ComputeShader();
+            shader.init(data, shaderPath);
+
+            System.err.println("BEFORE: " + Arrays.toString(Arrays.copyOf(data, 16)));
+
+            shader.dispatch();
+
+            float[] result = shader.readBack();
+            System.err.println("COMPUTE READBACK:");
+            System.err.println("AFTER:  " + Arrays.toString(Arrays.copyOf(result, 16)));
+
+        });
+    }
+
+    @SubscribeEvent
+    static void tick(ClientTickEvent.Pre event) {
+
     }
 
     @SubscribeEvent
@@ -71,19 +97,12 @@ public class GroovyEngineClient {
         poseStack.pushPose();
         RenderUtils.setupWorldRendering(poseStack);
 
-        // Render the huge quad
-        poseStack.translate(0, -65, 0);
-
-        renderHugeQuad(poseStack, bufferSource, 2000f);
-
         // Render other geometry
-        poseStack.translate(0, 165, 0);
+        poseStack.translate(0, 120, 0);
 
         renderGraphicsWithCustomShader(poseStack, bufferSource);
 
         renderGraphicsTriangleThing(poseStack, bufferSource);
-
-        RenderUtils.setPoseStackPosition(poseStack, new Vec3(0,75,0));
 
         poseStack.popPose();
     }
