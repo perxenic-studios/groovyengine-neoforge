@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.core.core.systems.structure;
+package io.github.luckymcdev.groovyengine.core.systems.structure;
 
 import io.github.luckymcdev.groovyengine.GE;
 

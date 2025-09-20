@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.core.core.registry;
+package io.github.luckymcdev.groovyengine.core.registry;
 
 import net.neoforged.bus.api.IEventBus;
 

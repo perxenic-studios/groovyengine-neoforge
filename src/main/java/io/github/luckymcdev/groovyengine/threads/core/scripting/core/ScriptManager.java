@@ -1,17 +1,12 @@
 package io.github.luckymcdev.groovyengine.threads.core.scripting.core;
 
 import io.github.luckymcdev.groovyengine.GE;
-import io.github.luckymcdev.groovyengine.threads.client.screen.ThreadsErrorScreen;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.event.ScriptEvent;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
-import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
@@ -22,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.github.luckymcdev.groovyengine.core.core.systems.structure.FileConstants.*;
+import static io.github.luckymcdev.groovyengine.core.systems.structure.FileConstants.*;
 
 public class ScriptManager {
     private static GroovyShell shell;

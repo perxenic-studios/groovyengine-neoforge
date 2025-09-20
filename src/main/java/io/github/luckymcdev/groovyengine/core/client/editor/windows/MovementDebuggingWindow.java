@@ -4,7 +4,7 @@ import imgui.ImGui;
 import imgui.ImGuiIO;
 import io.github.luckymcdev.groovyengine.construct.client.MovementController;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
-import io.github.luckymcdev.groovyengine.core.core.registry.ModAttachmentTypes;
+import io.github.luckymcdev.groovyengine.core.registry.ModAttachmentTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 

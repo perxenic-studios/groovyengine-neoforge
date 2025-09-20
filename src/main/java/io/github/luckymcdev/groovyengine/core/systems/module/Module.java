@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.core.core.systems.module;
+package io.github.luckymcdev.groovyengine.core.systems.module;
 
 import net.neoforged.bus.api.IEventBus;
 

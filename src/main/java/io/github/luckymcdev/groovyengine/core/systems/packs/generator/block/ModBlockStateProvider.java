@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.core.core.systems.packs.generator.block;
+package io.github.luckymcdev.groovyengine.core.systems.packs.generator.block;
 
 import dev.perxenic.acidapi.api.datagen.AcidBlockStateProvider;
 import net.minecraft.data.PackOutput;

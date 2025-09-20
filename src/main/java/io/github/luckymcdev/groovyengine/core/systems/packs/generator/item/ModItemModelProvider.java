@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.core.core.systems.packs.generator.item;
+package io.github.luckymcdev.groovyengine.core.systems.packs.generator.item;
 
 import dev.perxenic.acidapi.api.datagen.AcidItemModelProvider;
 import net.minecraft.data.PackOutput;

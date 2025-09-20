@@ -1,13 +1,13 @@
-package io.github.luckymcdev.groovyengine.core.core.systems.packs.generator;
+package io.github.luckymcdev.groovyengine.core.systems.packs.generator;
 
 import io.github.luckymcdev.groovyengine.GE;
 import dev.perxenic.acidapi.api.datagen.DataGeneratorHelper;
-import io.github.luckymcdev.groovyengine.core.core.systems.packs.generator.block.ModBlockLootTableProvider;
-import io.github.luckymcdev.groovyengine.core.core.systems.packs.generator.block.ModBlockStateProvider;
-import io.github.luckymcdev.groovyengine.core.core.systems.packs.generator.block.ModBlockTagProvider;
-import io.github.luckymcdev.groovyengine.core.core.systems.packs.generator.item.ModItemModelProvider;
-import io.github.luckymcdev.groovyengine.core.core.systems.packs.generator.item.ModItemTagProvider;
-import io.github.luckymcdev.groovyengine.core.core.systems.packs.generator.recipe.ModRecipeProvider;
+import io.github.luckymcdev.groovyengine.core.systems.packs.generator.block.ModBlockLootTableProvider;
+import io.github.luckymcdev.groovyengine.core.systems.packs.generator.block.ModBlockStateProvider;
+import io.github.luckymcdev.groovyengine.core.systems.packs.generator.block.ModBlockTagProvider;
+import io.github.luckymcdev.groovyengine.core.systems.packs.generator.item.ModItemModelProvider;
+import io.github.luckymcdev.groovyengine.core.systems.packs.generator.item.ModItemTagProvider;
+import io.github.luckymcdev.groovyengine.core.systems.packs.generator.recipe.ModRecipeProvider;
 import net.minecraft.SharedConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.registries.VanillaRegistries;

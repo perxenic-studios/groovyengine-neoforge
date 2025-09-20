@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.core.core.systems.packs.loader;
+package io.github.luckymcdev.groovyengine.core.systems.packs.loader;
 
 import io.github.luckymcdev.groovyengine.GE;
 import net.minecraft.network.chat.Component;

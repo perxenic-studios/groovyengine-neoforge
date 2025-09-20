@@ -1,6 +1,6 @@
 package io.github.luckymcdev.groovyengine.threads;
 
-import io.github.luckymcdev.groovyengine.core.core.systems.module.Module;
+import io.github.luckymcdev.groovyengine.core.systems.module.Module;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.core.ScriptManager;
 import net.neoforged.bus.api.IEventBus;
