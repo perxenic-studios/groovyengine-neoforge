@@ -1,5 +1,6 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +36,14 @@ public abstract class CoreShader {
                 new ShaderInstance(event.getResourceProvider(), getShaderLocation(), getVertexFormat()),
                 this::_init
         );
+    }
+
+    public void bind() {
+        RenderSystem.setShader(() -> getShader());
+    }
+
+    public void update() {
+
     }
 }
 
