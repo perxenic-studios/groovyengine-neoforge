@@ -3,6 +3,7 @@ package io.github.luckymcdev.groovyengine.lens.client.rendering;
 import com.mojang.blaze3d.pipeline.RenderCall;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.IBufferObject;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
@@ -27,6 +28,11 @@ public class LensRenderSystem extends RenderSystem {
             renderCall.execute();
         }
     }
+
+    public static boolean assertStage(RenderLevelStageEvent event, RenderLevelStageEvent.Stage expected) {
+        return event.getStage() == expected;
+    }
+
 
     public static void registerBufferObject(IBufferObject bufferObject) {
         bufferObjects.add(bufferObject);
