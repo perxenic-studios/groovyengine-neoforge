@@ -12,11 +12,16 @@ import io.github.luckymcdev.groovyengine.core.client.editor.windows.*;
 import imgui.ImGui;
 import imgui.flag.ImGuiDockNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
+import io.github.luckymcdev.groovyengine.scribe.client.editor.ScribeWindow;
 import io.github.luckymcdev.groovyengine.threads.client.editor.ThreadsWindow;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @EventBusSubscriber
 public class ImGuiRenderer {
@@ -34,6 +39,8 @@ public class ImGuiRenderer {
         WindowManager.registerWindow(new MovementDebuggingWindow(), "Construct");
 
         WindowManager.registerWindow(new ThreadsWindow(), "Threads");
+
+        WindowManager.registerWindow(new ScribeWindow(), "Scribe");
 
         // Register demo windows
         WindowManager.registerWindow(new DemoWindows.AboutWindow(), "ImGui");
@@ -96,8 +103,41 @@ public class ImGuiRenderer {
 
     private static void renderMainMenuBar() {
         if (ImGui.beginMainMenuBar()) {
-            // Windows menu organized by category
-            for (String category : WindowManager.getCategories()) {
+            // Define the exact order you want
+            List<String> desiredOrder = Arrays.asList(
+                    "ImGui",        // Leftmost
+                    "Construct",    //
+                    "Lens",         //
+                    "Threads",      //
+                    "Scribe",       //
+                    "Debug"         // Rightmost before View/Help
+            );
+
+            // Get all categories and sort according to desired order
+            List<String> sortedCategories = new ArrayList<>(WindowManager.getCategories());
+            sortedCategories.sort((a, b) -> {
+                int indexA = desiredOrder.indexOf(a);
+                int indexB = desiredOrder.indexOf(b);
+
+                // If both are in the desired order list, sort by that order
+                if (indexA != -1 && indexB != -1) {
+                    return Integer.compare(indexA, indexB);
+                }
+                // If only one is in the desired order, that one comes first
+                else if (indexA != -1) {
+                    return -1;
+                }
+                else if (indexB != -1) {
+                    return 1;
+                }
+                // If neither are in the desired order, sort alphabetically
+                else {
+                    return a.compareTo(b);
+                }
+            });
+
+            // Render categories in the desired order
+            for (String category : sortedCategories) {
                 if (ImGui.beginMenu(category)) {
                     for (var window : WindowManager.getWindowsByCategory(category)) {
                         boolean enabled = window.isEnabled();
@@ -109,7 +149,7 @@ public class ImGuiRenderer {
                 }
             }
 
-            // Additional menu items
+            // Additional menu items (View, Help) - these will appear on the right
             if (ImGui.beginMenu("View")) {
                 if (ImGui.menuItem("Close All Windows")) {
                     WindowManager.closeAllWindows();
