@@ -125,7 +125,7 @@ public abstract class LightTextureMixin {
     private Vector3f groovyengine$getLocalizedLightColor(ClientLevel level, int blockLightLevel) {
         if (level == null || this.minecraft.player == null) {
             // If no context, gradually transition to vanilla (white) lighting
-            Vector3f vanillaColor = new Vector3f(1.0f, 1.0f, 1.0f);
+            Vector3f vanillaColor = new Vector3f(1.0f, 0.5f, 0.2f);
             if (lastCalculatedColor != null) {
                 lastCalculatedColor = new Vector3f(lastCalculatedColor).lerp(vanillaColor, 0.1f);
                 return lastCalculatedColor;
@@ -157,19 +157,19 @@ public abstract class LightTextureMixin {
         Vector3f targetColor;
         if (colorWeights.isEmpty()) {
             // No colored light sources found - transition to vanilla white lighting
-            targetColor = new Vector3f(1.0f, 1.0f, 1.0f); // Vanilla white light
+            targetColor = new Vector3f(1.0f, 0.5f, 0.2f); // Vanilla white light
         } else {
             // Get the most weighted color
             targetColor = colorWeights.entrySet().stream()
                     .max(Map.Entry.comparingByValue())
                     .map(Map.Entry::getKey)
-                    .orElse(new Vector3f(1.0f, 1.0f, 1.0f));
+                    .orElse(new Vector3f(1.0f, 0.5f, 0.2f));
         }
 
         // Smooth transition to avoid sudden changes
         if (lastCalculatedColor != null) {
             // Use a slower lerp speed when transitioning to vanilla to make it more gradual
-            float lerpSpeed = colorWeights.isEmpty() ? 0.1f : 0.3f;
+            float lerpSpeed = 0.05f;
             targetColor = new Vector3f(lastCalculatedColor).lerp(targetColor, lerpSpeed);
         }
 
