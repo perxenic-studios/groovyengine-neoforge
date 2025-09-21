@@ -1,5 +1,6 @@
 package io.github.luckymcdev.groovyengine;
 
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute.ComputeShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.test.TestShader;
@@ -26,6 +27,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.joml.Vector3f;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.List;
@@ -48,6 +50,7 @@ public class GroovyEngineClient {
         SuperDuperPostShader.INSTANCE.setActive(false);
 
         Minecraft.getInstance().execute(() -> {
+
             ResourceLocation shaderPath = GE.id("shaders/compute/test.csh");
             float[] data = new float[128 * 4];
             // Initialize with some test values
@@ -55,16 +58,16 @@ public class GroovyEngineClient {
                 data[i] = i * 0.1f; // 0.0, 0.1, 0.2, 0.3, etc.
             }
 
-            ComputeShader shader = new ComputeShader();
-            shader.init(data, shaderPath);
+            try (ComputeShader shader = new ComputeShader(data, shaderPath)) {
 
-            System.err.println("BEFORE: " + Arrays.toString(Arrays.copyOf(data, 16)));
+                System.err.println("BEFORE: " + Arrays.toString(Arrays.copyOf(data, 16)));
 
-            shader.dispatch();
+                shader.dispatch();
 
-            float[] result = shader.readBack();
-            System.err.println("COMPUTE READBACK:");
-            System.err.println("AFTER:  " + Arrays.toString(Arrays.copyOf(result, 16)));
+                float[] result = shader.readBackFloats();
+                System.err.println("COMPUTE READBACK:");
+                System.err.println("AFTER:  " + Arrays.toString(Arrays.copyOf(result, 16)));
+            }
 
         });
     }
