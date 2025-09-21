@@ -13,6 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 
 public class RenderingDebuggingWindow extends EditorWindow {
 
+    public static boolean lightingChangesEnabled = false;
+
     public RenderingDebuggingWindow() {
         super("Rendering Debug", "rendering_debug");
     }
@@ -65,7 +67,18 @@ public class RenderingDebuggingWindow extends EditorWindow {
             }
 
             // Light texture
-            if (ImGui.collapsingHeader("Light Texture")) {
+            if (ImGui.collapsingHeader("Lighting Changes")) {
+
+                if(ImGui.button("Toggle Lighting Changes")) {
+                    lightingChangesEnabled = !lightingChangesEnabled;
+                }
+                ImGui.sameLine();
+
+                ImGui.text(""+lightingChangesEnabled);
+
+                ImGui.separator();
+
+                ImGui.text("Current Light Texture: ");
                 LightTexture lightText = Minecraft.getInstance().gameRenderer.lightTexture();
                 float lightWidth = 500;
                 float lightHeight = 500;
