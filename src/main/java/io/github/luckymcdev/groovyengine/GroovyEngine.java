@@ -1,6 +1,7 @@
 package io.github.luckymcdev.groovyengine;
 
 import io.github.luckymcdev.groovyengine.construct.ConstructModule;
+import io.github.luckymcdev.groovyengine.core.CoreModule;
 import io.github.luckymcdev.groovyengine.core.config.Config;
 import io.github.luckymcdev.groovyengine.core.registry.ModRegistry;
 import io.github.luckymcdev.groovyengine.core.systems.module.Module;
@@ -34,7 +35,8 @@ public class GroovyEngine {
             new ThreadsModule(),
             new LensModule(),
             new ScribeModule(),
-            new ConstructModule()
+            new ConstructModule(),
+            new CoreModule()
     );
 
     public GroovyEngine(IEventBus modEventBus, ModContainer modContainer) {
