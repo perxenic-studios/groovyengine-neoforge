@@ -31,17 +31,7 @@ public class ImGuiRenderer {
 
     private static void initializeWindows() {
         if (initialized) return;
-
         WindowManager.registerWindow(new EditorControlWindow(), "Debug");
-
-        WindowManager.registerWindow(new RenderingDebuggingWindow(), "Lens");
-
-        WindowManager.registerWindow(new ConstructEditorWindow(), "Construct");
-        WindowManager.registerWindow(new MovementDebuggingWindow(), "Construct");
-
-        WindowManager.registerWindow(new ThreadsWindow(), "Threads");
-
-        WindowManager.registerWindow(new ScribeWindow(), "Scribe");
 
         // Register demo windows
         WindowManager.registerWindow(new DemoWindows.AboutWindow(), "ImGui");

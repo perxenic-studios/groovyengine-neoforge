@@ -70,6 +70,8 @@ public class GroovyEngineClient {
             }
 
         });
+
+        Minecraft.getInstance().execute(() -> GroovyEngine.modules.forEach(module -> module.registerWindows()) );
     }
 
     @SubscribeEvent

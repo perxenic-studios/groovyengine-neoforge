@@ -6,4 +6,5 @@ public interface Module {
     void init(IEventBus modEventBus);
     default void onServerStarting() {}
     default void onCommonSetup() {}
+    void registerWindows();
 }

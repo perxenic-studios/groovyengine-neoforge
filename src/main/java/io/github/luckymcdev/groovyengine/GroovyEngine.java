@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 @Mod(GE.MODID)
 public class GroovyEngine {
-    private final List<Module> modules = Arrays.asList(
+    static final List<Module> modules = Arrays.asList(
             new ThreadsModule(),
             new LensModule(),
             new ScribeModule(),
