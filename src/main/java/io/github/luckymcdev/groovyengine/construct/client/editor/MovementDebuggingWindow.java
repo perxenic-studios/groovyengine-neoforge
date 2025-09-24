@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 
 public class MovementDebuggingWindow extends EditorWindow {
-    private LocalPlayer player = Minecraft.getInstance().player;
+    private final LocalPlayer player = Minecraft.getInstance().player;
 
     private int[] flySpeedInt = new int[]{(int)(player.getData(ModAttachmentTypes.FLY_SPEED) * 100)};
 
