@@ -2,6 +2,7 @@ package io.github.luckymcdev.groovyengine.core.client.imgui.util;
 
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.flag.ImGuiCol;
 import imgui.type.ImBoolean;
 
 import java.util.function.Consumer;
@@ -19,6 +20,21 @@ public class ImUtil {
 
     public static int[] toIntArray(int value) {
         return new int[]{value};
+    }
+
+    // Text
+
+    public static void title(String text) {
+        // Use a separator and bold styling for title effect
+        ImGui.separator();
+
+        // Make text stand out with different color or styling
+        ImGui.pushStyleColor(ImGuiCol.Text, 0xFFFFFFFF); // Bright white
+        ImGui.text(text);
+        ImGui.popStyleColor();
+
+        ImGui.separator();
+        ImGui.spacing();
     }
 
     //Windows
@@ -54,20 +70,41 @@ public class ImUtil {
     // Buttons
 
     public static void button(String title, Runnable body) {
-        if(ImGui.button(title)) {
+        if (ImGui.button(title)) {
             body.run();
         }
     }
 
     public static void button(String title, ImVec2 size, Runnable body) {
-        if(ImGui.button(title, size)) {
+        if (ImGui.button(title, size)) {
             body.run();
         }
     }
 
     public static void button(String title, float sizeX, float sizeY, Runnable body) {
-        if(ImGui.button(title, sizeX, sizeY)) {
+        if (ImGui.button(title, sizeX, sizeY)) {
             body.run();
+        }
+    }
+
+    // checkboxes
+
+    public static void checkbox(String label, ImBoolean imBoolean, Runnable onChange) {
+        if (ImGui.checkbox(label, imBoolean)) {
+            imBoolean.set(imBoolean.get());
+            onChange.run();
+        }
+    }
+
+    public static void helpMarker(String description) {
+        ImGui.sameLine();
+        ImGui.textDisabled("(?)");
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.pushTextWrapPos(ImGui.getFontSize() * 35.0f);
+            ImGui.textUnformatted(description);
+            ImGui.popTextWrapPos();
+            ImGui.endTooltip();
         }
     }
 }
