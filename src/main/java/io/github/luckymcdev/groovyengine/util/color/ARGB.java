@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.util;
+package io.github.luckymcdev.groovyengine.util.color;
 
 public class ARGB {
     public static int toABGR(int argb) {

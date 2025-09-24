@@ -1,6 +1,6 @@
 package io.github.luckymcdev.groovyengine.core.client.imgui.styles;
 
-import io.github.luckymcdev.groovyengine.util.Color;
+import io.github.luckymcdev.groovyengine.util.color.Color;
 
 public enum ImColorVariant {
     DEFAULT(new Color(0.26f, 0.59f, 0.98f, 0.40f),

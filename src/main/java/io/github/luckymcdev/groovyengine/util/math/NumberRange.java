@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.util;
+package io.github.luckymcdev.groovyengine.util.math;
 
 public record NumberRange(float min, float max) {
 
