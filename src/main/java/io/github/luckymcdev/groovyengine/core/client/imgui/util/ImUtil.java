@@ -89,12 +89,25 @@ public class ImUtil {
 
     // checkboxes
 
-    public static void checkbox(String label, ImBoolean imBoolean, Runnable onChange) {
+    public static void checkbox(String label, ImBoolean imBoolean, Runnable body) {
         if (ImGui.checkbox(label, imBoolean)) {
             imBoolean.set(imBoolean.get());
-            onChange.run();
+            body.run();
         }
     }
+
+    // CollapsingHeader
+
+
+
+    public static void collapsingHeader(final String label, Runnable body) {
+        if(ImGui.collapsingHeader(label)) {
+            body.run();
+        }
+    }
+
+
+    // Utils
 
     public static void helpMarker(String description) {
         ImGui.sameLine();
