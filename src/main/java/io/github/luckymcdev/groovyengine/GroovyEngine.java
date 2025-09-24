@@ -4,7 +4,7 @@ import io.github.luckymcdev.groovyengine.construct.ConstructModule;
 import io.github.luckymcdev.groovyengine.core.CoreModule;
 import io.github.luckymcdev.groovyengine.core.config.Config;
 import io.github.luckymcdev.groovyengine.core.registry.ModRegistry;
-import io.github.luckymcdev.groovyengine.core.systems.module.Module;
+import io.github.luckymcdev.groovyengine.core.systems.module.ModuleManager;
 import io.github.luckymcdev.groovyengine.core.systems.packs.generator.GroovyDatagen;
 import io.github.luckymcdev.groovyengine.core.systems.structure.FileTreeGenerator;
 import io.github.luckymcdev.groovyengine.lens.LensModule;
@@ -24,26 +24,14 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Mod(GE.MODID)
 public class GroovyEngine {
-    static final List<Module> modules = Arrays.asList(
-            new ThreadsModule(),
-            new LensModule(),
-            new ScribeModule(),
-            new ConstructModule(),
-            new CoreModule()
-    );
+    private static final ModuleManager moduleManager = ModuleManager.getInstance();
 
     public GroovyEngine(IEventBus modEventBus, ModContainer modContainer) {
         FileTreeGenerator.generateFileStructure();
-
-        modules.forEach(module -> module.init(modEventBus));
-
 
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::addPackRepoSource);
@@ -51,9 +39,16 @@ public class GroovyEngine {
 
         ModRegistry.register(modEventBus);
 
+
+        ModuleManager.registerModule(new CoreModule());
+        ModuleManager.registerModule(new ThreadsModule());
+        ModuleManager.registerModule(new LensModule());
+        ModuleManager.registerModule(new ScribeModule());
+        ModuleManager.registerModule(new ConstructModule());
+
+
         String gc = ManagementFactory.getGarbageCollectorMXBeans().stream().map(Object::toString).collect(Collectors.joining(", "));
         GE.LOG.info("Current Garbage Collector: "+gc);
-
 
         try {
             GroovyDatagen.run();
@@ -65,12 +60,12 @@ public class GroovyEngine {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        modules.forEach(module -> module.onCommonSetup());
+        moduleManager.runOnCommonSetup();
     }
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-        modules.forEach(module -> module.onServerStarting());
+        moduleManager.runOnServerStarting();
     }
 
     private void addPackRepoSource(AddPackFindersEvent event) {

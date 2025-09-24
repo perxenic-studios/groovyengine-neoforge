@@ -2,6 +2,7 @@ package io.github.luckymcdev.groovyengine;
 
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import io.github.luckymcdev.groovyengine.core.systems.module.ModuleManager;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute.ComputeShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.test.TestShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.PostProcessManager;
@@ -35,6 +36,9 @@ import java.util.List;
 @Mod(value = GE.MODID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = GE.MODID, value = Dist.CLIENT)
 public class GroovyEngineClient {
+
+
+    private static boolean initializedModuleWindows = false;
 
     public GroovyEngineClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
@@ -70,13 +74,19 @@ public class GroovyEngineClient {
             }
 
         });
+    }
 
-        Minecraft.getInstance().execute(() -> GroovyEngine.modules.forEach(module -> module.registerWindows()) );
+    private static void registerModuleWindows() {
+        if (initializedModuleWindows) return;
+        ModuleManager instance = ModuleManager.getInstance();
+
+        instance.runRegisterWindows();
+
+        initializedModuleWindows = true;
     }
 
     @SubscribeEvent
     static void tick(ClientTickEvent.Pre event) {
-
     }
 
     @SubscribeEvent
@@ -90,6 +100,8 @@ public class GroovyEngineClient {
 
     @SubscribeEvent
     static void onRenderLevelStageEvent(RenderLevelStageEvent event) {
+        registerModuleWindows();
+
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_SKY) return;
 
         Minecraft mc = Minecraft.getInstance();
