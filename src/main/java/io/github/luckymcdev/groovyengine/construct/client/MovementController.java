@@ -24,7 +24,7 @@ public class MovementController {
         if (flyingChanges) {
             applyFlyingChanges(player);
         } else {
-            player.setData(ModAttachmentTypes.FLY_SPEED, 0.2f);
+            player.setData(ModAttachmentTypes.FLY_SPEED, 0.1f);
             player.getAbilities().setFlyingSpeed(player.getData(ModAttachmentTypes.FLY_SPEED));
         }
     }
