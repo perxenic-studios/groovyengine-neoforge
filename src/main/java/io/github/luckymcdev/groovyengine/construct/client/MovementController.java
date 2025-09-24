@@ -14,7 +14,6 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 public class MovementController {
 
     private static boolean flyingChanges = true;
-    private static boolean noClip = false;
 
     @SubscribeEvent
     public static void onClientTick(PlayerTickEvent.Pre event) {
@@ -30,29 +29,13 @@ public class MovementController {
         }
     }
 
-    public static void onServerTick(ServerTickEvent.Post event) {
-        event.getServer().getPlayerList().getPlayers().forEach((player -> {
-            if (noClip) {
-                applyNoClip(player);
-            }
-        }));
-    }
-
     // Public controls
     public static void toggleFlyingChanges() {
         flyingChanges = !flyingChanges;
     }
 
-    public static void toggleNoClip() {
-        noClip = !noClip;
-    }
-
     public static boolean flyingChangesEnabled() {
         return flyingChanges;
-    }
-
-    public static boolean noClipEnabled() {
-        return noClip;
     }
 
     // Internals
@@ -64,13 +47,6 @@ public class MovementController {
         if (!isPlayerMoving(player)) {
             player.setDeltaMovement(Vec3.ZERO);
         }
-    }
-
-    private static void applyNoClip(ServerPlayer player) {
-        // Example: disable collisions
-        player.noPhysics = true;
-        player.fallDistance = 0;
-        player.setOnGround(false);
     }
 
     private static boolean isPlayerMoving(LocalPlayer player) {
