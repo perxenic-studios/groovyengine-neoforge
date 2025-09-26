@@ -5,6 +5,7 @@ import io.github.luckymcdev.groovyengine.construct.client.editor.ConstructEditor
 import io.github.luckymcdev.groovyengine.core.client.editor.core.EditorScreen;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.EditorState;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.GroovyEngineEditor;
+import io.github.luckymcdev.groovyengine.core.client.editor.core.KeybindManager;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.WindowManager;
 import io.github.luckymcdev.groovyengine.core.client.editor.windows.*;
@@ -154,8 +155,8 @@ public class ImGuiRenderer {
             // Help menu with keybind info
             if (ImGui.beginMenu("Help")) {
                 ImGui.text("Keybinds:");
-                ImGui.text("F1 - Toggle ImGui (default)");
-                ImGui.text("F2 - Open Editor Screen (default)");
+                ImGui.text(KeybindManager.TOGGLE_IMGUI.getTranslatedKeyMessage().getString()+" - Toggle ImGui");
+                ImGui.text(KeybindManager.OPEN_EDITOR_SCREEN.getTranslatedKeyMessage().getString()+" - Open Editor Screen");
                 ImGui.separator();
                 ImGui.text("Change keybinds in Options > Controls");
                 ImGui.endMenu();

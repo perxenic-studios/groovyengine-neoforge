@@ -1,6 +1,7 @@
 package io.github.luckymcdev.groovyengine;
 
 import io.github.luckymcdev.groovyengine.construct.ConstructModule;
+import io.github.luckymcdev.groovyengine.construct.registry.ConstructRegistry;
 import io.github.luckymcdev.groovyengine.core.CoreModule;
 import io.github.luckymcdev.groovyengine.core.config.Config;
 import io.github.luckymcdev.groovyengine.core.registry.ModRegistry;
@@ -38,6 +39,9 @@ public class GroovyEngine {
         NeoForge.EVENT_BUS.register(this);
 
         ModRegistry.register(modEventBus);
+
+
+        ConstructRegistry.register(modEventBus);
 
 
         ModuleManager.registerModule(new CoreModule());
