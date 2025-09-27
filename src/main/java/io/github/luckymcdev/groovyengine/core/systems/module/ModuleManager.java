@@ -18,6 +18,10 @@ public class ModuleManager {
         modules.add(module);
     }
 
+    public static void registerModules(List<Module> moduleList) {
+        moduleList.forEach(module -> modules.add(module));
+    }
+
     public void runInit(IEventBus eventBus) {
         modules.forEach(module -> module.init(eventBus));
     }

@@ -11,6 +11,7 @@ import io.github.luckymcdev.groovyengine.core.systems.structure.FileTreeGenerato
 import io.github.luckymcdev.groovyengine.lens.LensModule;
 import io.github.luckymcdev.groovyengine.scribe.ScribeModule;
 import io.github.luckymcdev.groovyengine.threads.ThreadsModule;
+import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManager;
 import net.minecraft.server.packs.PackType;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
@@ -22,9 +23,11 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Mod(GE.MODID)
@@ -43,12 +46,10 @@ public class GroovyEngine {
 
         ConstructRegistry.register(modEventBus);
 
-
-        ModuleManager.registerModule(new CoreModule());
-        ModuleManager.registerModule(new ThreadsModule());
-        ModuleManager.registerModule(new LensModule());
-        ModuleManager.registerModule(new ScribeModule());
-        ModuleManager.registerModule(new ConstructModule());
+        ModuleManager.registerModules(List.of(new CoreModule(),
+                new ThreadsModule(), new LensModule()
+                , new ScribeModule(), new ConstructModule()
+        ));
 
 
         String gc = ManagementFactory.getGarbageCollectorMXBeans().stream().map(Object::toString).collect(Collectors.joining(", "));
