@@ -36,6 +36,11 @@ public class ThreadsErrorScreen extends ErrorScreen {
     }
 
     @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return false;
+    }
+
+    @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -50,49 +55,5 @@ public class ThreadsErrorScreen extends ErrorScreen {
         }
     }
 
-
-    // Custom entry list like LoadingErrorScreen.LoadingEntryList
-    public static class ThreadsEntryList extends ObjectSelectionList<ThreadsEntry> {
-        public ThreadsEntryList(ThreadsErrorScreen parent) {
-            super(parent.minecraft, parent.width, parent.height - 40, 35, 20);
-
-            for (ScriptErrors.ErrorEntry error : ScriptErrors.getErrors()) {
-                this.addEntry(new ThreadsEntry(error));
-            }
-        }
-
-        @Override
-        protected int getScrollbarPosition() {
-            return this.getRight() - 6;
-        }
-
-        @Override
-        public int getRowWidth() {
-            return this.width - 15;
-        }
-    }
-
-    public static class ThreadsEntry extends ObjectSelectionList.Entry<ThreadsEntry> {
-        private final ScriptErrors.ErrorEntry error;
-
-        public ThreadsEntry(ScriptErrors.ErrorEntry error) {
-            this.error = error;
-        }
-
-        @Override
-        public void render(GuiGraphics guiGraphics, int index, int y, int x, int width, int height,
-                           int mouseX, int mouseY, boolean hovered, float partialTick) {
-            Font font = Minecraft.getInstance().font;
-
-            guiGraphics.drawString(font, "Script: " + error.scriptName, x + 5, y, 0xFFFF5555, false);
-            guiGraphics.drawString(font, "Message: " + error.message, x + 5, y + 12, 0xFFFFFFFF, false);
-            guiGraphics.drawString(font, "Fix: " + error.description, x + 5, y + 24, 0xFFAAAAAA, false);
-        }
-
-        @Override
-        public Component getNarration() {
-            return Component.literal("Error in script " + error.scriptName);
-        }
-    }
 }
 
