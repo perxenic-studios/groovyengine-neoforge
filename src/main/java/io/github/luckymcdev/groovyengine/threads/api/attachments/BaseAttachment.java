@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.api.attachments;
+package io.github.luckymcdev.groovyengine.threads.api.attachments;
 
 import java.util.List;
 

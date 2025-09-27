@@ -1,7 +1,7 @@
 package common
 //priority=0
 import io.github.luckymcdev.groovyengine.GE
-import io.github.luckymcdev.groovyengine.api.attachments.AttachmentManager
+import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager
 
 GE.LOG.info('Hello from common scripts!')
 

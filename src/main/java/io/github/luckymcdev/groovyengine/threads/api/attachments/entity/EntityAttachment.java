@@ -1,6 +1,6 @@
-package io.github.luckymcdev.groovyengine.api.attachments.entity;
+package io.github.luckymcdev.groovyengine.threads.api.attachments.entity;
 
-import io.github.luckymcdev.groovyengine.api.attachments.BaseAttachment;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.BaseAttachment;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -9,7 +9,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 

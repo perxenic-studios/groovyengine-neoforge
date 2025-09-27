@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.api.attachments;
+package io.github.luckymcdev.groovyengine.threads.api.attachments;
 
 import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentManagerImpl;
 import net.minecraft.world.entity.EntityType;

@@ -1,11 +1,8 @@
-package io.github.luckymcdev.groovyengine.api.attachments.script;
+package io.github.luckymcdev.groovyengine.threads.api.attachments.script;
 
-import io.github.luckymcdev.groovyengine.api.attachments.BaseAttachment;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.BaseAttachment;
 
 import java.util.List;
-import java.util.Map;
 
 public abstract class ScriptAttachment implements BaseAttachment<Object> {
 

@@ -1,10 +1,10 @@
 package common
 
-import io.github.luckymcdev.groovyengine.api.attachments.AttachmentManager
-import io.github.luckymcdev.groovyengine.api.attachments.item.ItemAttachment
-import io.github.luckymcdev.groovyengine.api.attachments.block.BlockAttachment
-import io.github.luckymcdev.groovyengine.api.attachments.entity.EntityAttachment
-import io.github.luckymcdev.groovyengine.api.attachments.script.ScriptAttachment
+import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager
+import io.github.luckymcdev.groovyengine.threads.api.attachments.item.ItemAttachment
+import io.github.luckymcdev.groovyengine.threads.api.attachments.block.BlockAttachment
+import io.github.luckymcdev.groovyengine.threads.api.attachments.entity.EntityAttachment
+import io.github.luckymcdev.groovyengine.threads.api.attachments.script.ScriptAttachment
 
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack

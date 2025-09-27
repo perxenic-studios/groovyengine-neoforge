@@ -1,8 +1,8 @@
 package io.github.luckymcdev.groovyengine.threads.core.scripting.attachment;
 
 import io.github.luckymcdev.groovyengine.GE;
-import io.github.luckymcdev.groovyengine.api.attachments.AttachmentManager;
-import io.github.luckymcdev.groovyengine.api.attachments.BaseAttachment;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.BaseAttachment;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
