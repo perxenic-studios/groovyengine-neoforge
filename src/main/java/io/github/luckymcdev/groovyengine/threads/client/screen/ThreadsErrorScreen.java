@@ -1,53 +1,98 @@
 package io.github.luckymcdev.groovyengine.threads.client.screen;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.screens.ErrorScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
 
-public class ThreadsErrorScreen extends Screen {
-
-    private int scrollOffset = 0; // current scroll
-    private final int lineHeight = 12; // spacing between lines
+public class ThreadsErrorScreen extends ErrorScreen {
+    private ThreadsEntryList entryList;
 
     public ThreadsErrorScreen() {
-        super(Component.literal("Script Errors Detected"));
+        super(
+                Component.literal("Script Errors Detected"),
+                Component.literal("Details are shown below")
+        );
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return false;
+    protected void init() {
+        this.clearWidgets();
+
+        this.entryList = new ThreadsEntryList(this);
+        this.addWidget(entryList);
+        this.setFocused(entryList);
+
+        this.addRenderableWidget(
+                Button.builder(Component.literal("Close"), b -> this.minecraft.setScreen(null))
+                        .bounds(this.width / 2 - 50, this.height - 24, 100, 20)
+                        .build()
+        );
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        int startY = 20; // top margin
-        int screenHeight = this.height - 40; // leave some margin at bottom
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 10, 0xFF5555);
 
-        int y = startY - scrollOffset;
+        // render custom entries
+        this.entryList.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        for (ScriptErrors.ErrorEntry error : ScriptErrors.getErrors()) {
-            guiGraphics.drawString(this.font, "Script: " + error.scriptName, 10, y, 0xFFFF5555, false);
-            y += lineHeight;
-            guiGraphics.drawString(this.font, "Message: " + error.message, 10, y, 0xFFFFFFFF, false);
-            y += lineHeight;
-            guiGraphics.drawString(this.font, "Fix: " + error.description, 10, y, 0xFFAAAAAA, false);
-            y += lineHeight + 8; // extra spacing between entries
-        }
-
-        // Optional: show scroll hint if needed
-        if (ScriptErrors.getErrors().size() * (lineHeight * 3 + 8) > screenHeight) {
-            guiGraphics.drawString(this.font, "Use mouse wheel to scroll", 10, this.height - 20, 0xFFFFFF55, false);
+        // render buttons
+        for (var widget : this.renderables) {
+            widget.render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        int totalHeight = ScriptErrors.getErrors().size() * (lineHeight * 3 + 8);
-        scrollOffset -= (int)(scrollY * 15); // scroll speed
-        scrollOffset = Math.max(0, Math.min(scrollOffset, Math.max(0, totalHeight - (height - 40))));
-        return true;
+
+    // Custom entry list like LoadingErrorScreen.LoadingEntryList
+    public static class ThreadsEntryList extends ObjectSelectionList<ThreadsEntry> {
+        public ThreadsEntryList(ThreadsErrorScreen parent) {
+            super(parent.minecraft, parent.width, parent.height - 40, 35, 20);
+
+            for (ScriptErrors.ErrorEntry error : ScriptErrors.getErrors()) {
+                this.addEntry(new ThreadsEntry(error));
+            }
+        }
+
+        @Override
+        protected int getScrollbarPosition() {
+            return this.getRight() - 6;
+        }
+
+        @Override
+        public int getRowWidth() {
+            return this.width - 15;
+        }
+    }
+
+    public static class ThreadsEntry extends ObjectSelectionList.Entry<ThreadsEntry> {
+        private final ScriptErrors.ErrorEntry error;
+
+        public ThreadsEntry(ScriptErrors.ErrorEntry error) {
+            this.error = error;
+        }
+
+        @Override
+        public void render(GuiGraphics guiGraphics, int index, int y, int x, int width, int height,
+                           int mouseX, int mouseY, boolean hovered, float partialTick) {
+            Font font = Minecraft.getInstance().font;
+
+            guiGraphics.drawString(font, "Script: " + error.scriptName, x + 5, y, 0xFFFF5555, false);
+            guiGraphics.drawString(font, "Message: " + error.message, x + 5, y + 12, 0xFFFFFFFF, false);
+            guiGraphics.drawString(font, "Fix: " + error.description, x + 5, y + 24, 0xFFAAAAAA, false);
+        }
+
+        @Override
+        public Component getNarration() {
+            return Component.literal("Error in script " + error.scriptName);
+        }
     }
 }
+
