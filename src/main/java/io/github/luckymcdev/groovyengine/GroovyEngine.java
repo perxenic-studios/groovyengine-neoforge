@@ -71,6 +71,12 @@ public class GroovyEngine {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         moduleManager.runOnServerStarting();
+        AttachmentEventManager.getInstance().fireServerStart();
+    }
+
+    @SubscribeEvent
+    public void onServerStopping(ServerStoppingEvent event) {
+        AttachmentEventManager.getInstance().fireServerStop();
     }
 
     private void addPackRepoSource(AddPackFindersEvent event) {

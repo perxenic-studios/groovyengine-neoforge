@@ -1,3 +1,4 @@
+package client
 //priority=0
 import io.github.luckymcdev.groovyengine.GE;
 

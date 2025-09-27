@@ -1,12 +1,17 @@
 package io.github.luckymcdev.groovyengine.threads.core.scripting.core;
 
 import io.github.luckymcdev.groovyengine.GE;
+import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManager;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.event.ScriptEvent;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
+import net.minecraft.client.gui.screens.ErrorScreen;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.ModLoadingException;
+import net.neoforged.fml.ModLoadingIssue;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.client.gui.LoadingErrorScreen;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
@@ -21,6 +26,7 @@ import static io.github.luckymcdev.groovyengine.core.systems.structure.FileConst
 
 public class ScriptManager {
     private static GroovyShell shell;
+    private static final AttachmentEventManager attachmentEventManager = AttachmentEventManager.getInstance();
 
     public static void initialize() {
         GE.LOG.info("Initializing script manager");
@@ -62,6 +68,9 @@ public class ScriptManager {
     private static void evaluateScript(Path scriptPath) {
         GE.LOG.info("Evaluating script: {}", scriptPath.getFileName());
 
+        attachmentEventManager.fireScriptLoad(scriptPath.getFileName().toString());
+        attachmentEventManager.fireScriptReload(scriptPath.getFileName().toString());
+
         try {
             NeoForge.EVENT_BUS.post(new ScriptEvent.PreExecutionEvent(shell, scriptPath.toString()));
             Script compiledScript = shell.parse(scriptPath.toFile());
@@ -70,7 +79,8 @@ public class ScriptManager {
         } catch (Exception ex) {
             GE.LOG.error("Script error in {}", scriptPath.getFileName(), ex);
 
-            // Add to common error list
+            attachmentEventManager.fireScriptError(scriptPath.getFileName().toString(), ex);
+
             String description = ScriptErrors.generateErrorDescription(ex);
             ScriptErrors.addError(scriptPath.getFileName().toString(), ex.getMessage(), description);
         }
