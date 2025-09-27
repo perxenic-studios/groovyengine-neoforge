@@ -3,7 +3,7 @@ package io.github.luckymcdev.groovyengine.construct.client.editor;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.type.ImBoolean;
-import io.github.luckymcdev.groovyengine.construct.client.MovementController;
+import io.github.luckymcdev.groovyengine.construct.client.movement.MovementController;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import io.github.luckymcdev.groovyengine.core.registry.ModAttachmentTypes;

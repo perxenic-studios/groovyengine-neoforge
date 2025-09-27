@@ -2,7 +2,8 @@ package io.github.luckymcdev.groovyengine.construct.client.editor;
 
 import imgui.ImGui;
 import imgui.ImGuiIO;
-import io.github.luckymcdev.groovyengine.construct.ext.worldedit.WorldEditAPI;
+import io.github.luckymcdev.groovyengine.construct.api.worldedit.WorldEditAPI;
+import io.github.luckymcdev.groovyengine.construct.client.input.KeyCombo;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import net.minecraft.client.Minecraft;
@@ -24,8 +25,6 @@ public class ConstructEditorWindow extends EditorWindow {
     private final Map<KeyCombo, Boolean> pressedLast = new HashMap<>();
 
     private final int[] brushRadius = new int[]{5}; // default radius
-
-    private record KeyCombo(int modifier, int key) {}
 
     public ConstructEditorWindow() {
         super("Construct Editor", "construct_window");
@@ -121,8 +120,8 @@ public class ConstructEditorWindow extends EditorWindow {
 
         for (var entry : macros.entrySet()) {
             KeyCombo combo = entry.getKey();
-            boolean isPressed = GLFW.glfwGetKey(window, combo.modifier) == GLFW.GLFW_PRESS &&
-                    GLFW.glfwGetKey(window, combo.key) == GLFW.GLFW_PRESS;
+            boolean isPressed = GLFW.glfwGetKey(window, combo.modifier()) == GLFW.GLFW_PRESS &&
+                    GLFW.glfwGetKey(window, combo.key()) == GLFW.GLFW_PRESS;
             boolean wasPressed = pressedLast.getOrDefault(combo, false);
 
             if (isPressed && !wasPressed) {

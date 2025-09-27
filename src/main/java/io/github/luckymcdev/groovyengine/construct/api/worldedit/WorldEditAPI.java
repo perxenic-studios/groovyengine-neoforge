@@ -1,6 +1,6 @@
-package io.github.luckymcdev.groovyengine.construct.ext.worldedit;
+package io.github.luckymcdev.groovyengine.construct.api.worldedit;
 
-import io.github.luckymcdev.groovyengine.construct.core.commands.WorldEditCommands;
+import io.github.luckymcdev.groovyengine.construct.core.command.WorldEditCommands;
 
 public class WorldEditAPI {
     public static final WorldEditAPI INSTANCE = new WorldEditAPI();
@@ -10,7 +10,7 @@ public class WorldEditAPI {
 
     }
 
-    // Basic selection commands
+    // Basic selection command
     public void setPos(int pos) {
         command("pos" + pos);
     }
@@ -23,7 +23,7 @@ public class WorldEditAPI {
         setPos(2);
     }
 
-    // History commands
+    // History command
     public void undo(int amount) {
         command("undo " + amount);
     }
@@ -116,7 +116,7 @@ public class WorldEditAPI {
         command("brush "+type+" "+pattern+" "+radius);
     }
 
-    // Utility commands
+    // Utility command
     public void count(String block) {
         command("count " + block);
     }

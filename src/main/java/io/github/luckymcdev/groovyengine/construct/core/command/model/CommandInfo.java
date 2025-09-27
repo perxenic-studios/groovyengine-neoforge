@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.construct.core.commands;
+package io.github.luckymcdev.groovyengine.construct.core.command.model;
 
 public class CommandInfo {
     private final String name;

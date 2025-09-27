@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.construct.core.commands;
+package io.github.luckymcdev.groovyengine.construct.core.command;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

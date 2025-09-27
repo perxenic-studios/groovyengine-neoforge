@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.construct.client;
+package io.github.luckymcdev.groovyengine.construct.client.movement;
 
 import io.github.luckymcdev.groovyengine.core.registry.ModAttachmentTypes;
 import net.minecraft.client.Minecraft;
