@@ -18,10 +18,32 @@ public class ThreadsEntry extends ObjectSelectionList.Entry<ThreadsEntry> {
     public void render(GuiGraphics guiGraphics, int index, int y, int x, int width, int height,
                        int mouseX, int mouseY, boolean hovered, float partialTick) {
         Font font = Minecraft.getInstance().font;
+        int textWidth = width - 10;
+        int lineHeight = 12;
+        int currentY = y;
 
-        guiGraphics.drawString(font, "Script: " + error.scriptName, x + 5, y, 0xFFFF5555, false);
-        guiGraphics.drawString(font, "Message: " + error.message, x + 5, y + 12, 0xFFFFFFFF, false);
-        guiGraphics.drawString(font, "Fix: " + error.description, x + 5, y + 24, 0xFFAAAAAA, false);
+        String scriptText = "Script: " + error.scriptName;
+        if (font.width(scriptText) > textWidth) {
+            scriptText = font.plainSubstrByWidth(scriptText, textWidth - font.width("...")) + "...";
+        }
+        guiGraphics.drawString(font, scriptText, x + 5, currentY, 0xFFFF5555, false);
+        currentY += lineHeight;
+
+        String messageText = "Message: " + error.message;
+        var messageLines = font.split(Component.literal(messageText), textWidth);
+        for (var line : messageLines) {
+            if (currentY + lineHeight > y + height) break; // Don't go beyond entry bounds
+            guiGraphics.drawString(font, line, x + 5, currentY, 0xFFFFFFFF, false);
+            currentY += lineHeight;
+        }
+
+        String descText = "Fix: " + error.description;
+        var descLines = font.split(Component.literal(descText), textWidth);
+        for (var line : descLines) {
+            if (currentY + lineHeight > y + height) break; // Don't go beyond entry bounds
+            guiGraphics.drawString(font, line, x + 5, currentY, 0xFFAAAAAA, false);
+            currentY += lineHeight;
+        }
     }
 
     @Override
