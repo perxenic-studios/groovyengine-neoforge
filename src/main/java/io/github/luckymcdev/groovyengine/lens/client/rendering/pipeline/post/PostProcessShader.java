@@ -8,16 +8,13 @@ import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import dev.perxenic.acidapi.AcidApi;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.LensRenderSystem;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.core.LensRenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.PostChain;
 import net.minecraft.client.renderer.PostPass;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.NeoForgeRenderTypes;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

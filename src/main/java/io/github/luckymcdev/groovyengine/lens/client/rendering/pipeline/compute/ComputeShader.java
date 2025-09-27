@@ -1,6 +1,6 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute;
 
-import io.github.luckymcdev.groovyengine.lens.client.rendering.LensRenderSystem;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.core.LensRenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;

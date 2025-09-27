@@ -1,7 +1,7 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.util;
 
 import com.mojang.blaze3d.vertex.*;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.GERenderTypes;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.core.GERenderTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.Vec3;

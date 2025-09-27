@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.lens.client.rendering;
+package io.github.luckymcdev.groovyengine.lens.client.rendering.core;
 
 import com.mojang.blaze3d.pipeline.RenderCall;
 import com.mojang.blaze3d.platform.GlStateManager;
