@@ -1,14 +1,10 @@
 package io.github.luckymcdev.groovyengine.threads.client.screen;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
+import io.github.luckymcdev.groovyengine.threads.client.screen.entry.ThreadsEntryList;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.ErrorScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
 
 public class ThreadsErrorScreen extends ErrorScreen {
     private ThreadsEntryList entryList;

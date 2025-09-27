@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.threads.client.screen;
+package io.github.luckymcdev.groovyengine.threads.client.screen.entry;
 
 import io.github.luckymcdev.groovyengine.threads.client.screen.ThreadsErrorScreen;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
