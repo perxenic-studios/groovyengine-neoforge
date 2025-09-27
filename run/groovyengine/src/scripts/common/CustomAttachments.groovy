@@ -1,3 +1,5 @@
+package common
+
 import io.github.luckymcdev.groovyengine.api.attachments.AttachmentManager
 import io.github.luckymcdev.groovyengine.api.attachments.item.ItemAttachment
 import io.github.luckymcdev.groovyengine.api.attachments.block.BlockAttachment
@@ -163,45 +165,45 @@ class TestEntityAttachment extends EntityAttachment {
 
     @Override
     void onInit() {
-        println("Entity Attachment initialized for: ${targetEntityTypes*.descriptionId}")
+        //println("Entity Attachment initialized for: ${targetEntityTypes*.descriptionId}")
     }
 
     @Override
     void onDestroy() {
-        println("Entity Attachment destroyed!")
+        //println("Entity Attachment destroyed!")
     }
 
     @Override
     void onSpawn(Entity entity, LevelAccessor level) {
-        println("Entity spawned: ${entity.name.string} (${entity.type.descriptionId})")
+        //println("Entity spawned: ${entity.name.string} (${entity.type.descriptionId})")
     }
 
     @Override
     void onRemove(Entity entity, Entity.RemovalReason reason) {
-        println("Entity removed: ${entity.name.string} (${entity.type.descriptionId}) - Reason: ${reason}")
+        //println("Entity removed: ${entity.name.string} (${entity.type.descriptionId}) - Reason: ${reason}")
     }
 
     @Override
     void onTick(Entity entity) {
         if (entity.tickCount % 100 == 0) { // Log every 5 seconds (100 ticks)
-            println("Entity tick: ${entity.name.string} (${entity.type.descriptionId})")
+            //println("Entity tick: ${entity.name.string} (${entity.type.descriptionId})")
         }
     }
 
     @Override
     InteractionResult onInteract(Entity entity, Player player, InteractionHand hand) {
-        println("Entity interacted: ${entity.name.string} by ${player.name.string}")
+        //println("Entity interacted: ${entity.name.string} by ${player.name.string}")
         return InteractionResult.SUCCESS
     }
 
     @Override
     void onHurt(LivingEntity entity, DamageSource source, float amount) {
-        println("Entity hurt: ${entity.name.string} by ${source.type().msgId()} with amount ${amount}")
+        //println("Entity hurt: ${entity.name.string} by ${source.type().msgId()} with amount ${amount}")
     }
 
     @Override
     void onDeath(LivingEntity entity, DamageSource source) {
-        println("Entity died: ${entity.name.string} by ${source.type().msgId()}")
+        //println("Entity died: ${entity.name.string} by ${source.type().msgId()}")
     }
 }
 
@@ -224,14 +226,14 @@ attachmentManager.register(blockAttachment)
 TestEntityAttachment entityAttachment = new TestEntityAttachment()
 attachmentManager.register(entityAttachment)
 
-println("🎯 All test attachments registered successfully!")
+println("All test attachments registered successfully!")
 println("=== Available Events to Test ===")
-println("📜 Script Events: onScriptLoad, onScriptReload, onScriptError, onServerStart, onServerStop")
-println("🛠️ Item Events: onUse, onUseOn, onInventoryTick, onCraftedBy, onLeftClickEntity")
-println("🏗️ Block Events: onPlace, onBreak, onUse, onAttack, onNeighborChanged")
-println("👤 Entity Events: onSpawn, onRemove, onTick, onInteract, onHurt, onDeath")
+println(" Script Events: onScriptLoad, onScriptReload, onScriptError, onServerStart, onServerStop")
+println(" Item Events: onUse, onUseOn, onInventoryTick, onCraftedBy, onLeftClickEntity")
+println(" Block Events: onPlace, onBreak, onUse, onAttack, onNeighborChanged")
+println(" Entity Events: onSpawn, onRemove, onTick, onInteract, onHurt, onDeath")
 
-println("\n🧪 Test the attachments by:")
+println("\n Test the attachments by:")
 println("1. Using sticks, diamond swords, or apples in the game")
 println("2. Placing/breaking stone, dirt, or oak planks")
 println("3. Interacting with players, zombies, or cows")
