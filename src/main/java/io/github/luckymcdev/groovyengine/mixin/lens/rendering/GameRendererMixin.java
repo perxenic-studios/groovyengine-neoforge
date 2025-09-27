@@ -21,7 +21,7 @@ public class GameRendererMixin {
 
     /**
      * @author LuckyMcDev
-     * @reason To increase draw distance for planet rendering
+     * @reason To increase draw distance for rendering
      */
     @Overwrite()
     public float getDepthFar() {
