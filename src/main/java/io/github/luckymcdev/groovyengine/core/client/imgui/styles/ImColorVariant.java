@@ -1,7 +1,10 @@
 package io.github.luckymcdev.groovyengine.core.client.imgui.styles;
 
 import io.github.luckymcdev.groovyengine.util.color.Color;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public enum ImColorVariant {
     DEFAULT(new Color(0.26f, 0.59f, 0.98f, 0.40f),
             new Color(0.26f, 0.59f, 0.98f, 1.00f),

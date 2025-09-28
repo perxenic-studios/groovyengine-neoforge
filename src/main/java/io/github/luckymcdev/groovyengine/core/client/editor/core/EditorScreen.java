@@ -3,8 +3,11 @@ package io.github.luckymcdev.groovyengine.core.client.editor.core;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
+@OnlyIn(Dist.CLIENT)
 public class EditorScreen extends Screen {
 
     public EditorScreen() {

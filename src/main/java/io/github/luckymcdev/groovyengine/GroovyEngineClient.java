@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -36,6 +37,7 @@ import java.util.List;
 
 @Mod(value = GE.MODID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = GE.MODID, value = Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GroovyEngineClient {
 
 

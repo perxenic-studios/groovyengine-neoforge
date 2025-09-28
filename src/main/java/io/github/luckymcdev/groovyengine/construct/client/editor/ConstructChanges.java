@@ -9,7 +9,10 @@ import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import io.github.luckymcdev.groovyengine.core.registry.ModAttachmentTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class ConstructChanges extends EditorWindow {
     private final LocalPlayer player = Minecraft.getInstance().player;
     private final int[] flySpeedInt = new int[]{(int)(player.getData(ModAttachmentTypes.FLY_SPEED) * 100)};

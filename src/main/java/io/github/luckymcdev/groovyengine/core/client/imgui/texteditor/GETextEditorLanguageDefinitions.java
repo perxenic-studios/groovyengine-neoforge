@@ -2,10 +2,13 @@ package io.github.luckymcdev.groovyengine.core.client.imgui.texteditor;
 
 import imgui.extension.texteditor.TextEditorLanguageDefinition;
 import imgui.extension.texteditor.flag.TextEditorPaletteIndex;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Map;
 import java.util.HashMap;
 
+@OnlyIn(Dist.CLIENT)
 public class GETextEditorLanguageDefinitions {
     private static final TextEditorLanguageDefinition javaDef = new TextEditorLanguageDefinition();
     private static final TextEditorLanguageDefinition groovyDef = new TextEditorLanguageDefinition();

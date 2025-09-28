@@ -11,10 +11,13 @@ import io.github.luckymcdev.groovyengine.util.math.NumberRange;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
+@OnlyIn(Dist.CLIENT)
 public class ImGraphics {
     public static ImGraphics INSTANCE = new ImGraphics(Minecraft.getInstance());
 

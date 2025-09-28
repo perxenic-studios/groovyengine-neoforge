@@ -1,9 +1,12 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.util;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+@OnlyIn(Dist.CLIENT)
 public class GeometryBuilder {
 
     public static void renderCube(VertexConsumer consumer, Matrix4f matrix,

@@ -6,7 +6,10 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.tes
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class GERenderTypes extends RenderStateShard {
     public static final RenderType CUSTOM_QUADS = RenderType.create(
             "groovyengine:custom_quads",

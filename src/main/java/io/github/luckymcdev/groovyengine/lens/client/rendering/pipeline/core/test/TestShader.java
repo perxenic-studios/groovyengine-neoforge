@@ -5,7 +5,10 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.CoreShader;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class TestShader extends CoreShader {
     public static final TestShader INSTANCE = new TestShader();
 

@@ -2,9 +2,12 @@ package io.github.luckymcdev.groovyengine.lens.client.rendering.util;
 
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+@OnlyIn(Dist.CLIENT)
 public class RenderTargetUtil {
 
     public static RenderTarget copyRenderTarget(RenderTarget source, RenderTarget existing) {

@@ -5,6 +5,8 @@ import io.github.luckymcdev.groovyengine.construct.client.editor.ConstructEditor
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.WindowManager;
 import io.github.luckymcdev.groovyengine.core.client.editor.windows.EditorControlWindow;
 import io.github.luckymcdev.groovyengine.core.systems.module.Module;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 
 public class CoreModule implements Module {
@@ -14,6 +16,7 @@ public class CoreModule implements Module {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void registerWindows() {
         WindowManager.registerWindow(new ConstructEditorWindow(), "test");
     }

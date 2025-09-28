@@ -4,10 +4,13 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
 import imgui.type.ImBoolean;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@OnlyIn(Dist.CLIENT)
 public class ImUtil {
 
     public static float[] toFloatArray(float value) {

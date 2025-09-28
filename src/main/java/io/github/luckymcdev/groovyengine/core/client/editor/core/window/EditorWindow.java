@@ -1,9 +1,11 @@
 package io.github.luckymcdev.groovyengine.core.client.editor.core.window;
 
 import imgui.ImGuiIO;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-import javax.xml.stream.events.Characters;
 
+@OnlyIn(Dist.CLIENT)
 public abstract class EditorWindow {
     protected boolean enabled = false;
     protected final String title;

@@ -12,11 +12,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@OnlyIn(Dist.CLIENT)
 public class ConstructEditorWindow extends EditorWindow {
     private static final WorldEditAPI editor = WorldEditAPI.INSTANCE;
     private static final Minecraft mc = Minecraft.getInstance();

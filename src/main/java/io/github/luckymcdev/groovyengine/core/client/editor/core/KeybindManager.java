@@ -3,6 +3,8 @@ package io.github.luckymcdev.groovyengine.core.client.editor.core;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
@@ -10,7 +12,8 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import org.codehaus.groovy.ant.Groovy;
 import org.lwjgl.glfw.GLFW;
 
-@EventBusSubscriber
+@EventBusSubscriber(value = Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class KeybindManager {
 
     public static final KeyMapping TOGGLE_IMGUI = new KeyMapping(

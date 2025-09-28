@@ -4,6 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.io.IOException;
  * Base class for registering core shaders.
  * Handles registration and initialization only.
  */
+@OnlyIn(Dist.CLIENT)
 public abstract class CoreShader {
     protected ShaderInstance shader;
 

@@ -10,9 +10,12 @@ import imgui.flag.ImGuiWindowFlags;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.texteditor.GETextEditorLanguageDefinitions;
 import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.*;
 
+@OnlyIn(Dist.CLIENT)
 public class ThreadsWindow extends EditorWindow {
 
     private static final TextEditor editor = new TextEditor();

@@ -4,6 +4,8 @@ import com.mojang.blaze3d.pipeline.RenderCall;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.IBufferObject;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -16,6 +18,7 @@ import java.util.function.Consumer;
 
 import static org.lwjgl.opengl.GL43C.*;
 
+@OnlyIn(Dist.CLIENT)
 public class LensRenderSystem extends RenderSystem {
     private static final List<IBufferObject> bufferObjects = new ArrayList<>();
     private static final Vector3f viewBobOffset = new Vector3f();

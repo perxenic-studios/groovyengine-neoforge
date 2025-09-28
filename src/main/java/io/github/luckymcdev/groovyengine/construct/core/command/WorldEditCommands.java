@@ -3,8 +3,10 @@ package io.github.luckymcdev.groovyengine.construct.core.command;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-
+@OnlyIn(Dist.CLIENT)
 public class WorldEditCommands {
     private static Player player = Minecraft.getInstance().player;
 

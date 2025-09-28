@@ -1,8 +1,12 @@
 package io.github.luckymcdev.groovyengine.core.client.editor.core.window;
 
 import imgui.ImGuiIO;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
 import java.util.*;
 
+@OnlyIn(Dist.CLIENT)
 public class WindowManager {
     private static final Map<String, EditorWindow> windows = new LinkedHashMap<>();
     private static final Map<String, String> categories = new HashMap<>();

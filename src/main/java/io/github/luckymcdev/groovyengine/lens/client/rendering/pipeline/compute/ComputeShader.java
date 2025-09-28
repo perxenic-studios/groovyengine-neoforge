@@ -7,6 +7,8 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.core.LensRenderin
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
@@ -24,6 +26,7 @@ import static org.lwjgl.opengl.GL43C.*;
  * A generic compute shader implementation that supports various data types
  * through ByteBuffer-based data management.
  */
+@OnlyIn(Dist.CLIENT)
 public class ComputeShader implements AutoCloseable {
     private int ssbo;
     private int program;

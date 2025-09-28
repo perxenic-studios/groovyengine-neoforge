@@ -1,10 +1,13 @@
 package io.github.luckymcdev.groovyengine.scribe.ui.data;
 
 import io.github.luckymcdev.groovyengine.scribe.client.editor.ScribeWindow;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@OnlyIn(Dist.CLIENT)
 public class ChestUIData {
     public String name = "New Chest UI";
     public String title = "Custom Chest";

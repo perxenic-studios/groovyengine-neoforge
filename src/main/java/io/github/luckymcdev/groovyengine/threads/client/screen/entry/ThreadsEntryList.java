@@ -3,7 +3,10 @@ package io.github.luckymcdev.groovyengine.threads.client.screen.entry;
 import io.github.luckymcdev.groovyengine.threads.client.screen.ThreadsErrorScreen;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class ThreadsEntryList extends ObjectSelectionList<ThreadsEntry> {
     public ThreadsEntryList(ThreadsErrorScreen parent) {
         super(parent.getMinecraft(), parent.width, parent.height - 40, 35, 20);

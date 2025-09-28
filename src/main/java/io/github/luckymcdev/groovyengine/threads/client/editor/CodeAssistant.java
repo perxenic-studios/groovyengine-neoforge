@@ -1,7 +1,11 @@
 package io.github.luckymcdev.groovyengine.threads.client.editor;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
 import java.util.*;
 
+@OnlyIn(Dist.CLIENT)
 public class CodeAssistant {
 
     private final Map<String, List<String>> javaMethods = new HashMap<>();

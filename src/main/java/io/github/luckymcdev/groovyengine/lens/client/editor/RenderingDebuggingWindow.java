@@ -10,7 +10,10 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.target.LensRender
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class RenderingDebuggingWindow extends EditorWindow {
 
     public static boolean lightingChangesEnabled = false;

@@ -3,7 +3,10 @@ package io.github.luckymcdev.groovyengine.core.client.editor.windows;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class DemoWindows {
 
     public static class AboutWindow extends EditorWindow {

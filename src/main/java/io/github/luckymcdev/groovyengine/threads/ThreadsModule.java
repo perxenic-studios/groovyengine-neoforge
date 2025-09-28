@@ -5,6 +5,8 @@ import io.github.luckymcdev.groovyengine.core.systems.module.Module;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.threads.client.editor.ThreadsWindow;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.core.ScriptManager;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 
 public class ThreadsModule implements Module {
@@ -24,6 +26,7 @@ public class ThreadsModule implements Module {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void registerWindows() {
         WindowManager.registerWindow(new ThreadsWindow(), "Threads");
     }

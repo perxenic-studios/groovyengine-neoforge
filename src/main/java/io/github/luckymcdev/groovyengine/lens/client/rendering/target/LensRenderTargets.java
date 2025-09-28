@@ -3,12 +3,15 @@ package io.github.luckymcdev.groovyengine.lens.client.rendering.target;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderTargetUtil;
 import net.minecraft.client.Minecraft;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
 
-@EventBusSubscriber
+@EventBusSubscriber(value = Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class LensRenderTargets {
 
     public static RenderTarget afterSkyTarget;

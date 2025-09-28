@@ -2,7 +2,10 @@ package io.github.luckymcdev.groovyengine.scribe.ui.data;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class ChestSlotData {
     public Item item = null;
     public int stackSize = 1;

@@ -2,6 +2,8 @@ package io.github.luckymcdev.groovyengine.threads.core.scripting.error;
 
 import io.github.luckymcdev.groovyengine.threads.client.screen.ThreadsErrorScreen;
 import net.minecraft.client.Minecraft;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -9,7 +11,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-@EventBusSubscriber
+@EventBusSubscriber(value = Dist.CLIENT)
 public class ScriptErrors {
 
     public static class ErrorEntry {

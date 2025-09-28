@@ -2,6 +2,8 @@ package io.github.luckymcdev.groovyengine.mixin.lens.rendering;
 
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.PostProcessManager;
 import net.minecraft.client.renderer.GameRenderer;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -10,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRenderer.class)
+@OnlyIn(Dist.CLIENT)
 public class GameRendererMixin {
     @Shadow
     private float renderDistance;

@@ -16,6 +16,8 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.PostChain;
 import net.minecraft.client.renderer.PostPass;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -27,6 +29,7 @@ import java.util.function.Consumer;
 
 import static com.mojang.blaze3d.platform.GlConst.GL_DRAW_FRAMEBUFFER;
 
+@OnlyIn(Dist.CLIENT)
 public abstract class PostProcessShader {
     protected static final Minecraft MC = Minecraft.getInstance();
 

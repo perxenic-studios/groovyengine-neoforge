@@ -8,7 +8,10 @@ import io.github.luckymcdev.groovyengine.core.client.editor.core.GroovyEngineEdi
 import io.github.luckymcdev.groovyengine.core.client.editor.core.KeybindManager;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import net.minecraft.client.Minecraft;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class EditorControlWindow extends EditorWindow {
 
     public EditorControlWindow() {

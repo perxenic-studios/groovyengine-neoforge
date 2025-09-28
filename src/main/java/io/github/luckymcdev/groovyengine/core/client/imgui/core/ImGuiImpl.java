@@ -6,8 +6,11 @@ import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
+@OnlyIn(Dist.CLIENT)
 public class ImGuiImpl {
     private final static ImGuiImplGlfw imGuiImplGlfw = new ImGuiImplGlfw();
     private final static ImGuiImplGl3 imGuiImplGl3 = new ImGuiImplGl3();
@@ -19,30 +22,6 @@ public class ImGuiImpl {
         final ImGuiIO data = ImGui.getIO();
         data.setIniFilename("groovyengine.ini");
         data.setFontGlobalScale(1F);
-
-        // If you want to have custom fonts, you can use the following code here
-
-//        {
-//            final ImFontAtlas fonts = data.getFonts();
-//            final ImFontGlyphRangesBuilder rangesBuilder = new ImFontGlyphRangesBuilder();
-//
-//            rangesBuilder.addRanges(data.getFonts().getGlyphRangesDefault());
-//            rangesBuilder.addRanges(data.getFonts().getGlyphRangesCyrillic());
-//            rangesBuilder.addRanges(data.getFonts().getGlyphRangesJapanese());
-//
-//            final short[] glyphRanges = rangesBuilder.buildRanges();
-//
-//            final ImFontConfig basicConfig = new ImFontConfig();
-//            basicConfig.setGlyphRanges(data.getFonts().getGlyphRangesCyrillic());
-//
-//            final List<ImFont> generatedFonts = new ArrayList<>();
-//            for (int i = 5 /* MINIMUM_FONT_SIZE */; i < 50 /* MAXIMUM_FONT_SIZE */; i++) {
-//                basicConfig.setName("<Font Name> " + i + "px");
-//                generatedFonts.add(fonts.addFontFromMemoryTTF(IOUtils.toByteArray(Objects.requireNonNull(ImGuiImpl.class.getResourceAsStream("<File Path>"))), i, basicConfig, glyphRanges));
-//            }
-//            fonts.build();
-//            basicConfig.destroy();
-//        }
 
         // The "generatedFonts" list now contains an ImFont for each scale from 5 to 50, you should save the font scales you want as global fields here to use them later:
         // For example:

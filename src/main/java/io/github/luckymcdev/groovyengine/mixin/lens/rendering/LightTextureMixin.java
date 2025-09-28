@@ -13,6 +13,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.*;
 
@@ -20,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(LightTexture.class)
+@OnlyIn(Dist.CLIENT)
 public abstract class LightTextureMixin {
 
     @Shadow
