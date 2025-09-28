@@ -2,6 +2,7 @@ package io.github.luckymcdev.groovyengine;
 
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import io.github.luckymcdev.groovyengine.core.client.imgui.core.ImGuiRenderer;
 import io.github.luckymcdev.groovyengine.core.systems.module.ModuleManager;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute.ComputeShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.test.TestShader;
@@ -26,6 +27,7 @@ import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.common.NeoForge;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
@@ -55,6 +57,8 @@ public class GroovyEngineClient {
 
         CrtPostShader.INSTANCE.setActive(false);
         SuperDuperPostShader.INSTANCE.setActive(false);
+
+        NeoForge.EVENT_BUS.addListener(ImGuiRenderer::onRender);
 
         Minecraft.getInstance().execute(() -> {
             // Create a JSON config file for your compute shader
