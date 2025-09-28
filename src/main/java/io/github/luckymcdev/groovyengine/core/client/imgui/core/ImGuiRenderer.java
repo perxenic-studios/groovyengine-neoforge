@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@EventBusSubscriber(value = Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
 public class ImGuiRenderer {
 
@@ -44,7 +43,6 @@ public class ImGuiRenderer {
         initialized = true;
     }
 
-    @SubscribeEvent
     public static void onRender(RenderGuiEvent.Post event) {
         initializeWindows();
 
