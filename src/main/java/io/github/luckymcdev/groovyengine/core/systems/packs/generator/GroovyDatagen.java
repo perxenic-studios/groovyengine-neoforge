@@ -8,6 +8,7 @@ import io.github.luckymcdev.groovyengine.core.systems.packs.generator.block.ModB
 import io.github.luckymcdev.groovyengine.core.systems.packs.generator.item.ModItemModelProvider;
 import io.github.luckymcdev.groovyengine.core.systems.packs.generator.item.ModItemTagProvider;
 import io.github.luckymcdev.groovyengine.core.systems.packs.generator.recipe.ModRecipeProvider;
+import io.github.luckymcdev.groovyengine.core.systems.structure.FileConstants;
 import net.minecraft.SharedConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.registries.VanillaRegistries;
@@ -26,8 +27,7 @@ public class GroovyDatagen {
     public static void run() throws IOException {
 
         GE.CORE_LOG.info("Starting Datagen Runtime");
-        Path outputPath = new File(FMLPaths.GAMEDIR.get().toFile(),
-                GE.MODID + "/src/resources").toPath();
+        Path outputPath = FileConstants.RESOURCES_DIR;
         boolean includeClient = FMLEnvironment.dist.isClient();
 
         DataGeneratorHelper generator = new DataGeneratorHelper(
