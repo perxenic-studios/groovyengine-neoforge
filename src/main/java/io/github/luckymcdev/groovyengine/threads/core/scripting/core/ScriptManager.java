@@ -1,5 +1,6 @@
 package io.github.luckymcdev.groovyengine.threads.core.scripting.core;
 
+import dev.perxenic.acidapi.api.dimension.DimensionManager;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManager;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
@@ -29,13 +30,13 @@ public class ScriptManager {
     private static final AttachmentEventManager attachmentEventManager = AttachmentEventManager.getInstance();
 
     public static void initialize() {
-        GE.LOG.info("Initializing script manager");
+        GE.THREADS_LOG.info("Initializing script manager");
         shell = ScriptShellFactory.createSharedShell();
         loadAllScripts();
     }
 
     public static void reloadScripts() {
-        GE.LOG.info("Reloading scripts");
+        GE.THREADS_LOG.info("Reloading scripts");
         shell = ScriptShellFactory.createSharedShell();
         loadAllScripts();
     }
@@ -61,12 +62,12 @@ public class ScriptManager {
 
             scripts.forEach(ScriptManager::evaluateScript);
         } catch (IOException e) {
-            GE.LOG.error("Error loading scripts from {}", environment, e);
+            GE.THREADS_LOG.error("Error loading scripts from {}", environment, e);
         }
     }
 
     private static void evaluateScript(Path scriptPath) {
-        GE.LOG.info("Evaluating script: {}", scriptPath.getFileName());
+        GE.THREADS_LOG.info("Evaluating script: {}", scriptPath.getFileName());
 
         attachmentEventManager.fireScriptLoad(scriptPath.getFileName().toString());
         attachmentEventManager.fireScriptReload(scriptPath.getFileName().toString());
@@ -77,7 +78,7 @@ public class ScriptManager {
             Object result = compiledScript.run();
             NeoForge.EVENT_BUS.post(new ScriptEvent.PostExecutionEvent(shell, scriptPath.toString(), result));
         } catch (Exception ex) {
-            GE.LOG.error("Script error in {}", scriptPath.getFileName(), ex);
+            GE.THREADS_LOG.error("Script error in {}", scriptPath.getFileName(), ex);
 
             attachmentEventManager.fireScriptError(scriptPath.getFileName().toString(), ex);
 

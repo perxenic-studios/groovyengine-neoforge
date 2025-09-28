@@ -19,7 +19,7 @@ public class AttachmentManagerImpl implements AttachmentManager {
     @Override
     public void register(BaseAttachment<?> attachment) {
         if (attachments.add(attachment)) {
-            GE.LOG.info("Registered attachment: {} for targets: {}",
+            GE.THREADS_LOG.info("Registered attachment: {} for targets: {}",
                     attachment.getClass().getSimpleName(),
                     attachment.getTargets().size());
             attachment.onInit();
@@ -29,7 +29,7 @@ public class AttachmentManagerImpl implements AttachmentManager {
     @Override
     public void unregister(BaseAttachment<?> attachment) {
         if (attachments.remove(attachment)) {
-            GE.LOG.info("Unregistered attachment: {}", attachment.getClass().getSimpleName());
+            GE.THREADS_LOG.info("Unregistered attachment: {}", attachment.getClass().getSimpleName());
             attachment.onDestroy();
         }
     }

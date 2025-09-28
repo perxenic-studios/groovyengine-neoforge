@@ -19,7 +19,7 @@ public class ScriptShellFactory {
 
     public static Binding createBinding() {
         Binding binding = new Binding();
-        binding.setVariable("logger", GE.LOG);
+        binding.setVariable("logger", GE.SCRIPT_LOG);
 
         // Fire event to allow other mods to add their own bindings
         GroovyShell tempShell = new GroovyShell(createClassLoader(), binding);
@@ -51,7 +51,7 @@ public class ScriptShellFactory {
     }
 
     public static GroovyShell createSharedShell() {
-        GE.LOG.info("Creating shared Groovy shell");
+        GE.THREADS_LOG.info("Creating shared Groovy shell");
         return new GroovyShell(
                 createClassLoader(),
                 createBinding(),

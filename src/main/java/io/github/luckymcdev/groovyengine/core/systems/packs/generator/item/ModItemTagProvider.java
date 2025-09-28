@@ -21,7 +21,7 @@ public class ModItemTagProvider extends AcidItemTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        GE.LOG.info("Starting Tags!");
+        GE.CORE_LOG.info("Starting Tags!");
 
         tag(ItemTags.CREEPER_DROP_MUSIC_DISCS)
                 .add(Items.DIAMOND);

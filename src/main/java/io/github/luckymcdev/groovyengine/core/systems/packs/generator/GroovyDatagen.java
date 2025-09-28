@@ -25,7 +25,7 @@ public class GroovyDatagen {
 
     public static void run() throws IOException {
 
-        GE.LOG.info("Starting Datagen Runtime");
+        GE.CORE_LOG.info("Starting Datagen Runtime");
         Path outputPath = new File(FMLPaths.GAMEDIR.get().toFile(),
                 GE.MODID + "/src/resources").toPath();
         boolean includeClient = FMLEnvironment.dist.isClient();

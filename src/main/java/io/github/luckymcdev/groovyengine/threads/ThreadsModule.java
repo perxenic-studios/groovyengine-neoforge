@@ -12,7 +12,7 @@ public class ThreadsModule implements Module {
     @Override
     public void init(IEventBus modEventBus) {
 
-        GE.LOG.info("Initializing Threads module");
+        GE.THREADS_LOG.info("Initializing Threads module");
 
         ScriptManager.initialize();
 

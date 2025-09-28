@@ -30,23 +30,23 @@ public class GroovyEngineRepositorySource implements RepositorySource {
         this.packLocation = new File(FMLPaths.GAMEDIR.get().toFile(),
                 GE.MODID + "/src/resources");
 
-        GE.LOG.info("GroovyEngine pack location for {}: {}", type.name(), packLocation.getAbsolutePath());
+        GE.CORE_LOG.info("GroovyEngine pack location for {}: {}", type.name(), packLocation.getAbsolutePath());
     }
 
     @Override
     public void loadPacks(@NotNull Consumer<Pack> consumer) {
-        GE.LOG.info("Scan started for {} in directory: {}", type.name(), packLocation.getAbsolutePath());
+        GE.CORE_LOG.info("Scan started for {} in directory: {}", type.name(), packLocation.getAbsolutePath());
         final long startTime = System.nanoTime();
 
         int validPackCount = loadFromLocation(consumer);
 
         final long endTime = System.nanoTime();
-        GE.LOG.info("Located {} packs. Took {}ms.", validPackCount, GE.DECIMAL_2.format((endTime - startTime) / 1000000d));
+        GE.CORE_LOG.info("Located {} packs. Took {}ms.", validPackCount, GE.DECIMAL_2.format((endTime - startTime) / 1000000d));
     }
 
     private int loadFromLocation(@NotNull Consumer<Pack> consumer) {
         if (!packLocation.exists()) {
-            GE.LOG.warn("Resources directory does not exist: {}", packLocation.getAbsolutePath());
+            GE.CORE_LOG.warn("Resources directory does not exist: {}", packLocation.getAbsolutePath());
             return 0;
         }
 
@@ -61,9 +61,9 @@ public class GroovyEngineRepositorySource implements RepositorySource {
                         "  }\n" +
                         "}";
                 Files.write(mcmetaFile.toPath(), mcmetaContent.getBytes());
-                GE.LOG.info("Created pack.mcmeta file at: {}", mcmetaFile.getAbsolutePath());
+                GE.CORE_LOG.info("Created pack.mcmeta file at: {}", mcmetaFile.getAbsolutePath());
             } catch (IOException e) {
-                GE.LOG.error("Failed to create pack.mcmeta file", e);
+                GE.CORE_LOG.error("Failed to create pack.mcmeta file", e);
                 return 0;
             }
         }
@@ -88,13 +88,13 @@ public class GroovyEngineRepositorySource implements RepositorySource {
 
             if (pack != null) {
                 consumer.accept(pack);
-                GE.LOG.info("Successfully loaded GroovyEngine pack for {}", type.name());
+                GE.CORE_LOG.info("Successfully loaded GroovyEngine pack for {}", type.name());
                 return 1;
             } else {
-                GE.LOG.warn("Failed to create pack for {}", type.name());
+                GE.CORE_LOG.warn("Failed to create pack for {}", type.name());
             }
         } else {
-            GE.LOG.info("No content found for pack type {} in {}", type.name(), packLocation.getAbsolutePath());
+            GE.CORE_LOG.info("No content found for pack type {} in {}", type.name(), packLocation.getAbsolutePath());
         }
 
         return 0;

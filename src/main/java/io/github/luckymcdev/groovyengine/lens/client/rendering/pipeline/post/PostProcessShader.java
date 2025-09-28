@@ -8,6 +8,7 @@ import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import dev.perxenic.acidapi.AcidApi;
+import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.LensRenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EffectInstance;
@@ -104,7 +105,7 @@ public abstract class PostProcessShader {
             postChain.resize(MC.getWindow().getWidth(), MC.getWindow().getHeight());
             effects = postChain.passes.stream().map(PostPass::getEffect).toArray(EffectInstance[]::new);
         } catch (IOException | JsonParseException e) {
-            AcidApi.LOGGER.error("Failed to load post-processing shader: ", e);
+            GE.LENS_LOG.error("Failed to load post-processing shader: ", e);
         }
     }
 

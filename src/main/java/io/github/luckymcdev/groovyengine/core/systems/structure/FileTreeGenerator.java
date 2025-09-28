@@ -9,7 +9,7 @@ import java.nio.file.Path;
 public class FileTreeGenerator {
 
     public static void generateFileStructure() {
-        GE.LOG.info("Generating file structure for GroovyEngine");
+        GE.CORE_LOG.info("Generating file structure for GroovyEngine");
 
         // Create all directories
         createDirectory(FileConstants.MOD_ROOT);
@@ -28,17 +28,17 @@ public class FileTreeGenerator {
         // Create default files
         createDefaultScriptFiles();
 
-        GE.LOG.info("File structure generation completed");
+        GE.CORE_LOG.info("File structure generation completed");
     }
 
     private static void createDirectory(Path path) {
         try {
             if (!Files.exists(path)) {
                 Files.createDirectories(path);
-                GE.LOG.info("Created directory: {}", path);
+                GE.CORE_LOG.info("Created directory: {}", path);
             }
         } catch (IOException e) {
-            GE.LOG.error("Failed to create directory: {}", path, e);
+            GE.CORE_LOG.error("Failed to create directory: {}", path, e);
         }
     }
 
@@ -71,10 +71,10 @@ public class FileTreeGenerator {
         try {
             if (!Files.exists(scriptPath)) {
                 Files.writeString(scriptPath, content);
-                GE.LOG.info("Created sample script: {}", scriptPath);
+                GE.CORE_LOG.info("Created sample script: {}", scriptPath);
             }
         } catch (IOException e) {
-            GE.LOG.error("Failed to create sample script: {}", scriptPath, e);
+            GE.CORE_LOG.error("Failed to create sample script: {}", scriptPath, e);
         }
     }
 
@@ -92,7 +92,7 @@ public class FileTreeGenerator {
 
         for (Path dir : requiredDirs) {
             if (!Files.exists(dir)) {
-                GE.LOG.warn("Required directory does not exist: {}", dir);
+                GE.CORE_LOG.warn("Required directory does not exist: {}", dir);
                 valid = false;
             }
         }

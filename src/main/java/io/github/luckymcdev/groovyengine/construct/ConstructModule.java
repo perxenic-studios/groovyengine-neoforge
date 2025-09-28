@@ -1,5 +1,6 @@
 package io.github.luckymcdev.groovyengine.construct;
 
+import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.construct.client.editor.ConstructChanges;
 import io.github.luckymcdev.groovyengine.construct.client.editor.ConstructEditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.WindowManager;
@@ -10,6 +11,7 @@ public class ConstructModule implements Module {
     @Override
     public void init(IEventBus modEventBus) {
         // Construct initialization code here
+        GE.CONSTRUCT_LOG.info("Construct Initialization");
     }
 
     @Override
