@@ -145,7 +145,7 @@ class TestBlockAttachment extends BlockAttachment {
     @Override
     InteractionResult onUse(BlockState state, LevelAccessor level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         SCRIPT_LOG.info("Block used: ${state.block.descriptionId} at ${pos} by ${player.name.string}")
-        return InteractionResult.SUCCESS
+        return InteractionResult.PASS
     }
 
     @Override
