@@ -1,6 +1,7 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute;
 
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.LensRenderSystem;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.core.LensRenderingCapabilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -33,6 +34,25 @@ public class ComputeShader implements AutoCloseable {
                     GL_TEXTURE_FETCH_BARRIER_BIT;
 
     /**
+     * Checks if compute shaders are supported on this device
+     */
+    public static boolean isSupported() {
+        return LensRenderingCapabilities.COMPUTE_SUPPORTED.getAsBoolean();
+    }
+
+    /**
+     * Throws an UnsupportedOperationException if compute shaders are not supported
+     */
+    private static void checkSupport() {
+        if (!isSupported()) {
+            throw new UnsupportedOperationException(
+                    "Compute shaders are not supported on this device. " +
+                            "Required OpenGL 4.3 or ARB_compute_shader extension."
+            );
+        }
+    }
+
+    /**
      * Constructs a compute shader with initial data
      *
      * @param initialData The initial data to load into the SSBO
@@ -40,6 +60,7 @@ public class ComputeShader implements AutoCloseable {
      * @param shaderPath The resource location of the compute shader
      */
     public ComputeShader(ByteBuffer initialData, int elementSize, ResourceLocation shaderPath) {
+        checkSupport();
         init(initialData, elementSize, shaderPath);
     }
 
@@ -65,6 +86,7 @@ public class ComputeShader implements AutoCloseable {
      * @param shaderPath The resource location of the compute shader
      */
     public void init(ByteBuffer initialData, int elementSize, ResourceLocation shaderPath) {
+        checkSupport();
         if (ssbo != 0 || program != 0) {
             cleanup(); // Clean up any existing resources
         }
@@ -83,6 +105,7 @@ public class ComputeShader implements AutoCloseable {
      * Initializes the compute shader with float data (convenience method)
      */
     public void init(float[] floatData, ResourceLocation shaderPath) {
+        checkSupport();
         ByteBuffer buffer = MemoryUtil.memAlloc(floatData.length * Float.BYTES);
         try {
             buffer.asFloatBuffer().put(floatData).flip();
@@ -247,6 +270,8 @@ public class ComputeShader implements AutoCloseable {
      * Initializes from source string instead of file
      */
     public void initFromSource(String source, ByteBuffer initialData, int elementSize) {
+        checkSupport();
+
         if (ssbo != 0 || program != 0) {
             cleanup(); // Clean up any existing resources
         }
