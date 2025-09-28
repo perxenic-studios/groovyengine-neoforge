@@ -24,6 +24,7 @@ public class MinecraftClientMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     public void initImGui(GameConfig gameConfig, CallbackInfo ci) {
         ImGuiImpl.create(window.getWindow());
+        ImGuiImpl.loadFonts(Minecraft.getInstance().getResourceManager());
     }
 
     @Inject(method = "close", at = @At("RETURN"))
