@@ -34,3 +34,4 @@ repo
 /run/groovyengine/gradle/
 /run/groovyengine/gradlew.bat
 /run/groovyengine/src/resources/.cache
+/run/groovyengine/.idea
