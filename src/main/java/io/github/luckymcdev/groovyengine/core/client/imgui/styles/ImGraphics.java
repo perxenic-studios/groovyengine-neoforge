@@ -17,6 +17,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
+/**
+ * @author LatvianModder but changes by LuckyMcDev
+ */
 @OnlyIn(Dist.CLIENT)
 public class ImGraphics {
     public static ImGraphics INSTANCE = new ImGraphics(Minecraft.getInstance());
