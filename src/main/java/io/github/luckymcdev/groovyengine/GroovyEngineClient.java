@@ -26,6 +26,7 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.joml.Vector3f;
+import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -54,25 +55,35 @@ public class GroovyEngineClient {
         SuperDuperPostShader.INSTANCE.setActive(false);
 
         Minecraft.getInstance().execute(() -> {
+            // Create a JSON config file for your compute shader
+            ResourceLocation shaderConfig = GE.id("compute_test");
 
-            ResourceLocation shaderPath = GE.id("shaders/compute/test.csh");
-            float[] data = new float[128 * 4];
-            // Initialize with some test values
-            for (int i = 0; i < data.length; i++) {
-                data[i] = i * 0.1f; // 0.0, 0.1, 0.2, 0.3, etc.
+            int elementCount = 128 * 4;
+            ByteBuffer data = MemoryUtil.memAlloc(elementCount * Float.BYTES);
+
+            try {
+                // Initialize with some test values
+                FloatBuffer floatBuffer = data.asFloatBuffer();
+                for (int i = 0; i < elementCount; i++) {
+                    floatBuffer.put(i, i * 0.1f); // 0.0, 0.1, 0.2, 0.3, etc.
+                }
+
+                // Print before values
+                float[] beforeArray = new float[16];
+                floatBuffer.position(0);
+                floatBuffer.get(beforeArray, 0, 16);
+                System.err.println("BEFORE: " + Arrays.toString(beforeArray));
+
+                try (ComputeShader shader = new ComputeShader(data, Float.BYTES, shaderConfig)) {
+                    shader.dispatch();
+
+                    float[] result = shader.readBackFloats();
+                    System.err.println("COMPUTE READBACK:");
+                    System.err.println("AFTER:  " + Arrays.toString(Arrays.copyOf(result, 16)));
+                }
+            } finally {
+                MemoryUtil.memFree(data);
             }
-
-            try (ComputeShader shader = new ComputeShader(data, shaderPath)) {
-
-                System.err.println("BEFORE: " + Arrays.toString(Arrays.copyOf(data, 16)));
-
-                shader.dispatch();
-
-                float[] result = shader.readBackFloats();
-                System.err.println("COMPUTE READBACK:");
-                System.err.println("AFTER:  " + Arrays.toString(Arrays.copyOf(result, 16)));
-            }
-
         });
     }
 

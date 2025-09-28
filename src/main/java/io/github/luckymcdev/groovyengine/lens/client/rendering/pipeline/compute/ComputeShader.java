@@ -1,5 +1,7 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.LensRenderSystem;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.LensRenderingCapabilities;
 import net.minecraft.client.Minecraft;
@@ -9,6 +11,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -32,6 +35,8 @@ public class ComputeShader implements AutoCloseable {
             GL_SHADER_STORAGE_BARRIER_BIT |
                     GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT |
                     GL_TEXTURE_FETCH_BARRIER_BIT;
+
+    private static final Gson GSON = new Gson();
 
     /**
      * Checks if compute shaders are supported on this device
@@ -57,18 +62,18 @@ public class ComputeShader implements AutoCloseable {
      *
      * @param initialData The initial data to load into the SSBO
      * @param elementSize The size of each element in bytes
-     * @param shaderPath The resource location of the compute shader
+     * @param shaderConfigPath The resource location of the compute shader config JSON
      */
-    public ComputeShader(ByteBuffer initialData, int elementSize, ResourceLocation shaderPath) {
+    public ComputeShader(ByteBuffer initialData, int elementSize, ResourceLocation shaderConfigPath) {
         checkSupport();
-        init(initialData, elementSize, shaderPath);
+        init(initialData, elementSize, shaderConfigPath);
     }
 
     /**
      * Constructs a compute shader with float data (convenience constructor)
      */
-    public ComputeShader(float[] floatData, ResourceLocation shaderPath) {
-        init(floatData, shaderPath);
+    public ComputeShader(float[] floatData, ResourceLocation shaderConfigPath) {
+        init(floatData, shaderConfigPath);
     }
 
     /**
@@ -83,9 +88,9 @@ public class ComputeShader implements AutoCloseable {
      *
      * @param initialData The initial data to load into the SSBO
      * @param elementSize The size of each element in bytes
-     * @param shaderPath The resource location of the compute shader
+     * @param shaderConfigPath The resource location of the compute shader config JSON
      */
-    public void init(ByteBuffer initialData, int elementSize, ResourceLocation shaderPath) {
+    public void init(ByteBuffer initialData, int elementSize, ResourceLocation shaderConfigPath) {
         checkSupport();
         if (ssbo != 0 || program != 0) {
             cleanup(); // Clean up any existing resources
@@ -97,19 +102,19 @@ public class ComputeShader implements AutoCloseable {
         // Create and initialize SSBO
         createSSBO(initialData);
 
-        // Compile and link the compute shader
-        compileAndLinkShader(shaderPath);
+        // Load shader config and compile the compute shader
+        compileAndLinkShader(shaderConfigPath);
     }
 
     /**
      * Initializes the compute shader with float data (convenience method)
      */
-    public void init(float[] floatData, ResourceLocation shaderPath) {
+    public void init(float[] floatData, ResourceLocation shaderConfigPath) {
         checkSupport();
         ByteBuffer buffer = MemoryUtil.memAlloc(floatData.length * Float.BYTES);
         try {
             buffer.asFloatBuffer().put(floatData).flip();
-            init(buffer, Float.BYTES, shaderPath);
+            init(buffer, Float.BYTES, shaderConfigPath);
         } finally {
             MemoryUtil.memFree(buffer);
         }
@@ -127,10 +132,11 @@ public class ComputeShader implements AutoCloseable {
     }
 
     /**
-     * Compiles and links the compute shader
+     * Compiles and links the compute shader from a config file
      */
-    private void compileAndLinkShader(ResourceLocation shaderPath) {
-        String source = loadComputeSource(shaderPath);
+    private void compileAndLinkShader(ResourceLocation shaderConfigPath) {
+        ResourceLocation computeShaderPath = loadShaderConfig(shaderConfigPath);
+        String source = loadComputeSource(computeShaderPath);
 
         int computeShader = LensRenderSystem.createShader(GL_COMPUTE_SHADER);
         LensRenderSystem.shaderSource(computeShader, source);
@@ -143,6 +149,54 @@ public class ComputeShader implements AutoCloseable {
         LensRenderSystem.checkProgramLink(program);
 
         LensRenderSystem.deleteShader(computeShader);
+    }
+
+    /**
+     * Loads compute shader config from JSON file and returns the compute shader path
+     */
+    private ResourceLocation loadShaderConfig(ResourceLocation configPath) {
+        try {
+            // Prepend the path like PostProcessShader does
+            ResourceLocation configFile = ResourceLocation.fromNamespaceAndPath(
+                    configPath.getNamespace(),
+                    "shaders/compute/" + configPath.getPath() + ".json"
+            );
+
+            Resource res = Minecraft.getInstance().getResourceManager().getResource(configFile).orElseThrow();
+            try (InputStream in = res.open();
+                 InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+
+                JsonObject config = GSON.fromJson(reader, JsonObject.class);
+                if (config == null || !config.has("compute")) {
+                    throw new RuntimeException("Invalid compute shader config: missing 'compute' field in " + configFile);
+                }
+
+                String computeShaderLocation = config.get("compute").getAsString();
+                ResourceLocation shaderLoc = ResourceLocation.parse(computeShaderLocation);
+
+                // Prepend the path for the compute shader too
+                return ResourceLocation.fromNamespaceAndPath(
+                        shaderLoc.getNamespace(),
+                        "shaders/compute/" + shaderLoc.getPath() + ".csh"
+                );
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load compute shader config " + configPath, e);
+        }
+    }
+
+    /**
+     * Loads compute shader source from resource location
+     */
+    private String loadComputeSource(ResourceLocation rl) {
+        try {
+            Resource res = Minecraft.getInstance().getResourceManager().getResource(rl).orElseThrow();
+            try (InputStream in = res.open()) {
+                return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load compute shader " + rl, e);
+        }
     }
 
     /**
@@ -250,20 +304,6 @@ public class ComputeShader implements AutoCloseable {
 
         this.dataSizeBytes = newData.remaining();
         this.elementCount = dataSizeBytes / (dataSizeBytes / elementCount); // Maintain element count ratio
-    }
-
-    /**
-     * Loads compute shader source from resource location
-     */
-    public String loadComputeSource(ResourceLocation rl) {
-        try {
-            Resource res = Minecraft.getInstance().getResourceManager().getResource(rl).orElseThrow();
-            try (InputStream in = res.open()) {
-                return new String(in.readAllBytes(), StandardCharsets.UTF_8);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load compute shader " + rl, e);
-        }
     }
 
     /**
