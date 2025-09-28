@@ -56,15 +56,16 @@ public class AttachmentEventManager {
 
     public InteractionResult fireBlockUse(Block block, BlockState state, LevelAccessor level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         List<BaseAttachment<Block>> attachments = attachmentManager.getBlockAttachments(block);
+        InteractionResult finalResult = InteractionResult.PASS;
         for (BaseAttachment<Block> attachment : attachments) {
             if (attachment instanceof BlockAttachment ba) {
                 InteractionResult result = ba.onUse(state, level, pos, player, hand, hit);
-                if (result != InteractionResult.PASS) {
-                    return result; // Return first non-PASS result
+                if (result == InteractionResult.PASS) {
+                    finalResult = result;
                 }
             }
         }
-        return InteractionResult.PASS;
+        return finalResult;
     }
 
     public void fireBlockAttack(Block block, BlockState state, LevelAccessor level, BlockPos pos, Player player) {
