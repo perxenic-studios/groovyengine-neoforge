@@ -1,6 +1,7 @@
 package io.github.luckymcdev.groovyengine.core.systems.packs.loader;
 
 import io.github.luckymcdev.groovyengine.GE;
+import io.github.luckymcdev.groovyengine.core.systems.structure.FileConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackSelectionConfig;
@@ -25,10 +26,9 @@ public class GroovyEngineRepositorySource implements RepositorySource {
 
     public GroovyEngineRepositorySource(PackType type) {
         this.type = type;
+        this.packLocation = FileConstants.RESOURCES_DIR.toFile();
 
         // Change to .minecraft/groovyengine/src/resources
-        this.packLocation = new File(FMLPaths.GAMEDIR.get().toFile(),
-                GE.MODID + "/src/resources");
 
         GE.CORE_LOG.info("GroovyEngine pack location for {}: {}", type.name(), packLocation.getAbsolutePath());
     }

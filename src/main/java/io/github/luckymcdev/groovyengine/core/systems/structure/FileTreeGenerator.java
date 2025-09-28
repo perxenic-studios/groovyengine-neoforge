@@ -1,3 +1,4 @@
+// Update FileTreeGenerator.java to generate Gradle files
 package io.github.luckymcdev.groovyengine.core.systems.structure;
 
 import io.github.luckymcdev.groovyengine.GE;
@@ -13,20 +14,19 @@ public class FileTreeGenerator {
 
         // Create all directories
         createDirectory(FileConstants.MOD_ROOT);
-
         createDirectory(FileConstants.SRC_DIR);
-
         createDirectory(FileConstants.RESOURCES_DIR);
-
         createDirectory(FileConstants.SCRIPTS_DIR);
-
         createDirectory(FileConstants.COMMON_SCRIPTS_DIR);
         createDirectory(FileConstants.CLIENT_SCRIPTS_DIR);
         createDirectory(FileConstants.SERVER_SCRIPTS_DIR);
-
         createDirectory(FileConstants.MODULES_DIR);
+
         // Create default files
         createDefaultScriptFiles();
+
+        // Create Gradle files
+        createGradleFiles();
 
         GE.CORE_LOG.info("File structure generation completed");
     }
@@ -39,6 +39,56 @@ public class FileTreeGenerator {
             }
         } catch (IOException e) {
             GE.CORE_LOG.error("Failed to create directory: {}", path, e);
+        }
+    }
+
+    private static void createGradleFiles() {
+        // Create build.gradle with proper source set configuration
+        createGradleFile(FileConstants.BUILD_GRADLE,
+                "plugins {\n" +
+                        "    id 'groovy'\n" +
+                        "    id 'java'\n" +
+                        "}\n\n" +
+                        "sourceSets {\n" +
+                        "    main {\n" +
+                        "        groovy {\n" +
+                        "            srcDirs = ['src/main/groovy']\n" +
+                        "        }\n" +
+                        "        resources {\n" +
+                        "            srcDirs = ['src/main/resources']\n" +
+                        "        }\n" +
+                        "        compileClasspath += fileTree('../mods') { include '*.jar' }\n" +
+                        "        runtimeClasspath += fileTree('../mods') { include '*.jar' }\n" +
+                        "    }\n" +
+                        "}\n\n" +
+                        "repositories {\n" +
+                        "    mavenCentral()\n" +
+                        "}\n\n" +
+                        "dependencies {\n" +
+                        "    implementation 'org.apache.groovy:groovy:4.0.14'\n" +
+                        "    implementation 'org.apache.groovy:groovy-json:4.0.14'\n" +
+                        "}"
+        );
+
+        // Create settings.gradle
+        createGradleFile(FileConstants.SETTINGS_GRADLE,
+                "rootProject.name = 'groovyengine'"
+        );
+
+        // Create gradle.properties
+        createGradleFile(FileConstants.GRADLE_PROPERTIES,
+                 " "
+        );
+    }
+
+    private static void createGradleFile(Path filePath, String content) {
+        try {
+            if (!Files.exists(filePath)) {
+                Files.writeString(filePath, content);
+                GE.CORE_LOG.info("Created Gradle file: {}", filePath);
+            }
+        } catch (IOException e) {
+            GE.CORE_LOG.error("Failed to create Gradle file: {}", filePath, e);
         }
     }
 

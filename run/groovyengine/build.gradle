@@ -1,0 +1,26 @@
+plugins {
+    id 'groovy'
+    id 'java'
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['src/main/groovy']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+        compileClasspath += fileTree('../mods') { include '*.jar' }
+        runtimeClasspath += fileTree('../mods') { include '*.jar' }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.apache.groovy:groovy:4.0.14'
+    implementation 'org.apache.groovy:groovy-json:4.0.14'
+}

@@ -27,5 +27,10 @@ runs
 run-data
 
 repo
-/run/groovyengine/src/resources/.cache
+/run/groovyengine/src/main/resources/.cache
 /logs
+/run/groovyengine/gradlew
+/run/groovyengine/.gradle/
+/run/groovyengine/gradle/
+/run/groovyengine/gradlew.bat
+/run/groovyengine/src/resources/.cache
