@@ -16,6 +16,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.jetbrains.annotations.NotNull;
@@ -24,21 +25,30 @@ import org.jetbrains.annotations.NotNull;
 @OnlyIn(Dist.CLIENT)
 public class WorldEditSelectionRenderer {
     private static final Minecraft minecraft = Minecraft.getInstance();
+    private static Boolean worldEditLoaded = null; // Cache the check result
 
+    private static boolean notIsWorldEditLoaded() {
+        if (worldEditLoaded == null) {
+            worldEditLoaded = ModList.get().isLoaded("worldedit");
+        }
+        return worldEditLoaded;
+    }
 
     @SubscribeEvent
     private static void render(RenderLevelStageEvent event) {
-        if(event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER ) return;
+        if (notIsWorldEditLoaded()) return; // Early return if WorldEdit not loaded
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) return;
         renderSelection(event.getPoseStack(), minecraft.renderBuffers().bufferSource(), event.getCamera().getPosition());
     }
 
     public static void renderSelection(PoseStack poseStack, MultiBufferSource bufferSource, Vec3 cameraPos) {
+        if (notIsWorldEditLoaded()) return; // Safety check
         if (minecraft.player == null || minecraft.level == null) return;
 
-        LocalSession session = WorldEdit.getInstance().getSessionManager().findByName(minecraft.player.getName().getString());
-        if (session == null) return;
-
         try {
+            LocalSession session = WorldEdit.getInstance().getSessionManager().findByName(minecraft.player.getName().getString());
+            if (session == null) return;
+
             com.sk89q.worldedit.world.World weWorld = session.getSelectionWorld();
             if (weWorld == null) return;
 
@@ -51,7 +61,6 @@ public class WorldEditSelectionRenderer {
 
             VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.lines());
 
-
             LevelRenderer.renderLineBox(
                     poseStack,
                     vertexConsumer,
@@ -62,6 +71,7 @@ public class WorldEditSelectionRenderer {
             renderPositionCubes(poseStack, vertexConsumer, cameraPos, selection);
 
         } catch (Exception ignored) {
+            // Silently handle any WorldEdit-related exceptions
         }
     }
 
@@ -97,12 +107,10 @@ public class WorldEditSelectionRenderer {
         );
     }
 
-
     private static @NotNull AABB getAabb(Vec3 cameraPos, Region selection) {
         BlockVector3 min = selection.getMinimumPoint();
         BlockVector3 max = selection.getMaximumPoint();
 
-        // Adjust for camera position
         return new AABB(
                 min.x(), min.y(), min.z(),
                 max.x() + 1, max.y() + 1, max.z() + 1

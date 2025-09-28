@@ -34,7 +34,6 @@ public class ConstructEditorWindow extends EditorWindow {
         initMacros();
     }
 
-
     private void initMacros() {
         macros.put(new KeyCombo(GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_Z), editor::undo);
         macros.put(new KeyCombo(GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_Y), editor::redo);
@@ -44,12 +43,19 @@ public class ConstructEditorWindow extends EditorWindow {
 
     @Override
     public void render(ImGuiIO io) {
-
-        handleKeys();
-        handleScroll(io);
+        // Only handle input if WorldEdit is loaded
+        if (editor.isAvailable()) {
+            handleKeys();
+            handleScroll(io);
+        }
 
         // Main Construct Editor Window
         ImUtil.window("Construct Editor", () -> {
+            if (!editor.isAvailable()) {
+                ImGui.text("WorldEdit is not loaded!");
+                ImGui.text("This editor requires WorldEdit to function.");
+                return; // Exit early if WorldEdit isn't available
+            }
 
             // SELECTIONS
             ImUtil.collapsingHeader("Selections", () -> {
@@ -75,18 +81,16 @@ public class ConstructEditorWindow extends EditorWindow {
             });
 
             ImUtil.collapsingHeader("Brushes", () -> {
-                ImUtil.collapsingHeader("Brushes", () -> {
-                    if (ImGui.sliderInt("Brush Radius", brushRadius, 1, 50)) {
-                        // optional: live feedback if needed
-                    }
+                if (ImGui.sliderInt("Brush Radius", brushRadius, 1, 50)) {
+                    // optional: live feedback if needed
+                }
 
-                    ImUtil.button("Stone Sphere", () -> {
-                        giveOrUpdateBrush("sphere", "minecraft:stone", brushRadius[0]);
-                    });
+                ImUtil.button("Stone Sphere", () -> {
+                    giveOrUpdateBrush("sphere", "minecraft:stone", brushRadius[0]);
+                });
 
-                    ImUtil.button("Dirt Cylinder", () -> {
-                        giveOrUpdateBrush("cylinder", "minecraft:dirt", brushRadius[0]);
-                    });
+                ImUtil.button("Dirt Cylinder", () -> {
+                    giveOrUpdateBrush("cylinder", "minecraft:dirt", brushRadius[0]);
                 });
             });
 
@@ -96,7 +100,6 @@ public class ConstructEditorWindow extends EditorWindow {
                 ImUtil.button("Size", editor::size);
                 ImUtil.button("Distr", editor::distr);
             });
-
         });
     }
 
@@ -105,6 +108,8 @@ public class ConstructEditorWindow extends EditorWindow {
         editor.brush(type, pattern, radius);
 
         var player = mc.player;
+        if (player == null) return;
+
         var inHand = player.getMainHandItem();
 
         if (inHand.getItem() == Items.BRUSH) {
@@ -138,6 +143,7 @@ public class ConstructEditorWindow extends EditorWindow {
     private void handleScroll(ImGuiIO io) {
         float scroll = io.getMouseWheel();
         if (scroll == 0) return;
+        if (mc.player == null) return;
 
         io.setMouseWheel(0); // stop hotbar scroll
         Vec3 look = mc.player.getLookAngle();
@@ -152,7 +158,6 @@ public class ConstructEditorWindow extends EditorWindow {
             else editor.shift(-amount, dir);
         }
     }
-
 
     private String getDirectionFromVec(Vec3 look) {
         double absX = Math.abs(look.x);
@@ -175,5 +180,4 @@ public class ConstructEditorWindow extends EditorWindow {
             default -> dir;
         };
     }
-
 }
