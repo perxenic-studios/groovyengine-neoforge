@@ -17,7 +17,7 @@ tasks.named('wrapper', Wrapper).configure {
 version = mod_version
 group = mod_group_id
 
-def groovyLibs = fileTree(dir: 'libs/groovy', include: ['groovy-*.jar'])
+def groovyLibs = fileTree(dir: 'libs/groovy', include: ['groovy-*.jar'], exclude: ['*-sources.jar'])
 def worldEditLibs = fileTree(dir: 'libs/worldedit', include: ['*.jar'])
 
 repositories {
@@ -137,9 +137,6 @@ dependencies {
     implementation "io.github.spair:imgui-java-natives-macos:${imgui_version}"
 
     jarJar(implementation (groovyLibs)) {
-    }
-
-    jarJar(implementation (worldEditLibs)) {
     }
 
     jarJar(implementation("io.github.spair:imgui-java-binding:${imgui_version}")) {
