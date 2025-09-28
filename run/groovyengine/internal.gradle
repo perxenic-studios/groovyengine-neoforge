@@ -1,0 +1,49 @@
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['src/main/groovy']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+        compileClasspath += fileTree('../mods') { include '*.jar' }
+        runtimeClasspath += fileTree('../mods') { include '*.jar' }
+    }
+}
+
+neoForge {
+    version = project.hasProperty('neoforge_version') ? project.neoforge_version : '20.4.0-beta'
+
+    parchment {
+        mappingsVersion = project.hasProperty('mappings_version') ? project.mappings_version : '23.0.0'
+        minecraftVersion = project.hasProperty('minecraft_version') ? project.minecraft_version : '1.21.1'
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { name = 'NeoForged'; url = 'https://maven.neoforged.net/releases' }
+    maven { name = 'ParchmentMC'; url = 'https://maven.parchmentmc.org' }
+    maven { name = 'LWJGL'; url = 'https://repo.lwjgl.org/releases' }
+}
+
+dependencies {
+    implementation 'org.apache.groovy:groovy:4.0.14'
+    implementation 'org.apache.groovy:groovy-json:4.0.14'
+
+    implementation "io.github.spair:imgui-java-binding:1.87.7"
+    implementation("io.github.spair:imgui-java-lwjgl3:1.87.7") {
+        exclude group: 'org.lwjgl'
+    }
+    implementation "io.github.spair:imgui-java-natives-windows:1.87.7"
+    implementation "io.github.spair:imgui-java-natives-linux:1.87.7"
+    implementation "io.github.spair:imgui-java-natives-macos:1.87.7"
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+

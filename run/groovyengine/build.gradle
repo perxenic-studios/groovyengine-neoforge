@@ -1,26 +1,19 @@
 plugins {
-    id 'groovy'
-    id 'java'
-}
+     id 'maven-publish'
+     id 'net.neoforged.moddev' version '2.0.107'
+     id 'idea'
+     id 'groovy'
+     id 'java'
+ }
 
-sourceSets {
-    main {
-        groovy {
-            srcDirs = ['src/main/groovy']
-        }
-        resources {
-            srcDirs = ['src/main/resources']
-        }
-        compileClasspath += fileTree('../mods') { include '*.jar' }
-        runtimeClasspath += fileTree('../mods') { include '*.jar' }
-    }
-}
+ // Apply internal build logic
+ apply from: 'internal.gradle'
 
-repositories {
-    mavenCentral()
-}
+ // Optional user additions
+ repositories {
+     //maven { url 'https://my.custom.repo/repo' }
+ }
 
-dependencies {
-    implementation 'org.apache.groovy:groovy:4.0.14'
-    implementation 'org.apache.groovy:groovy-json:4.0.14'
-}
+ dependencies {
+     //implementation 'com.example:my-lib:1.0.0'
+ }

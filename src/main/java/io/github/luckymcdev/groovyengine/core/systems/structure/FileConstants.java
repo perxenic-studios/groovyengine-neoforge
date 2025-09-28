@@ -25,6 +25,7 @@ public class FileConstants {
 
     // Gradle files
     public static final Path BUILD_GRADLE = MOD_ROOT.resolve("build.gradle");
+    public static final Path INTERNAL_GRADLE = MOD_ROOT.resolve("internal.gradle");
     public static final Path SETTINGS_GRADLE = MOD_ROOT.resolve("settings.gradle");
     public static final Path GRADLE_PROPERTIES = MOD_ROOT.resolve("gradle.properties");
 }

@@ -1,13 +1,25 @@
-// Update FileTreeGenerator.java to generate Gradle files
 package io.github.luckymcdev.groovyengine.core.systems.structure;
 
 import io.github.luckymcdev.groovyengine.GE;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.neoforged.fml.loading.FMLLoader;
 
-import java.io.IOException;
+import net.minecraft.client.Minecraft;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Map;
+import java.util.Optional;
 
 public class FileTreeGenerator {
+
+    private static final String NEOFORGE_VERSION = FMLLoader.versionInfo().neoForgeVersion();
+    private static final String MINECRAFT_VERSION = FMLLoader.versionInfo().mcVersion();
+    private static final String MAPPINGS_VERSION = "2024.11.17";
 
     public static void generateFileStructure() {
         GE.CORE_LOG.info("Generating file structure for GroovyEngine");
@@ -43,42 +55,99 @@ public class FileTreeGenerator {
     }
 
     private static void createGradleFiles() {
-        // Create build.gradle with proper source set configuration
-        createGradleFile(FileConstants.BUILD_GRADLE,
-                "plugins {\n" +
-                        "    id 'groovy'\n" +
-                        "    id 'java'\n" +
-                        "}\n\n" +
-                        "sourceSets {\n" +
-                        "    main {\n" +
-                        "        groovy {\n" +
-                        "            srcDirs = ['src/main/groovy']\n" +
-                        "        }\n" +
-                        "        resources {\n" +
-                        "            srcDirs = ['src/main/resources']\n" +
-                        "        }\n" +
-                        "        compileClasspath += fileTree('../mods') { include '*.jar' }\n" +
-                        "        runtimeClasspath += fileTree('../mods') { include '*.jar' }\n" +
-                        "    }\n" +
-                        "}\n\n" +
-                        "repositories {\n" +
-                        "    mavenCentral()\n" +
-                        "}\n\n" +
-                        "dependencies {\n" +
-                        "    implementation 'org.apache.groovy:groovy:4.0.14'\n" +
-                        "    implementation 'org.apache.groovy:groovy-json:4.0.14'\n" +
-                        "}"
-        );
+        createGradleFile(FileConstants.BUILD_GRADLE, """
+            plugins {
+                 id 'maven-publish'
+                 id 'net.neoforged.moddev' version '2.0.107'
+                 id 'idea'
+                 id 'groovy'
+                 id 'java'
+             }
+            
+             // Apply internal build logic
+             apply from: 'internal.gradle'
+            
+             // Optional user additions
+             repositories {
+                 //maven { url 'https://my.custom.repo/repo' }
+             }
+            
+             dependencies {
+                 //implementation 'com.example:my-lib:1.0.0'
+             }
+            """);
 
-        // Create settings.gradle
-        createGradleFile(FileConstants.SETTINGS_GRADLE,
-                "rootProject.name = 'groovyengine'"
-        );
+        createGradleFile(FileConstants.INTERNAL_GRADLE, """
+            sourceSets {
+                main {
+                    groovy {
+                        srcDirs = ['src/main/groovy']
+                    }
+                    resources {
+                        srcDirs = ['src/main/resources']
+                    }
+                    compileClasspath += fileTree('../mods') { include '*.jar' }
+                    runtimeClasspath += fileTree('../mods') { include '*.jar' }
+                }
+            }
+            
+            neoForge {
+                version = project.hasProperty('neoforge_version') ? project.neoforge_version : '20.4.0-beta'
+            
+                parchment {
+                    mappingsVersion = project.hasProperty('mappings_version') ? project.mappings_version : '23.0.0'
+                    minecraftVersion = project.hasProperty('minecraft_version') ? project.minecraft_version : '1.21.1'
+                }
+            }
+            
+            repositories {
+                mavenCentral()
+                maven { name = 'NeoForged'; url = 'https://maven.neoforged.net/releases' }
+                maven { name = 'ParchmentMC'; url = 'https://maven.parchmentmc.org' }
+                maven { name = 'LWJGL'; url = 'https://repo.lwjgl.org/releases' }
+            }
+            
+            dependencies {
+                implementation 'org.apache.groovy:groovy:4.0.14'
+                implementation 'org.apache.groovy:groovy-json:4.0.14'
+            
+                implementation "io.github.spair:imgui-java-binding:1.87.7"
+                implementation("io.github.spair:imgui-java-lwjgl3:1.87.7") {
+                    exclude group: 'org.lwjgl'
+                }
+                implementation "io.github.spair:imgui-java-natives-windows:1.87.7"
+                implementation "io.github.spair:imgui-java-natives-linux:1.87.7"
+                implementation "io.github.spair:imgui-java-natives-macos:1.87.7"
+            }
+            
+            idea {
+                module {
+                    downloadSources = true
+                    downloadJavadoc = true
+                }
+            }
 
-        // Create gradle.properties
-        createGradleFile(FileConstants.GRADLE_PROPERTIES,
-                 " "
-        );
+            """);
+
+        createGradleFile(FileConstants.SETTINGS_GRADLE, """
+            pluginManagement {
+                repositories {
+                    gradlePluginPortal()
+                    maven {
+                        name = 'NeoForged'
+                        url = 'https://maven.neoforged.net/releases'
+                    }
+                }
+            }
+            """);
+
+        createGradleFile(FileConstants.GRADLE_PROPERTIES, """
+            org.gradle.jvmargs=-Xmx2G
+            minecraft_version=%s
+            neoforge_version=%s
+            mappings_channel=parchment
+            mappings_version=%s
+            """.formatted(MINECRAFT_VERSION, NEOFORGE_VERSION, MAPPINGS_VERSION));
     }
 
     private static void createGradleFile(Path filePath, String content) {
@@ -93,27 +162,29 @@ public class FileTreeGenerator {
     }
 
     private static void createDefaultScriptFiles() {
-        // Create a sample script in each environment
-        createSampleScript(FileConstants.COMMON_SCRIPTS_DIR, "CommonMain.groovy",
-                "//priority=0\n" +
-                        "import io.github.luckymcdev.groovyengine.GE;\n" +
-                        "GE.LOG.info('Hello from common scripts!')\n" +
-                        "// Add your common script logic here"
-        );
+        createSampleScript(FileConstants.COMMON_SCRIPTS_DIR, "CommonMain.groovy", """
+                //priority=0
+                package common
+                import io.github.luckymcdev.groovyengine.GE;
+                GE.LOG.info('Hello from common scripts!')
+                // Add your common script logic here
+                """);
 
-        createSampleScript(FileConstants.CLIENT_SCRIPTS_DIR, "ClientMain.groovy",
-                "//priority=0\n" +
-                        "import io.github.luckymcdev.groovyengine.GE;\n" +
-                        "GE.LOG.info('Hello from client scripts!')\n" +
-                        "// Add your client-side script logic here"
-        );
+        createSampleScript(FileConstants.CLIENT_SCRIPTS_DIR, "ClientMain.groovy", """
+                //priority=0
+                package client
+                import io.github.luckymcdev.groovyengine.GE;
+                GE.LOG.info('Hello from client scripts!')
+                // Add your client-side script logic here
+                """);
 
-        createSampleScript(FileConstants.SERVER_SCRIPTS_DIR, "ServerMain.groovy",
-                "//priority=0\n" +
-                        "import io.github.luckymcdev.groovyengine.GE;\n" +
-                        "GE.LOG.info('Hello from server scripts!')\n" +
-                        "// Add your server-side script logic here"
-        );
+        createSampleScript(FileConstants.SERVER_SCRIPTS_DIR, "ServerMain.groovy", """
+                //priority=0
+                package server
+                import io.github.luckymcdev.groovyengine.GE;
+                GE.LOG.info('Hello from server scripts!')
+                // Add your server-side script logic here
+                """);
     }
 
     private static void createSampleScript(Path directory, String filename, String content) {
@@ -131,7 +202,6 @@ public class FileTreeGenerator {
     public static boolean validateStructure() {
         boolean valid = true;
 
-        // Check if all required directories exist
         Path[] requiredDirs = {
                 FileConstants.MOD_ROOT,
                 FileConstants.SCRIPTS_DIR,
