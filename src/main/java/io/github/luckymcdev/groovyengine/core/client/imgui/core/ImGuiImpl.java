@@ -1,6 +1,7 @@
 package io.github.luckymcdev.groovyengine.core.client.imgui.core;
 
 import imgui.*;
+import imgui.extension.imnodes.ImNodes;
 import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
@@ -22,6 +23,7 @@ public class ImGuiImpl {
     public static void create(final long handle) {
         ImGui.createContext();
         ImPlot.createContext();
+        ImNodes.createContext();
 
         final ImGuiIO data = ImGui.getIO();
         data.setIniFilename("groovyengine.ini");
@@ -128,8 +130,10 @@ public class ImGuiImpl {
     public static void dispose() {
         imGuiImplGl3.shutdown();
 
-        ImGui.destroyContext();
+
+        ImNodes.destroyContext();
         ImPlot.destroyContext();
+        ImGui.destroyContext();
     }
 
     // Can be used to load buffered images in ImGui
