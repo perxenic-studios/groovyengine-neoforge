@@ -10,9 +10,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
+import java.util.Collections;
 import java.util.List;
 
-public abstract class BlockAttachment implements BaseAttachment<Block> {
+public abstract class BlockAttachment implements BaseAttachment {
 
     public final List<Block> targetBlocks;
 
@@ -43,8 +44,8 @@ public abstract class BlockAttachment implements BaseAttachment<Block> {
     }
 
     @Override
-    public List<Block> getTargets() {
-        return targetBlocks;
+    public List<Object> getTargets() {
+        return Collections.singletonList(targetBlocks);
     }
 
 

@@ -12,6 +12,7 @@ import io.github.luckymcdev.groovyengine.lens.LensModule;
 import io.github.luckymcdev.groovyengine.scribe.ScribeModule;
 import io.github.luckymcdev.groovyengine.threads.ThreadsModule;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManager;
+import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManagerImpl;
 import net.minecraft.server.packs.PackType;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
@@ -51,15 +52,11 @@ public class GroovyEngine {
                 , new ScribeModule(), new ConstructModule()
         ));
 
+        moduleManager.runInit(modEventBus);
+
 
         String gc = ManagementFactory.getGarbageCollectorMXBeans().stream().map(Object::toString).collect(Collectors.joining(", "));
         GE.LOG.info("Current Garbage Collector: "+gc);
-
-        try {
-            GroovyDatagen.run();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
@@ -72,6 +69,13 @@ public class GroovyEngine {
     public void onServerStarting(ServerStartingEvent event) {
         moduleManager.runOnServerStarting();
         AttachmentEventManager.getInstance().fireServerStart();
+
+        try {
+            GroovyDatagen.run();
+        } catch (IOException e) {
+            GE.CORE_LOG.error(e.toString());
+        }
+
     }
 
     @SubscribeEvent

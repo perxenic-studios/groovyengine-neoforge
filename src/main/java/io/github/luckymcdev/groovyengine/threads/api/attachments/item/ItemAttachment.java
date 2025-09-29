@@ -11,9 +11,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.LevelAccessor;
 
+import java.util.Collections;
 import java.util.List;
 
-public abstract class ItemAttachment implements BaseAttachment<Item> {
+public abstract class ItemAttachment implements BaseAttachment {
 
     public final List<Item> targetItems;
 
@@ -44,8 +45,8 @@ public abstract class ItemAttachment implements BaseAttachment<Item> {
     }
 
     @Override
-    public List<Item> getTargets() {
-        return targetItems;
+    public List<Object> getTargets() {
+        return Collections.singletonList(targetItems);
     }
 
     // Item Usage Events

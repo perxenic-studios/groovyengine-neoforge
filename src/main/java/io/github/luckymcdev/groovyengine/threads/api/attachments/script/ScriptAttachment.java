@@ -4,7 +4,7 @@ import io.github.luckymcdev.groovyengine.threads.api.attachments.BaseAttachment;
 
 import java.util.List;
 
-public abstract class ScriptAttachment implements BaseAttachment<Object> {
+public abstract class ScriptAttachment implements BaseAttachment {
 
     public final String scriptId;
 
@@ -37,8 +37,4 @@ public abstract class ScriptAttachment implements BaseAttachment<Object> {
     public void onScriptLoad() {}
     public void onScriptReload() {}
     public void onScriptError(Exception error) {}
-
-    // Server Events (for server-wide scripts)
-    public void onServerStart() {}
-    public void onServerStop() {}
 }

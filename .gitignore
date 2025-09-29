@@ -35,3 +35,4 @@ repo
 /run/groovyengine/gradlew.bat
 /run/groovyengine/src/resources/.cache
 /run/groovyengine/.idea
+/run/groovyengine/build

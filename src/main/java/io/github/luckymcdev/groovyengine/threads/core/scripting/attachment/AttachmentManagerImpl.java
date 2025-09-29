@@ -3,6 +3,9 @@ package io.github.luckymcdev.groovyengine.threads.core.scripting.attachment;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.BaseAttachment;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.client.ClientAttachment;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.server.ServerAttachment;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.registry.RegistryAttachment;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -14,10 +17,10 @@ public class AttachmentManagerImpl implements AttachmentManager {
 
     public static AttachmentManager INSTANCE = new AttachmentManagerImpl();
 
-    private final Set<BaseAttachment<?>> attachments = new HashSet<>();
+    private final Set<BaseAttachment> attachments = new HashSet<>();
 
     @Override
-    public void register(BaseAttachment<?> attachment) {
+    public void register(BaseAttachment attachment) {
         if (attachments.add(attachment)) {
             GE.THREADS_LOG.info("Registered attachment: {} for targets: {}",
                     attachment.getClass().getSimpleName(),
@@ -27,7 +30,7 @@ public class AttachmentManagerImpl implements AttachmentManager {
     }
 
     @Override
-    public void unregister(BaseAttachment<?> attachment) {
+    public void unregister(BaseAttachment attachment) {
         if (attachments.remove(attachment)) {
             GE.THREADS_LOG.info("Unregistered attachment: {}", attachment.getClass().getSimpleName());
             attachment.onDestroy();
@@ -35,42 +38,45 @@ public class AttachmentManagerImpl implements AttachmentManager {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> List<BaseAttachment<T>> getAttachments(T target, Class<T> targetType) {
+    public List<BaseAttachment> getAttachments(Object target) {
         return attachments.stream()
-                .filter(attachment -> {
-                    try {
-                        return attachment.appliesTo(target);
-                    } catch (ClassCastException e) {
-                        return false;
-                    }
-                })
-                .map(attachment -> (BaseAttachment<T>) attachment)
+                .filter(attachment -> attachment.appliesTo(target))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<BaseAttachment<Block>> getBlockAttachments(Block block) {
-        return getAttachments(block, Block.class);
+    public List<BaseAttachment> getBlockAttachments(Block block) {
+        return getAttachments(block);
     }
 
     @Override
-    public List<BaseAttachment<Item>> getItemAttachments(Item item) {
-        return getAttachments(item, Item.class);
+    public List<BaseAttachment> getItemAttachments(Item item) {
+        return getAttachments(item);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<BaseAttachment<EntityType<?>>> getEntityAttachments(EntityType<?> entityType) {
-        return attachments.stream()
-                .filter(attachment -> attachment.appliesTo(entityType))
-                .map(attachment -> (BaseAttachment<EntityType<?>>) attachment)
-                .collect(Collectors.toList());
+    public List<BaseAttachment> getEntityAttachments(EntityType<?> entityType) {
+        return getAttachments(entityType);
     }
 
     @Override
-    public List<BaseAttachment<Object>> getScriptAttachments(String scriptId) {
-        return getAttachments((Object) scriptId, Object.class);
+    public List<BaseAttachment> getScriptAttachments(String scriptId) {
+        return getAttachments(scriptId);
+    }
+
+    @Override
+    public List<BaseAttachment> getClientAttachments() {
+        return getAttachments("client");
+    }
+
+    @Override
+    public List<BaseAttachment> getServerAttachments() {
+        return getAttachments("server");
+    }
+
+    @Override
+    public List<BaseAttachment> getRegistryAttachments() {
+        return getAttachments("registry");
     }
 
     public static AttachmentManager getInstance() {

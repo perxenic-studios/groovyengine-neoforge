@@ -13,6 +13,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -23,10 +27,94 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 @EventBusSubscriber
 public class AttachmentEventManagerImpl {
     private static final AttachmentEventManager instance = AttachmentEventManager.getInstance();
+
+    // ============= CLIENT EVENTS =============
+
+
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        instance.fireClientStart();
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(ClientTickEvent.Post event) {
+        instance.fireClientTick();
+    }
+
+    @SubscribeEvent
+    public static void onKeyInput(InputEvent.Key event) {
+        instance.fireKeyPress(event.getKey(), event.getAction(), event.getModifiers());
+    }
+
+    @SubscribeEvent
+    public static void onMouseClick(InputEvent.MouseButton.Post event) {
+        instance.fireMouseClick(event.getButton(), event.getAction(), event.getModifiers());
+    }
+
+    @SubscribeEvent
+    public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
+        instance.fireMouseScroll(event.getScrollDeltaX(), event.getScrollDeltaY());
+    }
+
+    @SubscribeEvent
+    public static void onRenderTick(RenderLevelStageEvent event) {
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
+            // Fire render events if needed
+        }
+    }
+
+    // ============= SERVER EVENTS =============
+
+    @SubscribeEvent
+    public static void onServerStarting(ServerStartingEvent event) {
+        instance.fireServerStart();
+    }
+
+    @SubscribeEvent
+    public static void onServerStopping(ServerStoppingEvent event) {
+        instance.fireServerStop();
+    }
+
+    @SubscribeEvent
+    public static void onServerTick(ServerTickEvent.Post event) {
+        instance.fireServerTick();
+    }
+
+    @SubscribeEvent
+    public static void onWorldLoad(LevelEvent.Load event) {
+        if (!event.getLevel().isClientSide()) {
+            String worldName = event.getLevel().toString(); // You might want to get a better identifier
+            instance.fireWorldLoad(worldName);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onWorldUnload(LevelEvent.Unload event) {
+        if (!event.getLevel().isClientSide()) {
+            String worldName = event.getLevel().toString();
+            instance.fireWorldUnload(worldName);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        instance.firePlayerJoin(event.getEntity().getName().getString());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+        instance.firePlayerLeave(event.getEntity().getName().getString());
+    }
+
+    // ============= EXISTING BLOCK/ITEM/ENTITY EVENTS =============
 
     @SubscribeEvent
     public static void onBlockAttack(BlockEvent.BreakEvent event) {

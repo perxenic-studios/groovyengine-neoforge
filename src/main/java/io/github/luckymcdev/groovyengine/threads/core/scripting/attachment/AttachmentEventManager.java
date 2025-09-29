@@ -1,11 +1,15 @@
 package io.github.luckymcdev.groovyengine.threads.core.scripting.attachment;
 
+import dev.perxenic.acidapi.api.datagen.*;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.BaseAttachment;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.block.BlockAttachment;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.client.ClientAttachment;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.entity.EntityAttachment;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.item.ItemAttachment;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.registry.RegistryAttachment;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.script.ScriptAttachment;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.server.ServerAttachment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,6 +26,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.bus.api.IEventBus;
 
 import java.util.List;
 
@@ -37,8 +42,8 @@ public class AttachmentEventManager {
     // ============= BLOCK EVENTS =============
 
     public void fireBlockPlace(Block block, LevelAccessor level, BlockPos pos, BlockState state, Player player) {
-        List<BaseAttachment<Block>> attachments = attachmentManager.getBlockAttachments(block);
-        for (BaseAttachment<Block> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getBlockAttachments(block);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof BlockAttachment ba) {
                 ba.onPlace(level, pos, state, player);
             }
@@ -46,8 +51,8 @@ public class AttachmentEventManager {
     }
 
     public void fireBlockBreak(Block block, LevelAccessor level, BlockPos pos, BlockState state, Player player) {
-        List<BaseAttachment<Block>> attachments = attachmentManager.getBlockAttachments(block);
-        for (BaseAttachment<Block> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getBlockAttachments(block);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof BlockAttachment ba) {
                 ba.onBreak(level, pos, state, player);
             }
@@ -55,12 +60,12 @@ public class AttachmentEventManager {
     }
 
     public InteractionResult fireBlockUse(Block block, BlockState state, LevelAccessor level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        List<BaseAttachment<Block>> attachments = attachmentManager.getBlockAttachments(block);
+        List<BaseAttachment> attachments = attachmentManager.getBlockAttachments(block);
         InteractionResult finalResult = InteractionResult.PASS;
-        for (BaseAttachment<Block> attachment : attachments) {
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof BlockAttachment ba) {
                 InteractionResult result = ba.onUse(state, level, pos, player, hand, hit);
-                if (result == InteractionResult.PASS) {
+                if (result != InteractionResult.PASS) {
                     finalResult = result;
                 }
             }
@@ -69,8 +74,8 @@ public class AttachmentEventManager {
     }
 
     public void fireBlockAttack(Block block, BlockState state, LevelAccessor level, BlockPos pos, Player player) {
-        List<BaseAttachment<Block>> attachments = attachmentManager.getBlockAttachments(block);
-        for (BaseAttachment<Block> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getBlockAttachments(block);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof BlockAttachment ba) {
                 ba.onAttack(state, level, pos, player);
             }
@@ -78,17 +83,19 @@ public class AttachmentEventManager {
     }
 
     public void fireBlockNeighborChanged(Block block, BlockState state, LevelAccessor level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean isMoving) {
-        List<BaseAttachment<Block>> attachments = attachmentManager.getBlockAttachments(block);
-        for (BaseAttachment<Block> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getBlockAttachments(block);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof BlockAttachment ba) {
                 ba.onNeighborChanged(state, level, pos, neighborBlock, neighborPos, isMoving);
             }
         }
     }
 
+    // ============= ITEM EVENTS =============
+
     public InteractionResultHolder<ItemStack> fireItemUse(Item item, LevelAccessor level, Player player, InteractionHand hand, ItemStack stack) {
-        List<BaseAttachment<Item>> attachments = attachmentManager.getItemAttachments(item);
-        for (BaseAttachment<Item> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getItemAttachments(item);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof ItemAttachment ia) {
                 InteractionResultHolder<ItemStack> result = ia.onUse(level, player, hand, stack);
                 if (result.getResult() != InteractionResult.PASS) {
@@ -100,8 +107,8 @@ public class AttachmentEventManager {
     }
 
     public InteractionResult fireItemUseOn(Item item, UseOnContext context, ItemStack stack) {
-        List<BaseAttachment<Item>> attachments = attachmentManager.getItemAttachments(item);
-        for (BaseAttachment<Item> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getItemAttachments(item);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof ItemAttachment ia) {
                 InteractionResult result = ia.onUseOn(context, stack);
                 if (result != InteractionResult.PASS) {
@@ -113,8 +120,8 @@ public class AttachmentEventManager {
     }
 
     public void fireItemInventoryTick(Item item, ItemStack stack, LevelAccessor level, Entity entity, int slotId, boolean isSelected) {
-        List<BaseAttachment<Item>> attachments = attachmentManager.getItemAttachments(item);
-        for (BaseAttachment<Item> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getItemAttachments(item);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof ItemAttachment ia) {
                 ia.onInventoryTick(stack, level, entity, slotId, isSelected);
             }
@@ -122,8 +129,8 @@ public class AttachmentEventManager {
     }
 
     public void fireItemCraftedBy(Item item, ItemStack stack, LevelAccessor level, Player player) {
-        List<BaseAttachment<Item>> attachments = attachmentManager.getItemAttachments(item);
-        for (BaseAttachment<Item> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getItemAttachments(item);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof ItemAttachment ia) {
                 ia.onCraftedBy(stack, level, player);
             }
@@ -131,8 +138,8 @@ public class AttachmentEventManager {
     }
 
     public boolean fireItemOnLeftClickEntity(Item item, ItemStack stack, Player player, Entity entity) {
-        List<BaseAttachment<Item>> attachments = attachmentManager.getItemAttachments(item);
-        for (BaseAttachment<Item> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getItemAttachments(item);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof ItemAttachment ia) {
                 if (ia.onLeftClickEntity(stack, player, entity)) {
                     return true;
@@ -142,9 +149,11 @@ public class AttachmentEventManager {
         return false;
     }
 
+    // ============= ENTITY EVENTS =============
+
     public void fireEntitySpawn(EntityType<?> entityType, Entity entity, LevelAccessor level) {
-        List<BaseAttachment<EntityType<?>>> attachments = attachmentManager.getEntityAttachments(entityType);
-        for (BaseAttachment<EntityType<?>> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getEntityAttachments(entityType);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof EntityAttachment ea) {
                 ea.onSpawn(entity, level);
             }
@@ -152,8 +161,8 @@ public class AttachmentEventManager {
     }
 
     public void fireEntityRemove(EntityType<?> entityType, Entity entity, Entity.RemovalReason reason) {
-        List<BaseAttachment<EntityType<?>>> attachments = attachmentManager.getEntityAttachments(entityType);
-        for (BaseAttachment<EntityType<?>> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getEntityAttachments(entityType);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof EntityAttachment ea) {
                 ea.onRemove(entity, reason);
             }
@@ -161,8 +170,8 @@ public class AttachmentEventManager {
     }
 
     public void fireEntityTick(EntityType<?> entityType, Entity entity) {
-        List<BaseAttachment<EntityType<?>>> attachments = attachmentManager.getEntityAttachments(entityType);
-        for (BaseAttachment<EntityType<?>> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getEntityAttachments(entityType);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof EntityAttachment ea) {
                 ea.onTick(entity);
             }
@@ -170,8 +179,8 @@ public class AttachmentEventManager {
     }
 
     public InteractionResult fireEntityInteract(EntityType<?> entityType, Entity entity, Player player, InteractionHand hand) {
-        List<BaseAttachment<EntityType<?>>> attachments = attachmentManager.getEntityAttachments(entityType);
-        for (BaseAttachment<EntityType<?>> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getEntityAttachments(entityType);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof EntityAttachment ea) {
                 InteractionResult result = ea.onInteract(entity, player, hand);
                 if (result != InteractionResult.PASS) {
@@ -182,18 +191,18 @@ public class AttachmentEventManager {
         return InteractionResult.PASS;
     }
 
-    public void fireEntityHurt(EntityType<?> entityType, LivingEntity entity, DamageSource source, float ammount) {
-        List<BaseAttachment<EntityType<?>>> attachments = attachmentManager.getEntityAttachments(entityType);
-        for (BaseAttachment<EntityType<?>> attachment : attachments) {
+    public void fireEntityHurt(EntityType<?> entityType, LivingEntity entity, DamageSource source, float amount) {
+        List<BaseAttachment> attachments = attachmentManager.getEntityAttachments(entityType);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof EntityAttachment ea) {
-                ea.onHurt(entity, source, ammount);
+                ea.onHurt(entity, source, amount);
             }
         }
     }
 
     public void fireEntityDeath(EntityType<?> entityType, LivingEntity entity, DamageSource source) {
-        List<BaseAttachment<EntityType<?>>> attachments = attachmentManager.getEntityAttachments(entityType);
-        for (BaseAttachment<EntityType<?>> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getEntityAttachments(entityType);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof EntityAttachment ea) {
                 ea.onDeath(entity, source);
             }
@@ -203,8 +212,8 @@ public class AttachmentEventManager {
     // ============= SCRIPT EVENTS =============
 
     public void fireScriptLoad(String scriptId) {
-        List<BaseAttachment<Object>> attachments = attachmentManager.getScriptAttachments(scriptId);
-        for (BaseAttachment<Object> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getScriptAttachments(scriptId);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof ScriptAttachment sa) {
                 sa.onScriptLoad();
             }
@@ -212,8 +221,8 @@ public class AttachmentEventManager {
     }
 
     public void fireScriptReload(String scriptId) {
-        List<BaseAttachment<Object>> attachments = attachmentManager.getScriptAttachments(scriptId);
-        for (BaseAttachment<Object> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getScriptAttachments(scriptId);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof ScriptAttachment sa) {
                 sa.onScriptReload();
             }
@@ -221,31 +230,135 @@ public class AttachmentEventManager {
     }
 
     public void fireScriptError(String scriptId, Exception error) {
-        List<BaseAttachment<Object>> attachments = attachmentManager.getScriptAttachments(scriptId);
-        for (BaseAttachment<Object> attachment : attachments) {
+        List<BaseAttachment> attachments = attachmentManager.getScriptAttachments(scriptId);
+        for (BaseAttachment attachment : attachments) {
             if (attachment instanceof ScriptAttachment sa) {
                 sa.onScriptError(error);
             }
         }
     }
 
-    // ============= UTILITY METHODS =============
+    // ============= CLIENT EVENTS =============
+
+    public void fireClientStart() {
+        List<BaseAttachment> attachments = attachmentManager.getClientAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ClientAttachment ca) {
+                ca.onClientStart();
+            }
+        }
+    }
+
+    public void fireClientTick() {
+        List<BaseAttachment> attachments = attachmentManager.getClientAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ClientAttachment ca) {
+                ca.onClientTick();
+            }
+        }
+    }
+
+    public void fireKeyPress(int key, int action, int modifiers) {
+        List<BaseAttachment> attachments = attachmentManager.getClientAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ClientAttachment ca) {
+                ca.onKeyPress(key, action, modifiers);
+            }
+        }
+    }
+
+    public void fireMouseClick(int button, int action, int modifiers) {
+        List<BaseAttachment> attachments = attachmentManager.getClientAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ClientAttachment ca) {
+                ca.onMouseClick(button, action, modifiers);
+            }
+        }
+    }
+
+    public void fireMouseScroll(double horizontal, double vertical) {
+        List<BaseAttachment> attachments = attachmentManager.getClientAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ClientAttachment ca) {
+                ca.onMouseScroll(horizontal, vertical);
+            }
+        }
+    }
+
+    // ============= SERVER EVENTS =============
 
     public void fireServerStart() {
-        // Fire server start for all script attachments
-        for (BaseAttachment<?> attachment : attachmentManager.getAttachments("server", String.class)) {
-            if (attachment instanceof ScriptAttachment sa) {
+        List<BaseAttachment> attachments = attachmentManager.getServerAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ServerAttachment sa) {
                 sa.onServerStart();
             }
         }
     }
 
     public void fireServerStop() {
-        // Fire server stop for all script attachments
-        for (BaseAttachment<?> attachment : attachmentManager.getAttachments("server", String.class)) {
-            if (attachment instanceof ScriptAttachment sa) {
+        List<BaseAttachment> attachments = attachmentManager.getServerAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ServerAttachment sa) {
                 sa.onServerStop();
             }
         }
     }
+
+    public void fireServerTick() {
+        List<BaseAttachment> attachments = attachmentManager.getServerAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ServerAttachment sa) {
+                sa.onServerTick();
+            }
+        }
+    }
+
+    public void fireWorldLoad(String worldName) {
+        List<BaseAttachment> attachments = attachmentManager.getServerAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ServerAttachment sa) {
+                sa.onWorldLoad(worldName);
+            }
+        }
+    }
+
+    public void fireWorldUnload(String worldName) {
+        List<BaseAttachment> attachments = attachmentManager.getServerAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ServerAttachment sa) {
+                sa.onWorldUnload(worldName);
+            }
+        }
+    }
+
+    public void firePlayerJoin(String playerName) {
+        List<BaseAttachment> attachments = attachmentManager.getServerAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ServerAttachment sa) {
+                sa.onPlayerJoin(playerName);
+            }
+        }
+    }
+
+    public void firePlayerLeave(String playerName) {
+        List<BaseAttachment> attachments = attachmentManager.getServerAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof ServerAttachment sa) {
+                sa.onPlayerLeave(playerName);
+            }
+        }
+    }
+
+    // ============= REGISTRY EVENTS =============
+
+    public void fireOnRegister(IEventBus modEventBus) {
+        List<BaseAttachment> attachments = attachmentManager.getRegistryAttachments();
+        for (BaseAttachment attachment : attachments) {
+            if (attachment instanceof RegistryAttachment sa) {
+                sa.onRegister(modEventBus);
+            }
+        }
+    }
+
 }

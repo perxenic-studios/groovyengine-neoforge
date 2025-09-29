@@ -2,16 +2,16 @@ package io.github.luckymcdev.groovyengine.threads.api.attachments;
 
 import java.util.List;
 
-public interface BaseAttachment<T> {
+public interface BaseAttachment {
     /**
      * Get the primary target this attachment is for
      */
-    default T getTarget() { return null; }
+    default Object getTarget() { return null; }
 
     /**
      * Get all targets this attachment applies to (for multi-target attachments)
      */
-    default List<T> getTargets() { return getTarget() != null ? List.of(getTarget()) : List.of(); }
+    default List<Object> getTargets() { return getTarget() != null ? List.of(getTarget()) : List.of(); }
 
     /**
      * Check if this attachment applies to the given target

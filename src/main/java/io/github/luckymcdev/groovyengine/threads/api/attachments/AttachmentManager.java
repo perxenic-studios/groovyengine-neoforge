@@ -13,14 +13,19 @@ public interface AttachmentManager {
         return AttachmentManagerImpl.INSTANCE;
     }
 
-    void register(BaseAttachment<?> attachment);
-    void unregister(BaseAttachment<?> attachment);
+    void register(BaseAttachment attachment);
+    void unregister(BaseAttachment attachment);
 
     // Utility methods for finding attachments by target
-    <T> List<BaseAttachment<T>> getAttachments(T target, Class<T> targetType);
+    <T> List<BaseAttachment> getAttachments(T target);
 
-    List<BaseAttachment<Block>> getBlockAttachments(Block block);
-    List<BaseAttachment<Item>> getItemAttachments(Item item);
-    List<BaseAttachment<EntityType<?>>> getEntityAttachments(EntityType<?> entityType);
-    List<BaseAttachment<Object>> getScriptAttachments(String scriptId);
+    List<BaseAttachment> getBlockAttachments(Block block);
+    List<BaseAttachment> getItemAttachments(Item item);
+    List<BaseAttachment> getEntityAttachments(EntityType<?> entityType);
+    List<BaseAttachment> getScriptAttachments(String scriptId);
+
+    // Global attachment getters
+    List<BaseAttachment> getClientAttachments();
+    List<BaseAttachment> getServerAttachments();
+    List<BaseAttachment> getRegistryAttachments();
 }

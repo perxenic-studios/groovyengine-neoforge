@@ -10,9 +10,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 
+import java.util.Collections;
 import java.util.List;
 
-public abstract class EntityAttachment implements BaseAttachment<EntityType<?>> {
+public abstract class EntityAttachment implements BaseAttachment {
 
     public final List<EntityType<?>> targetEntityTypes;
 
@@ -44,8 +45,8 @@ public abstract class EntityAttachment implements BaseAttachment<EntityType<?>> 
     }
 
     @Override
-    public List<EntityType<?>> getTargets() {
-        return targetEntityTypes;
+    public List<Object> getTargets() {
+        return Collections.singletonList(targetEntityTypes);
     }
 
     // Lifecycle Events
