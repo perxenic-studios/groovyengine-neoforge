@@ -5,6 +5,7 @@ import imgui.ImGuiIO;
 import io.github.luckymcdev.groovyengine.construct.api.worldedit.WorldEditAPI;
 import io.github.luckymcdev.groovyengine.construct.client.input.KeyCombo;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
+import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
@@ -29,16 +30,16 @@ public class ConstructEditorWindow extends EditorWindow {
 
     private final int[] brushRadius = new int[]{5}; // default radius
 
-    public ConstructEditorWindow() {
-        super("Construct Editor", "construct_window");
-        initMacros();
-    }
-
     private void initMacros() {
         macros.put(new KeyCombo(GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_Z), editor::undo);
         macros.put(new KeyCombo(GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_Y), editor::redo);
         macros.put(new KeyCombo(GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_C), editor::copy);
         macros.put(new KeyCombo(GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_V), editor::paste);
+    }
+
+    public ConstructEditorWindow() {
+        super(ImIcons.WRENCH.get() + " Construct Editor", "construct_window");
+        initMacros();
     }
 
     @Override
@@ -49,56 +50,51 @@ public class ConstructEditorWindow extends EditorWindow {
             handleScroll(io);
         }
 
-        // Main Construct Editor Window
-        ImUtil.window("Construct Editor", () -> {
+        ImUtil.window(title, () -> {
             if (!editor.isAvailable()) {
-                ImGui.text("WorldEdit is not loaded!");
+                ImGui.text(ImIcons.ERROR.get() + " WorldEdit is not loaded!");
                 ImGui.text("This editor requires WorldEdit to function.");
-                return; // Exit early if WorldEdit isn't available
+                return;
             }
 
-            // SELECTIONS
-            ImUtil.collapsingHeader("Selections", () -> {
-                ImUtil.button("Pos1", () -> editor.setPos1());
-                ImUtil.button("Pos2", () -> editor.setPos2());
-                ImUtil.button("Clear History", () -> editor.clearHistory());
+            ImUtil.collapsingHeader(ImIcons.SELECT.get() + " Selections", () -> {
+                ImUtil.button(ImIcons.TARGET.get() + " Pos1", () -> editor.setPos1());
+                ImUtil.button(ImIcons.TARGET.get() + " Pos2", () -> editor.setPos2());
+                ImUtil.button(ImIcons.DELETE.get() + " Clear History", () -> editor.clearHistory());
             });
 
-            // TRANSFORM
-            ImUtil.collapsingHeader("Transform", () -> {
-                ImUtil.button("Expand 5", () -> editor.expand(5));
-                ImUtil.button("Contract 5", () -> editor.contract(5));
-                ImUtil.button("Shift Up 3", () -> editor.shift(3, "up"));
+            ImUtil.collapsingHeader(ImIcons.ROTATE.get() + " Transform", () -> {
+                ImUtil.button(ImIcons.EXPAND.get() + " Expand 5", () -> editor.expand(5));
+                ImUtil.button(ImIcons.COLLAPSE.get() + " Contract 5", () -> editor.contract(5));
+                ImUtil.button(ImIcons.ARROW_UP.get() + " Shift Up 3", () -> editor.shift(3, "up"));
             });
 
-            // CLIPBOARD
-            ImUtil.collapsingHeader("Clipboard", () -> {
-                ImUtil.button("Copy", editor::copy);
-                ImUtil.button("Cut", editor::cut);
-                ImUtil.button("Paste", editor::paste);
-                ImUtil.button("Undo", editor::undo);
-                ImUtil.button("Redo", editor::redo);
+            ImUtil.collapsingHeader(ImIcons.COPY.get() + " Clipboard", () -> {
+                ImUtil.button(ImIcons.COPY.get() + " Copy", editor::copy);
+                ImUtil.button(ImIcons.CUT.get() + " Cut", editor::cut);
+                ImUtil.button(ImIcons.PASTE.get() + " Paste", editor::paste);
+                ImUtil.button(ImIcons.UNDO.get() + " Undo", editor::undo);
+                ImUtil.button(ImIcons.REDO.get() + " Redo", editor::redo);
             });
 
-            ImUtil.collapsingHeader("Brushes", () -> {
-                if (ImGui.sliderInt("Brush Radius", brushRadius, 1, 50)) {
+            ImUtil.collapsingHeader(ImIcons.BRUSH.get() + " Brushes", () -> {
+                if (ImGui.sliderInt(ImIcons.SQUARE.get() + " Brush Radius", brushRadius, 1, 50)) {
                     // optional: live feedback if needed
                 }
 
-                ImUtil.button("Stone Sphere", () -> {
+                ImUtil.button(ImIcons.CIRCLE.get() + " Stone Sphere", () -> {
                     giveOrUpdateBrush("sphere", "minecraft:stone", brushRadius[0]);
                 });
 
-                ImUtil.button("Dirt Cylinder", () -> {
+                ImUtil.button(ImIcons.HEXAGON.get() + " Dirt Cylinder", () -> {
                     giveOrUpdateBrush("cylinder", "minecraft:dirt", brushRadius[0]);
                 });
             });
 
-            // UTILITIES
-            ImUtil.collapsingHeader("Utilities", () -> {
-                ImUtil.button("Count Blocks", () -> editor.count("minecraft:stone"));
-                ImUtil.button("Size", editor::size);
-                ImUtil.button("Distr", editor::distr);
+            ImUtil.collapsingHeader(ImIcons.SETTINGS.get() + " Utilities", () -> {
+                ImUtil.button(ImIcons.NUMBERS.get() + " Count Blocks", () -> editor.count("minecraft:stone"));
+                ImUtil.button(ImIcons.FRAMED_CUBE.get() + " Size", editor::size);
+                ImUtil.button(ImIcons.PERCENT.get() + " Distr", editor::distr);
             });
         });
     }

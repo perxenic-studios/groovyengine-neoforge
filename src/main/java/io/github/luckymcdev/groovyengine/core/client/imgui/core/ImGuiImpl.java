@@ -39,17 +39,13 @@ public class ImGuiImpl {
 
     public static void loadFonts(net.minecraft.server.packs.resources.ResourceManager resourceManager) {
         GE.CORE_LOG.debug("Loading ImGui fonts...");
-
         final ImGuiIO io = ImGui.getIO();
         final ImFontAtlas fonts = io.getFonts();
-        final ImFontGlyphRangesBuilder rangesBuilder = new ImFontGlyphRangesBuilder();
 
-        rangesBuilder.addRanges(fonts.getGlyphRangesDefault());
-        rangesBuilder.addRanges(fonts.getGlyphRangesCyrillic());
-        rangesBuilder.addRanges(fonts.getGlyphRangesJapanese());
-        short[] glyphRanges = rangesBuilder.buildRanges();
+        short[] defaultGlyphRanges = new ImFontGlyphRangesBuilder().buildRanges();
 
         try {
+            // Load JetBrains Mono
             ResourceLocation jetBrainsLocation = GE.id("fonts/jetbrains_mono_regular.ttf");
             var jetBrainsRes = resourceManager.getResource(jetBrainsLocation);
             if (jetBrainsRes.isPresent()) {
@@ -58,18 +54,24 @@ public class ImGuiImpl {
                     fontData = input.readAllBytes();
                 }
 
-                ImFontConfig config = new ImFontConfig();
-                config.setName("JetBrains Mono Regular");
-                config.setGlyphRanges(glyphRanges);
+                if (fontData.length > 0) {
+                    ImFontConfig config = new ImFontConfig();
+                    config.setName("JetBrains Mono");
+                    config.setGlyphRanges(defaultGlyphRanges);
 
-                defaultFont = fonts.addFontFromMemoryTTF(fontData, 16f, config);
-                config.destroy();
-                GE.CORE_LOG.debug("Loaded JetBrains Mono font ({} bytes)", fontData.length);
+                    defaultFont = fonts.addFontFromMemoryTTF(fontData, 16f, config);
+                    config.destroy();
+                    GE.CORE_LOG.debug("Loaded JetBrains Mono font ({} bytes)", fontData.length);
+                } else {
+                    defaultFont = fonts.addFontDefault();
+                    GE.CORE_LOG.debug("JetBrains font is empty, using default");
+                }
             } else {
                 defaultFont = fonts.addFontDefault();
                 GE.CORE_LOG.debug("JetBrains font not found, using default");
             }
 
+            // Merge Material Icons safely
             ResourceLocation materialLocation = GE.id("fonts/material_icons_round_regular.ttf");
             var materialRes = resourceManager.getResource(materialLocation);
             if (materialRes.isPresent()) {
@@ -78,28 +80,31 @@ public class ImGuiImpl {
                     iconData = input.readAllBytes();
                 }
 
-                ImFontConfig iconConfig = new ImFontConfig();
-                iconConfig.setMergeMode(true);
-                iconConfig.setPixelSnapH(true);
-                iconConfig.setName("Material Icons");
+                if (iconData.length > 0) {
+                    ImFontConfig iconConfig = new ImFontConfig();
+                    iconConfig.setMergeMode(true);
+                    iconConfig.setPixelSnapH(true);
+                    iconConfig.setName("Material Icons");
 
-                short[] iconRanges = new short[]{(short) 0xE000, (short) 0xF8FF, 0};
-
-                fonts.addFontFromMemoryTTF(iconData, 16f, iconConfig, iconRanges);
-                iconConfig.destroy();
-
-                GE.CORE_LOG.debug("Merged Material Icons font ({} bytes)", iconData.length);
+                    short[] iconRanges = new short[]{(short) 0xE000, (short) 0xF8FF, 0};
+                    fonts.addFontFromMemoryTTF(iconData, 16f, iconConfig, iconRanges);
+                    iconConfig.destroy();
+                    GE.CORE_LOG.debug("Merged Material Icons font ({} bytes)", iconData.length);
+                } else {
+                    GE.CORE_LOG.debug("Material Icons font is empty, skipping merge");
+                }
             } else {
                 GE.CORE_LOG.debug("Material Icons font not found, skipping merge");
             }
 
-            fonts.build();
+            fonts.build(); // build once after all fonts added
         } catch (Exception e) {
             GE.CORE_LOG.error("Failed to load fonts: {}", e.getMessage());
             defaultFont = fonts.addFontDefault();
             fonts.build();
         }
     }
+
 
     public static ImFont getDefaultFont() {
         return defaultFont;

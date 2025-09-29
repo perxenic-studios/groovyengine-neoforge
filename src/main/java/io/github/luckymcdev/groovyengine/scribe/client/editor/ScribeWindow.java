@@ -8,6 +8,7 @@ import imgui.type.ImString;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
+import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
 import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import io.github.luckymcdev.groovyengine.scribe.ui.data.ChestSlotData;
@@ -50,30 +51,13 @@ public class ScribeWindow extends EditorWindow {
     private final int chestCols = 9; // 9 columns
 
     public ScribeWindow() {
-        super("UI Editor");
+        super(ImIcons.EDIT.get() + " UI Editor");
         initializeFilteredItems();
-    }
-
-    private void initializeFilteredItems() {
-        filteredItems.clear();
-        String filter = searchFilter.toLowerCase();
-
-        for (Item item : BuiltInRegistries.ITEM) {
-            String itemName = BuiltInRegistries.ITEM.getKey(item).toString();
-            if (filter.isEmpty() || itemName.toLowerCase().contains(filter)) {
-                filteredItems.add(item);
-            }
-        }
-
-        // Limit to first 100 items for performance
-        if (filteredItems.size() > 100) {
-            filteredItems = filteredItems.subList(0, 100);
-        }
     }
 
     @Override
     public void render(ImGuiIO io) {
-        ImUtil.window("UI Editor", () -> {
+        ImUtil.window(title, () -> {
             renderMenuBar();
 
             // Main layout - split into chest area and properties panel
@@ -104,39 +88,57 @@ public class ScribeWindow extends EditorWindow {
         });
     }
 
+
+    private void initializeFilteredItems() {
+        filteredItems.clear();
+        String filter = searchFilter.toLowerCase();
+
+        for (Item item : BuiltInRegistries.ITEM) {
+            String itemName = BuiltInRegistries.ITEM.getKey(item).toString();
+            if (filter.isEmpty() || itemName.toLowerCase().contains(filter)) {
+                filteredItems.add(item);
+            }
+        }
+
+        // Limit to first 100 items for performance
+        if (filteredItems.size() > 100) {
+            filteredItems = filteredItems.subList(0, 100);
+        }
+    }
+
     private void renderMenuBar() {
         if (ImGui.beginMenuBar()) {
-            if (ImGui.beginMenu("File")) {
-                if (ImGui.menuItem("New", "Ctrl+N")) {
+            if (ImGui.beginMenu(ImIcons.FOLDER.get() + " File")) {
+                if (ImGui.menuItem(ImIcons.ADD.get() + " New", "Ctrl+N")) {
                     newChestUI();
                 }
-                if (ImGui.menuItem("Load", "Ctrl+O")) {
+                if (ImGui.menuItem(ImIcons.OPEN_IN_NEW.get() + " Load", "Ctrl+O")) {
                     loadChestUI();
                 }
-                if (ImGui.menuItem("Save", "Ctrl+S")) {
+                if (ImGui.menuItem(ImIcons.SAVE.get() + " Save", "Ctrl+S")) {
                     saveChestUI();
                 }
-                if (ImGui.menuItem("Export", "Ctrl+E")) {
+                if (ImGui.menuItem(ImIcons.DOWNLOAD.get() + " Export", "Ctrl+E")) {
                     exportChestUI();
                 }
                 ImGui.endMenu();
             }
 
-            if (ImGui.beginMenu("Edit")) {
-                if (ImGui.menuItem("Clear All Slots")) {
+            if (ImGui.beginMenu(ImIcons.EDIT.get() + " Edit")) {
+                if (ImGui.menuItem(ImIcons.DELETE.get() + " Clear All Slots")) {
                     clearAllSlots();
                 }
-                if (ImGui.menuItem("Copy Selected Slot", "Ctrl+C", false, selectedSlot != -1)) {
+                if (ImGui.menuItem(ImIcons.COPY.get() + " Copy Selected Slot", "Ctrl+C", false, selectedSlot != -1)) {
                     copySlot();
                 }
-                if (ImGui.menuItem("Paste Slot", "Ctrl+V", false, hasClipboardData())) {
+                if (ImGui.menuItem(ImIcons.PASTE.get() + " Paste Slot", "Ctrl+V", false, hasClipboardData())) {
                     pasteSlot();
                 }
                 ImGui.endMenu();
             }
 
-            if (ImGui.beginMenu("View")) {
-                if (ImGui.menuItem("Reset Zoom")) {
+            if (ImGui.beginMenu(ImIcons.VISIBLE.get() + " View")) {
+                if (ImGui.menuItem(ImIcons.FULLSCREEN.get() + " Reset Zoom")) {
                     // Could implement zoom functionality
                 }
                 ImGui.endMenu();
@@ -147,7 +149,7 @@ public class ScribeWindow extends EditorWindow {
     }
 
     private void renderChestEditor() {
-        ImGui.text("Chest UI Designer");
+        ImGui.text(ImIcons.DASHBOARD.get() + " Chest UI Designer");
         ImGui.separator();
 
         // Center the chest in the available area
@@ -169,7 +171,7 @@ public class ScribeWindow extends EditorWindow {
         ImGui.textColored(0.7f, 0.7f, 0.7f, 1.0f, "Click a slot to select it, then use the properties panel to configure items and actions.");
         ImGui.textColored(0.7f, 0.7f, 0.7f, 1.0f, "Right-click a slot to quickly clear it.");
 
-        if(ImGui.button("Save")) {
+        if(ImGui.button(ImIcons.SAVE.get() + " Save")) {
             saveChestUI();
         }
     }
@@ -254,7 +256,7 @@ public class ScribeWindow extends EditorWindow {
     }
 
     private void renderPropertiesPanel() {
-        ImGui.text("Properties");
+        ImGui.text(ImIcons.SETTINGS.get() + " Properties");
         ImGui.separator();
 
         // UI Name
@@ -305,10 +307,9 @@ public class ScribeWindow extends EditorWindow {
             slotData.displayName = displayName.get().isEmpty() ? null : displayName.get();
         }
 
-        ImGui.separator();
-
         // Script actions
-        ImGui.text("Click Actions");
+        ImGui.separator();
+        ImGui.text(ImIcons.CLICK.get() + " Click Actions");
 
         // Left click action
         String leftClickDisplay = slotData.leftClickAction != null ? slotData.leftClickAction : "None";

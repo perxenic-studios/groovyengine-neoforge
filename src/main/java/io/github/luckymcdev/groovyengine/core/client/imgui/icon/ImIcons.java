@@ -151,4 +151,12 @@ public class ImIcons {
     public static final ImIcon FLAG = new ImIcon('\ue153', "FLAG");
     public static final ImIcon SHIELD = new ImIcon('\ue9e0', "SHIELD");
     public static final ImIcon PALETTE = new ImIcon('\ue40a', "PALETTE");
+
+    public static final ImIcon BRUSH = new ImIcon('\ue3ae', "BRUSH");
+    public static final ImIcon TEXTURE = new ImIcon('\ue421', "TEXTURE");
+    public static final ImIcon WEATHER = new ImIcon('\uee6d', "WEATHER");
+    public static final ImIcon SAVE = new ImIcon('\ue161', "SAVE");
+    public static final ImIcon CLICK = new ImIcon('\ue25d', "CLICK");
+    public static final ImIcon SELECT_ALL = new ImIcon('\ue162', "SELECT_ALL");
+    public static final ImIcon SPACE = new ImIcon('\ue256', "SPACE");
 }

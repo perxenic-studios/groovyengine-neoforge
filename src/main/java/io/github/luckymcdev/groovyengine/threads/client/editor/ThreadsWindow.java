@@ -8,6 +8,7 @@ import imgui.extension.texteditor.TextEditorCoordinates;
 import imgui.extension.texteditor.TextEditorLanguageDefinition;
 import imgui.flag.ImGuiWindowFlags;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
+import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.client.imgui.texteditor.GETextEditorLanguageDefinitions;
 import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import net.neoforged.api.distmarker.Dist;
@@ -41,7 +42,7 @@ public class ThreadsWindow extends EditorWindow {
     private boolean spaceKeyConsumed = false;
 
     public ThreadsWindow() {
-        super("Code Editor");
+        super(ImIcons.CODE.get() + " Code Editor");
         initializeEditor();
     }
 
@@ -92,22 +93,22 @@ public class ThreadsWindow extends EditorWindow {
 
     private void renderMenuBar() {
         if (ImGui.beginMenuBar()) {
-            if (ImGui.beginMenu("File")) {
-                if (ImGui.menuItem("New", "Ctrl+N")) {
+            if (ImGui.beginMenu(ImIcons.FOLDER.get() + " File")) {
+                if (ImGui.menuItem(ImIcons.ADD.get() + " New", "Ctrl+N")) {
                     newFile();
                 }
-                if (ImGui.menuItem("Save", "Ctrl+S")) {
+                if (ImGui.menuItem(ImIcons.SAVE.get() + " Save", "Ctrl+S")) {
                     saveFile();
                 }
-                if (ImGui.menuItem("Save As...", "Ctrl+Shift+S")) {
+                if (ImGui.menuItem(ImIcons.DOWNLOAD.get() + " Save As...", "Ctrl+Shift+S")) {
                     saveAsFile();
                 }
                 ImGui.separator();
-                if (ImGui.beginMenu("Language")) {
-                    if (ImGui.menuItem("Java", "", currentLanguage.equals("Java"))) {
+                if (ImGui.beginMenu(ImIcons.CODE.get() + " Language")) {
+                    if (ImGui.menuItem(ImIcons.SETTINGS.get() + " Java", "", currentLanguage.equals("Java"))) {
                         setLanguage("Java");
                     }
-                    if (ImGui.menuItem("Groovy", "", currentLanguage.equals("Groovy"))) {
+                    if (ImGui.menuItem(ImIcons.SETTINGS.get() + " Groovy", "", currentLanguage.equals("Groovy"))) {
                         setLanguage("Groovy");
                     }
                     ImGui.endMenu();
@@ -115,54 +116,54 @@ public class ThreadsWindow extends EditorWindow {
                 ImGui.endMenu();
             }
 
-            if (ImGui.beginMenu("Edit")) {
-                if (ImGui.menuItem("Undo", "Ctrl+Z", false, editor.canUndo())) {
+            if (ImGui.beginMenu(ImIcons.EDIT.get() + " Edit")) {
+                if (ImGui.menuItem(ImIcons.UNDO.get() + " Undo", "Ctrl+Z", false, editor.canUndo())) {
                     editor.undo();
                 }
-                if (ImGui.menuItem("Redo", "Ctrl+Y", false, editor.canRedo())) {
+                if (ImGui.menuItem(ImIcons.REDO.get() + " Redo", "Ctrl+Y", false, editor.canRedo())) {
                     editor.redo();
                 }
                 ImGui.separator();
-                if (ImGui.menuItem("Cut", "Ctrl+X", false, editor.hasSelection())) {
+                if (ImGui.menuItem(ImIcons.CUT.get() + " Cut", "Ctrl+X", false, editor.hasSelection())) {
                     editor.cut();
                 }
-                if (ImGui.menuItem("Copy", "Ctrl+C", false, editor.hasSelection())) {
+                if (ImGui.menuItem(ImIcons.COPY.get() + " Copy", "Ctrl+C", false, editor.hasSelection())) {
                     editor.copy();
                 }
-                if (ImGui.menuItem("Paste", "Ctrl+V")) {
+                if (ImGui.menuItem(ImIcons.PASTE.get() + " Paste", "Ctrl+V")) {
                     editor.paste();
                 }
                 ImGui.separator();
-                if (ImGui.menuItem("Select All", "Ctrl+A")) {
+                if (ImGui.menuItem(ImIcons.SELECT_ALL.get() + " Select All", "Ctrl+A")) {
                     editor.selectAll();
                 }
-                if (ImGui.menuItem("Select Word", "Ctrl+W")) {
+                if (ImGui.menuItem(ImIcons.SELECT.get() + " Select Word", "Ctrl+W")) {
                     editor.selectWordUnderCursor();
                 }
                 ImGui.endMenu();
             }
 
-            if (ImGui.beginMenu("View")) {
+            if (ImGui.beginMenu(ImIcons.VISIBLE.get() + " View")) {
                 boolean showWhitespaces = editor.isShowingWhitespaces();
-                if (ImGui.menuItem("Show Whitespaces", "", showWhitespaces)) {
+                if (ImGui.menuItem(ImIcons.SPACE.get() + " Show Whitespaces", "", showWhitespaces)) {
                     editor.setShowWhitespaces(!showWhitespaces);
                 }
 
                 boolean readOnly = editor.isReadOnly();
-                if (ImGui.menuItem("Read Only", "", readOnly)) {
+                if (ImGui.menuItem(ImIcons.LOCK.get() + " Read Only", "", readOnly)) {
                     editor.setReadOnly(!readOnly);
                 }
                 ImGui.endMenu();
             }
 
-            if (ImGui.beginMenu("Tools")) {
-                if (ImGui.menuItem("Trigger Autocomplete", "Ctrl+Space")) {
+            if (ImGui.beginMenu(ImIcons.SETTINGS.get() + " Tools")) {
+                if (ImGui.menuItem(ImIcons.SEARCH.get() + " Trigger Autocomplete", "Ctrl+Space")) {
                     triggerAutocomplete();
                 }
-                if (ImGui.menuItem("Add Error Marker")) {
+                if (ImGui.menuItem(ImIcons.ERROR.get() + " Add Error Marker")) {
                     addTestErrorMarker();
                 }
-                if (ImGui.menuItem("Clear Error Markers")) {
+                if (ImGui.menuItem(ImIcons.DELETE.get() + " Clear Error Markers")) {
                     clearErrorMarkers();
                 }
                 ImGui.endMenu();

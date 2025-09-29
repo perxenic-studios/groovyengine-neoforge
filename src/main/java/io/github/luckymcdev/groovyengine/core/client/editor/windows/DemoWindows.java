@@ -47,7 +47,7 @@ public class DemoWindows {
     public static class IconsWindow extends EditorWindow {
 
         public IconsWindow() {
-            super("Icons");
+            super(ImIcons.CIRCLE.get()+" Icons Window");
         }
 
         @Override

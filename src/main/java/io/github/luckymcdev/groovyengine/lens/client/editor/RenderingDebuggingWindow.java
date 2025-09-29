@@ -3,7 +3,9 @@ package io.github.luckymcdev.groovyengine.lens.client.editor;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
+import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
+import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.target.LensRenderTargets;
@@ -19,77 +21,60 @@ public class RenderingDebuggingWindow extends EditorWindow {
     public static boolean lightingChangesEnabled = false;
 
     public RenderingDebuggingWindow() {
-        super("Rendering Debug", "rendering_debug");
+        super(ImIcons.CAMERA.get() + " Rendering Debug", "rendering_debug");
     }
 
     @Override
     public void render(ImGuiIO io) {
-        if (ImGui.begin(title)) {
-            // Post-processing controls
-            if (ImGui.collapsingHeader("Post Processing")) {
-                if (ImGui.button("Toggle CrtPostShader")) {
+        ImUtil.window(title, () -> {
+            ImUtil.collapsingHeader(ImIcons.TUNE.get() + " Post Processing", () -> {
+                ImUtil.button(ImIcons.APERTURE.get() + " Toggle CrtPostShader", () -> {
                     CrtPostShader.INSTANCE.setActive(!CrtPostShader.INSTANCE.isActive());
-                }
+                });
 
-                if (ImGui.button("Toggle SuperDuperPostShader")) {
+                ImUtil.button(ImIcons.APERTURE.get() + " Toggle SuperDuperPostShader", () -> {
                     SuperDuperPostShader.INSTANCE.setActive(!SuperDuperPostShader.INSTANCE.isActive());
-                }
-            }
+                });
+            });
 
-            ImGui.separator();
-
-            // Texture preview
-            if (ImGui.collapsingHeader("Texture Preview")) {
-                ImGui.text("Render Minecraft Textures in imgui:");
-
+            ImUtil.collapsingHeader(ImIcons.TEXTURE.get() + " Texture Preview", () -> {
+                ImGui.text(ImIcons.VISIBLE.get() + " Render Minecraft Textures in imgui:");
                 float width = 64;
                 float height = 64;
-
                 ImGraphics.texture(ResourceLocation.withDefaultNamespace("textures/block/dirt.png"), width, height);
-            }
+            });
 
-            ImGui.separator();
-
-            // Render targets
-            if (ImGui.collapsingHeader("Render Targets")) {
+            ImUtil.collapsingHeader(ImIcons.LAYERS.get() + " Render Targets", () -> {
                 if (ImGui.beginTabBar("RenderTargetTabs")) {
-                    renderRenderTargetTab("After Sky", LensRenderTargets.getAfterSkyTextureId());
-                    renderRenderTargetTab("After Solid Blocks", LensRenderTargets.getAfterSolidBlocksTextureId());
-                    renderRenderTargetTab("After Cutout Mipped Blocks", LensRenderTargets.getAfterCutoutMippedBlocksTextureId());
-                    renderRenderTargetTab("After Entities", LensRenderTargets.getAfterEntitiesTextureId());
-                    renderRenderTargetTab("After Block Entities", LensRenderTargets.getAfterBlockEntitiesTextureId());
-                    renderRenderTargetTab("After Translucent Blocks", LensRenderTargets.getAfterTranslucentBlocksTextureId());
-                    renderRenderTargetTab("After Tripwire Blocks", LensRenderTargets.getAfterTripwireBlocksTextureId());
-                    renderRenderTargetTab("After Particles", LensRenderTargets.getAfterParticlesTextureId());
-                    renderRenderTargetTab("After Weather", LensRenderTargets.getAfterWeatherTextureId());
-                    renderRenderTargetTab("After Level", LensRenderTargets.getAfterLevelTextureId());
-                    renderRenderTargetTabFlipped("After PostProcessing", Minecraft.getInstance().getMainRenderTarget().getColorTextureId());
-
+                    renderRenderTargetTab(ImIcons.SUN.get() + " After Sky", LensRenderTargets.getAfterSkyTextureId());
+                    renderRenderTargetTab(ImIcons.BLOCK.get() + " After Solid Blocks", LensRenderTargets.getAfterSolidBlocksTextureId());
+                    renderRenderTargetTab(ImIcons.LAYERS.get() + " After Cutout Mipped Blocks", LensRenderTargets.getAfterCutoutMippedBlocksTextureId());
+                    renderRenderTargetTab(ImIcons.PERSON.get() + " After Entities", LensRenderTargets.getAfterEntitiesTextureId());
+                    renderRenderTargetTab(ImIcons.FRAMED_CUBE.get() + " After Block Entities", LensRenderTargets.getAfterBlockEntitiesTextureId());
+                    renderRenderTargetTab(ImIcons.BLUR.get() + " After Translucent Blocks", LensRenderTargets.getAfterTranslucentBlocksTextureId());
+                    renderRenderTargetTab(ImIcons.SLASH.get() + " After Tripwire Blocks", LensRenderTargets.getAfterTripwireBlocksTextureId());
+                    renderRenderTargetTab(ImIcons.ANIMATION.get() + " After Particles", LensRenderTargets.getAfterParticlesTextureId());
+                    renderRenderTargetTab(ImIcons.WEATHER.get() + " After Weather", LensRenderTargets.getAfterWeatherTextureId());
+                    renderRenderTargetTab(ImIcons.WORLD.get() + " After Level", LensRenderTargets.getAfterLevelTextureId());
+                    renderRenderTargetTabFlipped(ImIcons.CAMERA.get() + " After PostProcessing", Minecraft.getInstance().getMainRenderTarget().getColorTextureId());
                     ImGui.endTabBar();
                 }
-            }
+            });
 
-            // Light texture
-            if (ImGui.collapsingHeader("Lighting Changes")) {
-
-                if(ImGui.button("Toggle Lighting Changes")) {
+            ImUtil.collapsingHeader(ImIcons.LIGHTBULB.get() + " Lighting Changes", () -> {
+                ImUtil.button(ImIcons.TOGGLE_ON.get() + " Toggle Lighting Changes", () -> {
                     lightingChangesEnabled = !lightingChangesEnabled;
-                }
+                });
                 ImGui.sameLine();
-
-                ImGui.text(""+lightingChangesEnabled);
-
-                ImGui.separator();
+                ImGui.text("" + lightingChangesEnabled);
 
                 ImGui.text("Current Light Texture: ");
                 LightTexture lightText = Minecraft.getInstance().gameRenderer.lightTexture();
                 float lightWidth = 500;
                 float lightHeight = 500;
-
                 ImGui.image(lightText.lightTexture.getId(), lightWidth, lightHeight);
-            }
-        }
-        ImGui.end();
+            });
+        });
     }
 
     private void renderRenderTargetTab(String label, int textureId) {
