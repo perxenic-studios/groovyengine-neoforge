@@ -4,6 +4,7 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
 import imgui.type.ImBoolean;
+import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -107,6 +108,20 @@ public class ImUtil {
         if(ImGui.collapsingHeader(label)) {
             body.run();
         }
+    }
+
+    public static void pushIconScale() {
+        ImGraphics.INSTANCE.pushStack();
+        ImGraphics.INSTANCE.setFontScale(1.75f);
+    }
+
+    public static void pushIconScale(float multiplier) {
+        ImGraphics.INSTANCE.pushStack();
+        ImGraphics.INSTANCE.setFontScale(1.75f * multiplier);
+    }
+
+    public static void popIconScale() {
+        ImGraphics.INSTANCE.popStack();
     }
 
 

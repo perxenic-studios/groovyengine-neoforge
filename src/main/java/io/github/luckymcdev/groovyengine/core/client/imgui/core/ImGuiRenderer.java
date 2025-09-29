@@ -39,6 +39,7 @@ public class ImGuiRenderer {
         WindowManager.registerWindow(new DemoWindows.AboutWindow(), "ImGui");
         WindowManager.registerWindow(new DemoWindows.DemoWindow(), "ImGui");
         WindowManager.registerWindow(new DemoWindows.MetricsWindow(), "ImGui");
+        WindowManager.registerWindow(new DemoWindows.IconsWindow(), "ImGui");
 
         initialized = true;
     }

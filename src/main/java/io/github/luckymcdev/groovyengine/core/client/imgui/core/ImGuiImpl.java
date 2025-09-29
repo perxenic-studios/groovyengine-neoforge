@@ -36,50 +36,64 @@ public class ImGuiImpl {
     }
 
     public static void loadFonts(net.minecraft.server.packs.resources.ResourceManager resourceManager) {
-        GE.CORE_LOG.info("Loading ImGui fonts...");
+        GE.CORE_LOG.debug("Loading ImGui fonts...");
 
-        final ImGuiIO data = ImGui.getIO();
-        final ImFontAtlas fonts = data.getFonts();
+        final ImGuiIO io = ImGui.getIO();
+        final ImFontAtlas fonts = io.getFonts();
         final ImFontGlyphRangesBuilder rangesBuilder = new ImFontGlyphRangesBuilder();
 
-        // Add all required glyph sets
         rangesBuilder.addRanges(fonts.getGlyphRangesDefault());
         rangesBuilder.addRanges(fonts.getGlyphRangesCyrillic());
         rangesBuilder.addRanges(fonts.getGlyphRangesJapanese());
         short[] glyphRanges = rangesBuilder.buildRanges();
 
         try {
-            // Load font TTF from mod resources using ResourceManager
-            ResourceLocation fontLocation = ResourceLocation.fromNamespaceAndPath("groovyengine", "fonts/jetbrains_mono_regular.ttf");
-
-            var resource = resourceManager.getResource(fontLocation);
-            if (resource.isPresent()) {
+            ResourceLocation jetBrainsLocation = GE.id("fonts/jetbrains_mono_regular.ttf");
+            var jetBrainsRes = resourceManager.getResource(jetBrainsLocation);
+            if (jetBrainsRes.isPresent()) {
                 byte[] fontData;
-                try (var inputStream = resource.get().open()) {
-                    fontData = inputStream.readAllBytes();
+                try (var input = jetBrainsRes.get().open()) {
+                    fontData = input.readAllBytes();
                 }
 
                 ImFontConfig config = new ImFontConfig();
-                config.setGlyphRanges(glyphRanges);
                 config.setName("JetBrains Mono Regular");
+                config.setGlyphRanges(glyphRanges);
 
-                fonts.addFontFromMemoryTTF(fontData, 16f, config);
                 defaultFont = fonts.addFontFromMemoryTTF(fontData, 16f, config);
-                fonts.build();
-
                 config.destroy();
-
-                GE.CORE_LOG.info("Successfully loaded JetBrains Mono font ({} bytes)", fontData.length);
+                GE.CORE_LOG.debug("Loaded JetBrains Mono font ({} bytes)", fontData.length);
             } else {
-                GE.CORE_LOG.info("Font file not found, using default font");
                 defaultFont = fonts.addFontDefault();
-                fonts.build();
+                GE.CORE_LOG.debug("JetBrains font not found, using default");
             }
-        } catch (Exception e) {
-            GE.CORE_LOG.error("Failed to load custom font, using default: {}", e.getMessage());
-            e.printStackTrace();
 
-            // Fallback to default font
+            ResourceLocation materialLocation = GE.id("fonts/material_icons_round_regular.ttf");
+            var materialRes = resourceManager.getResource(materialLocation);
+            if (materialRes.isPresent()) {
+                byte[] iconData;
+                try (var input = materialRes.get().open()) {
+                    iconData = input.readAllBytes();
+                }
+
+                ImFontConfig iconConfig = new ImFontConfig();
+                iconConfig.setMergeMode(true);
+                iconConfig.setPixelSnapH(true);
+                iconConfig.setName("Material Icons");
+
+                short[] iconRanges = new short[]{(short) 0xE000, (short) 0xF8FF, 0};
+
+                fonts.addFontFromMemoryTTF(iconData, 16f, iconConfig, iconRanges);
+                iconConfig.destroy();
+
+                GE.CORE_LOG.debug("Merged Material Icons font ({} bytes)", iconData.length);
+            } else {
+                GE.CORE_LOG.debug("Material Icons font not found, skipping merge");
+            }
+
+            fonts.build();
+        } catch (Exception e) {
+            GE.CORE_LOG.error("Failed to load fonts: {}", e.getMessage());
             defaultFont = fonts.addFontDefault();
             fonts.build();
         }
