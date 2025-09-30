@@ -11,6 +11,7 @@ import io.github.luckymcdev.groovyengine.core.systems.structure.FileTreeGenerato
 import io.github.luckymcdev.groovyengine.lens.LensModule;
 import io.github.luckymcdev.groovyengine.scribe.ScribeModule;
 import io.github.luckymcdev.groovyengine.threads.ThreadsModule;
+import io.github.luckymcdev.groovyengine.threads.core.logging.LogCapture;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManager;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManagerImpl;
 import net.minecraft.server.packs.PackType;
@@ -36,6 +37,7 @@ public class GroovyEngine {
     private static final ModuleManager moduleManager = ModuleManager.getInstance();
 
     public GroovyEngine(IEventBus modEventBus, ModContainer modContainer) {
+        LogCapture.hookLog4j();
         FileTreeGenerator.generateFileStructure();
 
         modEventBus.addListener(this::commonSetup);
