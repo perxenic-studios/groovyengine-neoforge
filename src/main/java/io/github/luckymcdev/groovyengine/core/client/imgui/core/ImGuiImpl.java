@@ -42,7 +42,10 @@ public class ImGuiImpl {
         final ImGuiIO io = ImGui.getIO();
         final ImFontAtlas fonts = io.getFonts();
 
-        short[] defaultGlyphRanges = fonts.getGlyphRangesDefault();
+        ImFontGlyphRangesBuilder builder = new ImFontGlyphRangesBuilder();
+        builder.addRanges(fonts.getGlyphRangesDefault());    // Basic + Extended Latin
+        builder.addRanges(fonts.getGlyphRangesCyrillic());   // Cyrillic characters
+        short[] combinedGlyphRanges = builder.buildRanges();
 
         try {
             // Load JetBrains Mono
@@ -57,7 +60,7 @@ public class ImGuiImpl {
                 if (fontData.length > 0) {
                     ImFontConfig config = new ImFontConfig();
                     config.setName("JetBrains Mono");
-                    config.setGlyphRanges(defaultGlyphRanges);
+                    config.setGlyphRanges(combinedGlyphRanges);
 
                     defaultFont = fonts.addFontFromMemoryTTF(fontData, 16f, config);
                     config.destroy();
