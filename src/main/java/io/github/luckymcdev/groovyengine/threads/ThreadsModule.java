@@ -1,6 +1,7 @@
 package io.github.luckymcdev.groovyengine.threads;
 
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.WindowManager;
+import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.systems.module.Module;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.threads.client.editor.ThreadsWindow;
@@ -31,6 +32,6 @@ public class ThreadsModule implements Module {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void registerWindows() {
-        WindowManager.registerWindow(new ThreadsWindow(), "Threads");
+        WindowManager.registerWindow(new ThreadsWindow(), ImIcons.CODE.get()+" Threads");
     }
 }

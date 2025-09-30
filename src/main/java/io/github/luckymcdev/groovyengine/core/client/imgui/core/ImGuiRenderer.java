@@ -12,6 +12,7 @@ import io.github.luckymcdev.groovyengine.core.client.editor.windows.*;
 import imgui.ImGui;
 import imgui.flag.ImGuiDockNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
+import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.lens.client.editor.RenderingDebuggingWindow;
 import io.github.luckymcdev.groovyengine.scribe.client.editor.ScribeWindow;
 import io.github.luckymcdev.groovyengine.threads.client.editor.ThreadsWindow;
@@ -99,10 +100,10 @@ public class ImGuiRenderer {
             // Define the exact order you want
             List<String> desiredOrder = Arrays.asList(
                     "ImGui",        // Leftmost
-                    "Construct",    //
-                    "Lens",         //
-                    "Threads",      //
-                    "Scribe",       //
+                    ImIcons.WRENCH.get()+" Construct",    //
+                    ImIcons.CAMERA.get() + " Lens",         //
+                    ImIcons.CODE.get()+" Threads",      //
+                    ImIcons.EDIT.get()+" Scribe",       //
                     "Debug"         // Rightmost before View/Help
             );
 

@@ -2,6 +2,7 @@ package io.github.luckymcdev.groovyengine.scribe;
 
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.WindowManager;
+import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.systems.module.Module;
 import io.github.luckymcdev.groovyengine.scribe.client.editor.ScribeWindow;
 import net.neoforged.api.distmarker.Dist;
@@ -17,6 +18,6 @@ public class ScribeModule implements Module {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void registerWindows() {
-        WindowManager.registerWindow(new ScribeWindow(), "Scribe");
+        WindowManager.registerWindow(new ScribeWindow(), ImIcons.EDIT.get()+" Scribe");
     }
 }
