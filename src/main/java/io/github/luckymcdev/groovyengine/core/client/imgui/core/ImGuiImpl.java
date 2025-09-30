@@ -42,7 +42,7 @@ public class ImGuiImpl {
         final ImGuiIO io = ImGui.getIO();
         final ImFontAtlas fonts = io.getFonts();
 
-        short[] defaultGlyphRanges = new ImFontGlyphRangesBuilder().buildRanges();
+        short[] defaultGlyphRanges = fonts.getGlyphRangesDefault();
 
         try {
             // Load JetBrains Mono
