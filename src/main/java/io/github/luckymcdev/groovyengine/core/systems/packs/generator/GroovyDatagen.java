@@ -38,6 +38,7 @@ public class GroovyDatagen {
         INSTANCE.run();
     }
 
+    @Deprecated
     public static void addUnified(UnifiedDataProvider provider) {
         INSTANCE.addBlockStateProvider(provider::createBlockStateProvider);
         INSTANCE.addBlockTagsProvider(provider::createBlockTagProvider);

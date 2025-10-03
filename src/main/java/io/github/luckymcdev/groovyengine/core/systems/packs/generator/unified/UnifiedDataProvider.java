@@ -16,6 +16,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.concurrent.CompletableFuture;
 
+@Deprecated
 public abstract class UnifiedDataProvider {
 
     protected abstract DeferredRegister<Block> getBlockRegistry();
