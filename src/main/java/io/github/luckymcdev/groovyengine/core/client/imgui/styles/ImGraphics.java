@@ -62,7 +62,7 @@ public class ImGraphics {
     public void pushRootStack() {
         pushStack();
         //setDefaultStyle(ImGui.getStyle());
-        ImThemes.applyModernDark();
+        ImThemes.applyCherry();
         setNumberType(ImNumberType.DOUBLE);
         setNumberRange(null);
     }
