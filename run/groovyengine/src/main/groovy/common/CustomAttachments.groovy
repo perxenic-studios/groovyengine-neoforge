@@ -1,4 +1,4 @@
-// TestAttachments.groovy
+//disabled
 package common
 
 import dev.perxenic.acidapi.api.datagen.*
