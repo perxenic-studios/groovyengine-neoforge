@@ -12,7 +12,7 @@ public class CatpuccinMochaImTheme implements ImTheme {
 
     @Override
     public void applyTheme(ImGuiStyle style) {
-// Base colors inspired by Catppuccin Mocha
+        // Base colors inspired by Catppuccin Mocha
         style.setColor(ImGuiCol.Text, 0.90f, 0.89f, 0.88f, 1.00f);         // Latte
         style.setColor(ImGuiCol.TextDisabled, 0.60f, 0.56f, 0.52f, 1.00f); // Surface2
         style.setColor(ImGuiCol.WindowBg, 0.17f, 0.14f, 0.20f, 1.00f);     // Base
@@ -72,7 +72,6 @@ public class CatpuccinMochaImTheme implements ImTheme {
         // Style adjustments
         style.setWindowRounding(6.0f);
         style.setFrameRounding(4.0f);
-        style.setScrollbarRounding(4.0f);
         style.setGrabRounding(3.0f);
         style.setChildRounding(4.0f);
 
@@ -81,10 +80,17 @@ public class CatpuccinMochaImTheme implements ImTheme {
         style.setFramePadding(5.0f, 4.0f);
         style.setItemSpacing(6.0f, 6.0f);
         style.setItemInnerSpacing(6.0f, 6.0f);
-        style.setIndentSpacing(22.0f);
 
-        style.setScrollbarSize(14.0f);
         style.setGrabMinSize(10.0f);
+
+        style.setPopupRounding(3F);
+        style.setScrollbarRounding(9F);
+
+        style.setIndentSpacing(25F);
+        style.setScrollbarSize(15F);
+        style.setWindowBorderSize(0F);
+        style.setSelectableTextAlign(0F, 0.5F);
+        style.setAlpha(1F);
 
         style.setAntiAliasedLines(true);
         style.setAntiAliasedFill(true);
