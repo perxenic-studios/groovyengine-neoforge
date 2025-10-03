@@ -5,6 +5,7 @@ import imgui.ImGuiStyle;
 import imgui.extension.imnodes.ImNodes;
 import imgui.flag.ImGuiCol;
 import io.github.luckymcdev.groovyengine.core.client.imgui.core.ImNumberType;
+import io.github.luckymcdev.groovyengine.core.client.imgui.styles.theme.ImThemes;
 import io.github.luckymcdev.groovyengine.util.color.ARGB;
 import io.github.luckymcdev.groovyengine.util.color.Color;
 import io.github.luckymcdev.groovyengine.util.math.NumberRange;
@@ -60,7 +61,8 @@ public class ImGraphics {
 
     public void pushRootStack() {
         pushStack();
-        setDefaultStyle(ImGui.getStyle());
+        //setDefaultStyle(ImGui.getStyle());
+        ImThemes.applyModernDark();
         setNumberType(ImNumberType.DOUBLE);
         setNumberRange(null);
     }
