@@ -36,6 +36,7 @@ public class PoseScope {
     }
 
     public void run(Runnable action) {
+        stack.setIdentity();
         stack.pushPose();
         try {
             if (world) RenderUtils.setupWorldRendering(stack);
