@@ -25,7 +25,7 @@ public class KeybindManager {
     public static final KeyMapping OPEN_EDITOR_SCREEN = new KeyMapping(
             "key.groovyengine.open_editor_screen",
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_F2, // Default to F2, can be changed by user
+            GLFW.GLFW_KEY_G, // Default to G, can be changed by user
             "key.categories.groovyengine"
     );
 
