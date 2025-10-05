@@ -13,6 +13,7 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.tes
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.PostProcessManager;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.core.Renderer;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.PoseScope;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
@@ -62,6 +63,8 @@ public class GroovyEngineClient {
     private static final ObjModel suzanneModel = new ObjModel(GE.id("suzanne"));
     private static final ObjModel cubeModel = new ObjModel(GE.id("cube"));
 
+    private static final Renderer renderer = Renderer.getInstance();
+
     public GroovyEngineClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
@@ -75,6 +78,8 @@ public class GroovyEngineClient {
         SuperDuperPostShader.INSTANCE.setActive(false);
 
         NeoForge.EVENT_BUS.addListener(ImGuiRenderer::onRender);
+
+        onRenderLevelStageEvent();
 
         ObjModelManager.registerObjModel(suzanneModel);
         ObjModelManager.registerObjModel(cubeModel);
@@ -128,54 +133,55 @@ public class GroovyEngineClient {
         }
     }
 
-    @SubscribeEvent
-    static void onRenderLevelStageEvent(RenderLevelStageEvent event) {
-        registerModuleWindows();
+    static void onRenderLevelStageEvent() {
+        renderer.getWorldRenderer().onRenderLevelStage(event -> {
+            registerModuleWindows();
 
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
+            if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
 
-        Minecraft mc = Minecraft.getInstance();
-        PoseStack stack = event.getPoseStack();
-        MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
+            Minecraft mc = Minecraft.getInstance();
+            PoseStack stack = event.getPoseStack();
+            MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
 
-        // Triangle
-        new PoseScope(stack)
-                .translate(100, 200, 100)
-                .setWorld(true)
-                .run(() -> {
-                    renderVFXBuilderTriangle(stack, buffers);
-                });
+            // Triangle
+            new PoseScope(stack)
+                    .translate(100, 200, 100)
+                    .setWorld(true)
+                    .run(() -> {
+                        renderVFXBuilderTriangle(stack, buffers);
+                    });
 
-        // Sphere
-        new PoseScope(stack)
-                .translate(100, 200, 100)
-                .setWorld(true)
-                .run(() -> {
-                    renderVFXBuilderSphere(stack, buffers);
-                });
+            // Sphere
+            new PoseScope(stack)
+                    .translate(100, 200, 100)
+                    .setWorld(true)
+                    .run(() -> {
+                        renderVFXBuilderSphere(stack, buffers);
+                    });
 
-        // Torus
-        new PoseScope(stack)
-                .translate(100, 200, 100)
-                .setWorld(true)
-                .run(() -> {
-                    renderVFXBuilderTorus(stack, buffers);
-                });
+            // Torus
+            new PoseScope(stack)
+                    .translate(100, 200, 100)
+                    .setWorld(true)
+                    .run(() -> {
+                        renderVFXBuilderTorus(stack, buffers);
+                    });
 
-        new PoseScope(stack)
-                .run(() -> {
-                    renderScreenVFX(stack);
-                });
+            new PoseScope(stack)
+                    .run(() -> {
+                        renderScreenVFX(stack);
+                    });
 
-        new PoseScope(stack)
-                .run(() -> {
-                    renderSuzanne(stack);
-                });
+            new PoseScope(stack)
+                    .run(() -> {
+                        renderSuzanne(stack);
+                    });
 
-        new PoseScope(stack)
-                .run(() -> {
-                    renderCube(stack);
-                });
+            new PoseScope(stack)
+                    .run(() -> {
+                        renderCube(stack);
+                    });
+        });
     }
 
     static void renderSuzanne(PoseStack stack) {
