@@ -61,4 +61,17 @@ public class GeMaterials {
             .cullFaces(false)
             .build()
             .withPipeline(V2);
+
+    public static final Material OBJ_MODEL = Materials.builder("obj_model")
+            .shader(GameRenderer.getRendertypeEntitySolidShader()) // Better for dynamic objects
+            .format(DefaultVertexFormat.NEW_ENTITY) // Proper format with normals
+            .vertexMode(VertexFormat.Mode.QUADS)
+            .bufferSize(256)
+            .transparency(TransparencyMode.NONE)
+            .texture(ResourceLocation.withDefaultNamespace("textures/block/white_concrete.png"))
+            .lightmap(true)
+            .overlay(true)
+            .cullFaces(true)
+            .build()
+            .withPipeline(V2);
 }

@@ -16,11 +16,16 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.tes
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.PoseScope;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.vertex.CubeVertexData;
+import io.github.luckymcdev.groovyengine.lens.client.systems.gltf.GltfModel;
+import io.github.luckymcdev.groovyengine.lens.client.systems.gltf.GltfModelManager;
+import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
+import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModelManager;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -48,6 +53,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials.DEBUG_TRIANGLES;
+import static io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials.OBJ_MODEL;
 
 @Mod(value = GE.MODID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = GE.MODID, value = Dist.CLIENT)
@@ -55,6 +61,8 @@ import static io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMat
 public class GroovyEngineClient {
 
     private static boolean initializedModuleWindows = false;
+
+    private static final ObjModel suzanneModel = new ObjModel(GE.id("suzanne"));
 
     public GroovyEngineClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
@@ -69,6 +77,9 @@ public class GroovyEngineClient {
         SuperDuperPostShader.INSTANCE.setActive(false);
 
         NeoForge.EVENT_BUS.addListener(ImGuiRenderer::onRender);
+
+        ObjModelManager.registerObjModel(suzanneModel);
+
 
         Minecraft.getInstance().execute(() -> {
             ResourceLocation shaderConfig = GE.id("compute_test");
@@ -156,6 +167,34 @@ public class GroovyEngineClient {
                 .run(() -> {
                     renderScreenVFX(stack);
                 });
+
+        new PoseScope(stack)
+                .run(() -> {
+                    renderSuzanne(stack);
+                });
+    }
+
+    static void renderSuzanne(PoseStack stack) {
+        RenderUtils.setupWorldRendering(stack);
+
+        Minecraft mc = Minecraft.getInstance();
+        Camera camera = mc.gameRenderer.getMainCamera();
+        Vec3 cameraPos = camera.getPosition();
+
+
+        stack.pushPose();
+
+        // Model position in world
+        Vec3 modelPos = new Vec3(cameraPos.x, cameraPos.y + 75, cameraPos.z);
+        stack.translate(0, 75, 0);
+        stack.scale(10f, 10f, 10f);
+
+        // Get proper lighting at the model's position
+        int packedLight = RenderUtils.FULL_BRIGHT;
+
+        suzanneModel.renderModel(stack, OBJ_MODEL, packedLight);
+
+        stack.popPose();
     }
 
     static void renderVFXBuilderTriangle(PoseStack poseStack, MultiBufferSource bufferSource) {
