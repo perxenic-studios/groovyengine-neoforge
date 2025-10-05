@@ -1,56 +1,63 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Camera;
 
 public class PoseScope {
     private final PoseStack stack;
-    private Vector3f translation;
-    private Vector3f scale = new Vector3f(1,1,1);
-    private Quaternionf rotation;
-    private boolean world;
+    private boolean setupWorldRendering = false;
+    private Runnable preAction = null;
 
     public PoseScope(PoseStack stack) {
         this.stack = stack;
     }
 
-    public PoseScope translate(double x, double y, double z) {
-        this.translation = new Vector3f((float) x, (float) y, (float) z);
+    public PoseScope world() {
+        this.setupWorldRendering = true;
         return this;
     }
 
-    public PoseScope setWorld(boolean enabled) {
-        world = enabled;
-        return this;
+    public PoseScope translate(double x, double y, double z) {
+        return addPreAction(() -> stack.translate(x, y, z));
     }
 
     public PoseScope scale(float x, float y, float z) {
-        this.scale = new Vector3f(x, y, z);
-        return this;
+        return addPreAction(() -> stack.scale(x, y, z));
     }
 
-    public PoseScope rotate(Quaternionf rotation) {
-        this.rotation = rotation;
-        return this;
-    }
-
-    public void run(Runnable action) {
-        stack.setIdentity();
-        stack.pushPose();
-        try {
-            if (world) RenderUtils.setupWorldRendering(stack);
-
-            if( translation != null) stack.translate(translation.x, translation.y, translation.z);
-
-            stack.scale(scale.x, scale.y, scale.z);
-
-            if (rotation != null) stack.mulPose(rotation);
-
-            action.run();
-
-        } finally {
-            stack.popPose();
+    private PoseScope addPreAction(Runnable action) {
+        if (preAction == null) {
+            preAction = action;
+        } else {
+            Runnable oldAction = preAction;
+            preAction = () -> {
+                oldAction.run();
+                action.run();
+            };
         }
+        return this;
+    }
+
+    public void run(StackAction action) {
+        stack.pushPose();
+        stack.setIdentity();
+
+        if (setupWorldRendering) {
+            RenderUtils.setupWorldRendering(stack);
+        }
+        if (preAction != null) {
+            preAction.run();
+        }
+
+        action.execute(stack);
+
+        stack.popPose();
+
+    }
+
+    @FunctionalInterface
+    public interface StackAction {
+        void execute(PoseStack stack);
     }
 }

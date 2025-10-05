@@ -1,12 +1,8 @@
 package io.github.luckymcdev.groovyengine;
 
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import io.github.luckymcdev.groovyengine.core.client.imgui.core.ImGuiRenderer;
 import io.github.luckymcdev.groovyengine.core.systems.module.ModuleManager;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.VFXBuilders;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute.ComputeShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.test.TestShader;
@@ -21,11 +17,8 @@ import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModelManager
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -40,8 +33,6 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
@@ -79,7 +70,7 @@ public class GroovyEngineClient {
 
         NeoForge.EVENT_BUS.addListener(ImGuiRenderer::onRender);
 
-        onRenderLevelStageEvent();
+        rendering();
 
         ObjModelManager.registerObjModel(suzanneModel);
         ObjModelManager.registerObjModel(cubeModel);
@@ -133,7 +124,7 @@ public class GroovyEngineClient {
         }
     }
 
-    static void onRenderLevelStageEvent() {
+    static void rendering() {
         renderer.getWorldRenderer().onRenderLevelStage(event -> {
             registerModuleWindows();
 
@@ -145,54 +136,51 @@ public class GroovyEngineClient {
 
             // Triangle
             new PoseScope(stack)
-                    .translate(100, 200, 100)
-                    .setWorld(true)
-                    .run(() -> {
-                        renderVFXBuilderTriangle(stack, buffers);
+                    .world()
+                    .run(poseStack -> {
+                        poseStack.translate(100, 200, 100);
+                        renderVFXBuilderTriangle(poseStack, buffers);
                     });
 
             // Sphere
             new PoseScope(stack)
-                    .translate(100, 200, 100)
-                    .setWorld(true)
-                    .run(() -> {
-                        renderVFXBuilderSphere(stack, buffers);
+                    .world()
+                    .run(poseStack -> {
+                        poseStack.translate(100, 200, 100);
+                        renderVFXBuilderSphere(poseStack, buffers);
                     });
 
             // Torus
             new PoseScope(stack)
-                    .translate(100, 200, 100)
-                    .setWorld(true)
-                    .run(() -> {
-                        renderVFXBuilderTorus(stack, buffers);
+                    .world()
+                    .run(poseStack -> {
+                        poseStack.translate(100, 200, 100);
+                        renderVFXBuilderTorus(poseStack, buffers);
                     });
 
             new PoseScope(stack)
-                    .run(() -> {
-                        renderScreenVFX(stack);
+                    .run(poseStack -> {
+                        renderScreenVFX(poseStack);
                     });
 
             new PoseScope(stack)
-                    .run(() -> {
-                        renderSuzanne(stack);
+                    .world()
+                    .run(poseStack -> {
+                        renderSuzanne(poseStack);
                     });
 
             new PoseScope(stack)
-                    .run(() -> {
-                        renderCube(stack);
+                    .world()
+                    .run(poseStack -> {
+                        renderCube(poseStack);
                     });
         });
     }
 
     static void renderSuzanne(PoseStack stack) {
-        RenderUtils.setupWorldRendering(stack);
-
         Minecraft mc = Minecraft.getInstance();
         Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
-
-
-        stack.pushPose();
 
         // Model position in world
         Vec3 modelPos = new Vec3(cameraPos.x, cameraPos.y + 75, cameraPos.z);
@@ -203,19 +191,12 @@ public class GroovyEngineClient {
         int packedLight = RenderUtils.FULL_BRIGHT;
 
         suzanneModel.renderModel(stack, OBJ_MODEL, packedLight);
-
-        stack.popPose();
     }
 
     static void renderCube(PoseStack stack) {
-        RenderUtils.setupWorldRendering(stack);
-
         Minecraft mc = Minecraft.getInstance();
         Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
-
-
-        stack.pushPose();
 
         // Model position in world
         stack.translate(0, 125, 0);
@@ -225,12 +206,9 @@ public class GroovyEngineClient {
         int packedLight = RenderUtils.FULL_BRIGHT;
 
         cubeModel.renderModel(stack, OBJ_MODEL, packedLight);
-
-        stack.popPose();
     }
 
     static void renderVFXBuilderTriangle(PoseStack poseStack, MultiBufferSource bufferSource) {
-        RenderUtils.setupWorldRendering(poseStack);
 
         VFXBuilders.WorldVFXBuilder builder = VFXBuilders.createWorld()
                 .setMaterial(DEBUG_TRIANGLES)
@@ -238,18 +216,15 @@ public class GroovyEngineClient {
                 .setColor(0.0f, 1.0f, 0.0f, 1.0f)
                 .setUV(0f, 0f, 1f, 1f);
 
-        poseStack.pushPose();
         poseStack.translate(0, 50, 0);
 
         builder.placeVertex(poseStack, 0.0f, 1.0f, 0.0f);
         builder.placeVertex(poseStack, -1.0f, -1.0f, 0.0f);
         builder.placeVertex(poseStack, 1.0f, -1.0f, 0.0f);
 
-        poseStack.popPose();
     }
 
     static void renderVFXBuilderSphere(PoseStack poseStack, MultiBufferSource bufferSource) {
-        RenderUtils.setupWorldRendering(poseStack);
 
         VFXBuilders.WorldVFXBuilder builder = VFXBuilders.createWorld()
                 .setMaterial(DEBUG_TRIANGLES)
@@ -257,34 +232,26 @@ public class GroovyEngineClient {
                 .setColor(0.0f, 0.0f, 1.0f, 1.0f)
                 .setUV(0f, 0f, 1f, 1f);
 
-        poseStack.pushPose();
         poseStack.translate(-50, 0, 0);
 
         builder.renderSphere(poseStack, 15f, 8, 8);
-
-        poseStack.popPose();
     }
 
     static void renderVFXBuilderTorus(PoseStack poseStack, MultiBufferSource bufferSource) {
-        RenderUtils.setupWorldRendering(poseStack);
-
         VFXBuilders.WorldVFXBuilder builder = VFXBuilders.createWorld()
                 .setMaterial(DEBUG_TRIANGLES)
                 .replaceBufferSource(bufferSource)
                 .setColor(1.0f, 1.0f, 0.0f, 1.0f)
                 .setUV(0f, 0f, 1f, 1f);
 
-        poseStack.pushPose();
         poseStack.translate(0, 0, 50);
 
         // Render a torus
         builder.renderTorus(poseStack, 10f, 3f, 50, 30);
 
-        poseStack.popPose();
     }
 
     static void renderVFXBuilderCube(PoseStack poseStack, MultiBufferSource bufferSource) {
-        RenderUtils.setupWorldRendering(poseStack);
 
         VFXBuilders.WorldVFXBuilder builder = VFXBuilders.createWorld()
                 .setRenderType(RenderType.debugQuads())
@@ -292,10 +259,8 @@ public class GroovyEngineClient {
                 .setColor(1.0f, 0.5f, 0.0f, 1.0f) // Orange color
                 .setUV(0f, 0f, 1f, 1f);
 
-        poseStack.pushPose();
         poseStack.translate(-50, 50, 0);
 
-        poseStack.popPose();
     }
 
     static void renderScreenVFX(PoseStack poseStack) {
