@@ -1,6 +1,7 @@
 package io.github.luckymcdev.groovyengine.lens.client.editor;
 
 import imgui.ImGuiIO;
+import imgui.type.ImFloat;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
@@ -8,6 +9,8 @@ import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.target.LensRenderTargets;
+import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.AnimationController;
+import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.ChupacabraAnimations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +28,12 @@ public class RenderingDebuggingWindow extends EditorWindow {
 
     @Override
     public void render(ImGuiIO io) {
+        renderMainWindow();
+
+        renderAnimationWindow();
+    }
+
+    private void renderMainWindow() {
         ImGe.window(title, () -> {
             ImGe.collapsingHeader(ImIcons.TUNE.get() + " Post Processing", () -> {
                 ImGe.button(ImIcons.APERTURE.get() + " Toggle CrtPostShader", () -> {
@@ -72,6 +81,44 @@ public class RenderingDebuggingWindow extends EditorWindow {
                 float lightWidth = 500;
                 float lightHeight = 500;
                 ImGe.image(lightText.lightTexture.getId(), lightWidth, lightHeight);
+            });
+        });
+    }
+
+    private final float[] animationSpeed = new float[]{1.0f}; // default speed
+
+    private void renderAnimationWindow() {
+        ImGe.window(ImIcons.ANIMATION.get() + " Animation Controller", () -> {
+            ImGe.collapsingHeader("Chupacabra Animations", () -> {
+                AnimationController chupacabraController = ChupacabraAnimations.getController();
+
+                // Slider to adjust speed
+                if (ImGe.sliderFloat("Speed", animationSpeed, 0.0f, 2.0f)) {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                }
+
+                // Display current speed
+                ImGe.sameLine();
+                ImGe.text(String.format("%.2f", animationSpeed[0]));
+
+                ImGe.separator();
+
+                ImGe.button("Head Bob", () -> {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                    chupacabraController.play(ChupacabraAnimations.HEAD_BOB);
+                });
+                ImGe.separator();
+
+                ImGe.button("Head Bounce", () -> {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                    chupacabraController.play(ChupacabraAnimations.HEAD_BOUNCE);
+                });
+                ImGe.separator();
+
+                ImGe.button("Head Wiggle", () -> {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                    chupacabraController.play(ChupacabraAnimations.HEAD_WIGGLE);
+                });
             });
         });
     }

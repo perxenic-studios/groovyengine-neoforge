@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.luckymcdev.groovyengine.core.client.imgui.core.ImGuiRenderer;
 import io.github.luckymcdev.groovyengine.core.systems.module.ModuleManager;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.VFXBuilders;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.material.Material;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute.ComputeShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.test.TestShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.PostProcessManager;
@@ -14,6 +15,7 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.util.PoseScope;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModelManager;
+import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.ChupacabraAnimations;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -53,6 +55,8 @@ public class GroovyEngineClient {
 
     private static final ObjModel suzanneModel = new ObjModel(GE.id("suzanne"));
     private static final ObjModel cubeModel = new ObjModel(GE.id("cube"));
+    private static final ObjModel chupacabraModel = new ObjModel(GE.id("chupacabra"));
+    private static final ResourceLocation chupacabraTexture = GE.id("obj/chupacabra.png");
 
     private static final Renderer renderer = Renderer.getInstance();
 
@@ -75,6 +79,10 @@ public class GroovyEngineClient {
         ObjModelManager.registerObjModel(suzanneModel);
         ObjModelManager.registerObjModel(cubeModel);
 
+        ObjModelManager.registerObjModel(chupacabraModel);
+
+        // Add this line after model registration:
+        ChupacabraAnimations.initialize(chupacabraModel);
 
         Minecraft.getInstance().execute(() -> {
             ResourceLocation shaderConfig = GE.id("compute_test");
@@ -113,6 +121,8 @@ public class GroovyEngineClient {
 
     @SubscribeEvent
     static void tick(ClientTickEvent.Pre event) {
+        float deltaTime = Minecraft.getInstance().getTimer().getGameTimeDeltaTicks();
+        ChupacabraAnimations.update(deltaTime);
     }
 
     @SubscribeEvent
@@ -166,46 +176,67 @@ public class GroovyEngineClient {
             new PoseScope(stack)
                     .world()
                     .run(poseStack -> {
-                        renderSuzanne(poseStack);
+                        renderObjModel(poseStack, suzanneModel, new Vec3(0, 100, 0));
                     });
 
             new PoseScope(stack)
                     .world()
                     .run(poseStack -> {
-                        renderCube(poseStack);
+                        renderObjModel(poseStack, cubeModel, new Vec3(0, 125, 0));
                     });
+
+            new PoseScope(stack)
+                    .world()
+                    .run(poseStack -> {
+                        renderObjModelAnimated(poseStack, chupacabraModel, new Vec3(0, 150, 0), OBJ_MODEL.withTexture(chupacabraTexture));
+                    });
+
         });
     }
 
-    static void renderSuzanne(PoseStack stack) {
+    static void renderObjModel(PoseStack stack, ObjModel model, Vec3 position) {
         Minecraft mc = Minecraft.getInstance();
         Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
 
         // Model position in world
-        Vec3 modelPos = new Vec3(cameraPos.x, cameraPos.y + 75, cameraPos.z);
-        stack.translate(0, 75, 0);
+        stack.translate(position.x, position.y, position.z);
         stack.scale(10f, 10f, 10f);
 
         // Get proper lighting at the model's position
         int packedLight = RenderUtils.FULL_BRIGHT;
 
-        suzanneModel.renderModel(stack, OBJ_MODEL, packedLight);
+        model.renderModel(stack, OBJ_MODEL, packedLight);
     }
 
-    static void renderCube(PoseStack stack) {
+    static void renderObjModel(PoseStack stack, ObjModel model, Vec3 position, Material material) {
         Minecraft mc = Minecraft.getInstance();
         Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
 
         // Model position in world
-        stack.translate(0, 125, 0);
+        stack.translate(position.x, position.y, position.z);
         stack.scale(10f, 10f, 10f);
 
         // Get proper lighting at the model's position
         int packedLight = RenderUtils.FULL_BRIGHT;
 
-        cubeModel.renderModel(stack, OBJ_MODEL, packedLight);
+        model.renderModel(stack, material, packedLight);
+    }
+
+    static void renderObjModelAnimated(PoseStack stack, ObjModel model, Vec3 position, Material material) {
+        Minecraft mc = Minecraft.getInstance();
+        Camera camera = mc.gameRenderer.getMainCamera();
+        Vec3 cameraPos = camera.getPosition();
+
+        // Model position in world
+        stack.translate(position.x, position.y, position.z);
+        stack.scale(10f, 10f, 10f);
+
+        // Get proper lighting at the model's position
+        int packedLight = RenderUtils.FULL_BRIGHT;
+
+        model.renderModelAnimated(stack, material, packedLight);
     }
 
     static void renderVFXBuilderTriangle(PoseStack poseStack, MultiBufferSource bufferSource) {

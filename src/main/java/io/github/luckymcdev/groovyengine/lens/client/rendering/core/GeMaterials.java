@@ -32,7 +32,21 @@ public class GeMaterials {
     public static final PipelineState V2 = new PipelineState(
             true,  // depthTest
             true,  // depthWrite
-            true,  // cullFaces
+            false,  // cullFaces
+            BlendMode.OPAQUE,  // no blending
+            true, // lightmap
+            false, // overlay
+            TransparencyMode.NONE,  // no transparency
+            WriteMask.COLOR_DEPTH // write both color and depth
+    );
+
+    /**
+     * Default Pipeline for OBJ rendering (approved by Lio)
+     */
+    public static final PipelineState OBJ_PIPELINE = new PipelineState(
+            true,  // depthTest
+            true,  // depthWrite
+            false,  // cullFaces
             BlendMode.OPAQUE,  // no blending
             true, // lightmap
             false, // overlay
@@ -63,15 +77,10 @@ public class GeMaterials {
             .withPipeline(V2);
 
     public static final Material OBJ_MODEL = Materials.builder("obj_model")
-            .shader(GameRenderer.getRendertypeEntitySolidShader()) // Better for dynamic objects
-            .format(DefaultVertexFormat.NEW_ENTITY) // Proper format with normals
+            .shader(GameRenderer.getRendertypeEntitySolidShader())
+            .format(DefaultVertexFormat.NEW_ENTITY)
             .vertexMode(VertexFormat.Mode.QUADS)
             .bufferSize(256)
-            .transparency(TransparencyMode.NONE)
             .texture(ResourceLocation.withDefaultNamespace("textures/block/white_concrete.png"))
-            .lightmap(true)
-            .overlay(true)
-            .cullFaces(true)
-            .build()
-            .withPipeline(V2);
+            .build().withPipeline(OBJ_PIPELINE);
 }

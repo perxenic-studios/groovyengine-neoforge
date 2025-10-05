@@ -10,36 +10,63 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ObjParser {
     public List<Vector3f> vertices = new ArrayList<>();
     public List<Vector3f> normals = new ArrayList<>();
     public List<Vec2> uvs = new ArrayList<>();
     public List<Face> faces = new ArrayList<>();
+    public Map<String, ObjObject> objects = new LinkedHashMap<>();
+
+    private ObjObject currentObject;
+    private String currentObjectName = "default";
 
     public void parseObjFile(Resource resource) throws IOException {
+        // Initialize default object
+        currentObject = new ObjObject(currentObjectName);
+        objects.put(currentObjectName, currentObject);
+
         InputStream inputStream = resource.open();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
         String line;
         while ((line = reader.readLine()) != null) {
-            if (line.startsWith("v ")) {
-                String[] tokens = line.split(" ");
+            line = line.trim();
+
+            if (line.isEmpty() || line.startsWith("#")) {
+                continue; // Skip empty lines and comments
+            }
+
+            if (line.startsWith("o ")) {
+                // New object definition
+                String[] tokens = line.split("\\s+", 2);
+                currentObjectName = tokens.length > 1 ? tokens[1] : "unnamed";
+                currentObject = objects.get(currentObjectName);
+
+                if (currentObject == null) {
+                    currentObject = new ObjObject(currentObjectName);
+                    objects.put(currentObjectName, currentObject);
+                }
+
+            } else if (line.startsWith("v ")) {
+                String[] tokens = line.split("\\s+");
                 float x = Float.parseFloat(tokens[1]);
                 float y = Float.parseFloat(tokens[2]);
                 float z = Float.parseFloat(tokens[3]);
                 vertices.add(new Vector3f(x, y, z));
 
             } else if (line.startsWith("vn ")) {
-                String[] tokens = line.split(" ");
+                String[] tokens = line.split("\\s+");
                 float x = Float.parseFloat(tokens[1]);
                 float y = Float.parseFloat(tokens[2]);
                 float z = Float.parseFloat(tokens[3]);
                 normals.add(new Vector3f(x, y, z));
 
             } else if (line.startsWith("vt ")) {
-                String[] tokens = line.split(" ");
+                String[] tokens = line.split("\\s+");
                 float u = Float.parseFloat(tokens[1]);
                 float v = Float.parseFloat(tokens[2]);
                 uvs.add(new Vec2(u, v));
@@ -47,6 +74,7 @@ public class ObjParser {
             } else if (line.startsWith("f ")) {
                 Face face = getFace(line);
                 faces.add(face);
+                currentObject.addFace(face);
             }
         }
         reader.close();
@@ -96,5 +124,13 @@ public class ObjParser {
 
     public ArrayList<Face> getFaces() {
         return (ArrayList<Face>) faces;
+    }
+
+    public Map<String, ObjObject> getObjects() {
+        return objects;
+    }
+
+    public ObjObject getObject(String name) {
+        return objects.get(name);
     }
 }
