@@ -1,6 +1,5 @@
 package io.github.luckymcdev.groovyengine.scribe.client.editor;
 
-import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
@@ -8,9 +7,9 @@ import imgui.type.ImString;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
+import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
-import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import io.github.luckymcdev.groovyengine.scribe.ui.data.ChestSlotData;
 import io.github.luckymcdev.groovyengine.scribe.ui.data.ChestUIData;
 import net.minecraft.client.Minecraft;
@@ -24,8 +23,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 @OnlyIn(Dist.CLIENT)
@@ -57,25 +54,25 @@ public class ScribeWindow extends EditorWindow {
 
     @Override
     public void render(ImGuiIO io) {
-        ImUtil.window(title, () -> {
+        ImGe.window(title, () -> {
             renderMenuBar();
 
             // Main layout - split into chest area and properties panel
-            ImVec2 availableSize = ImGui.getContentRegionAvail();
+            ImVec2 availableSize = ImGe.getContentRegionAvail();
             float panelWidth = 300;
             float chestAreaWidth = availableSize.x - panelWidth - 10;
 
             // Left side - Chest editor
-            ImGui.beginChild("ChestArea", chestAreaWidth, 0, true);
+            ImGe.beginChild("ChestArea", chestAreaWidth, 0, true);
             renderChestEditor();
-            ImGui.endChild();
+            ImGe.endChild();
 
-            ImGui.sameLine();
+            ImGe.sameLine();
 
             // Right side - Properties panel
-            ImGui.beginChild("PropertiesPanel", panelWidth, 0, true);
+            ImGe.beginChild("PropertiesPanel", panelWidth, 0, true);
             renderPropertiesPanel();
-            ImGui.endChild();
+            ImGe.endChild();
 
             // Modals
             if (showItemPicker) {
@@ -107,71 +104,71 @@ public class ScribeWindow extends EditorWindow {
     }
 
     private void renderMenuBar() {
-        if (ImGui.beginMenuBar()) {
-            if (ImGui.beginMenu(ImIcons.FOLDER.get() + " File")) {
-                if (ImGui.menuItem(ImIcons.ADD.get() + " New", "Ctrl+N")) {
+        if (ImGe.beginMenuBar()) {
+            if (ImGe.beginMenu(ImIcons.FOLDER.get() + " File")) {
+                if (ImGe.menuItem(ImIcons.ADD.get() + " New", "Ctrl+N")) {
                     newChestUI();
                 }
-                if (ImGui.menuItem(ImIcons.OPEN_IN_NEW.get() + " Load", "Ctrl+O")) {
+                if (ImGe.menuItem(ImIcons.OPEN_IN_NEW.get() + " Load", "Ctrl+O")) {
                     loadChestUI();
                 }
-                if (ImGui.menuItem(ImIcons.SAVE.get() + " Save", "Ctrl+S")) {
+                if (ImGe.menuItem(ImIcons.SAVE.get() + " Save", "Ctrl+S")) {
                     saveChestUI();
                 }
-                if (ImGui.menuItem(ImIcons.DOWNLOAD.get() + " Export", "Ctrl+E")) {
+                if (ImGe.menuItem(ImIcons.DOWNLOAD.get() + " Export", "Ctrl+E")) {
                     exportChestUI();
                 }
-                ImGui.endMenu();
+                ImGe.endMenu();
             }
 
-            if (ImGui.beginMenu(ImIcons.EDIT.get() + " Edit")) {
-                if (ImGui.menuItem(ImIcons.DELETE.get() + " Clear All Slots")) {
+            if (ImGe.beginMenu(ImIcons.EDIT.get() + " Edit")) {
+                if (ImGe.menuItem(ImIcons.DELETE.get() + " Clear All Slots")) {
                     clearAllSlots();
                 }
-                if (ImGui.menuItem(ImIcons.COPY.get() + " Copy Selected Slot", "Ctrl+C", false, selectedSlot != -1)) {
+                if (ImGe.menuItem(ImIcons.COPY.get() + " Copy Selected Slot", "Ctrl+C", false, selectedSlot != -1)) {
                     copySlot();
                 }
-                if (ImGui.menuItem(ImIcons.PASTE.get() + " Paste Slot", "Ctrl+V", false, hasClipboardData())) {
+                if (ImGe.menuItem(ImIcons.PASTE.get() + " Paste Slot", "Ctrl+V", false, hasClipboardData())) {
                     pasteSlot();
                 }
-                ImGui.endMenu();
+                ImGe.endMenu();
             }
 
-            if (ImGui.beginMenu(ImIcons.VISIBLE.get() + " View")) {
-                if (ImGui.menuItem(ImIcons.FULLSCREEN.get() + " Reset Zoom")) {
+            if (ImGe.beginMenu(ImIcons.VISIBLE.get() + " View")) {
+                if (ImGe.menuItem(ImIcons.FULLSCREEN.get() + " Reset Zoom")) {
                     // Could implement zoom functionality
                 }
-                ImGui.endMenu();
+                ImGe.endMenu();
             }
 
-            ImGui.endMenuBar();
+            ImGe.endMenuBar();
         }
     }
 
     private void renderChestEditor() {
-        ImGui.text(ImIcons.DASHBOARD.get() + " Chest UI Designer");
-        ImGui.separator();
+        ImGe.text(ImIcons.DASHBOARD.get() + " Chest UI Designer");
+        ImGe.separator();
 
         // Center the chest in the available area
-        ImVec2 availableSize = ImGui.getContentRegionAvail();
+        ImVec2 availableSize = ImGe.getContentRegionAvail();
         float centerX = (availableSize.x - CHEST_WIDTH) * 0.5f;
         float centerY = 50; // Some padding from top
 
-        ImGui.setCursorPos(centerX, centerY);
+        ImGe.setCursorPos(centerX, centerY);
 
         // Draw chest background
-        ImVec2 chestPos = ImGui.getCursorScreenPos();
+        ImVec2 chestPos = ImGe.getCursorScreenPos();
         ImGraphics.texture(CHEST_GUI_TEXTURE, CHEST_WIDTH, CHEST_HEIGHT);
 
         // Draw slots and items
         renderChestSlots(chestPos);
 
         // Instructions
-        ImGui.setCursorPosY(centerY + CHEST_HEIGHT + 20);
-        ImGui.textColored(0.7f, 0.7f, 0.7f, 1.0f, "Click a slot to select it, then use the properties panel to configure items and actions.");
-        ImGui.textColored(0.7f, 0.7f, 0.7f, 1.0f, "Right-click a slot to quickly clear it.");
+        ImGe.setCursorPosY(centerY + CHEST_HEIGHT + 20);
+        ImGe.textColored(0.7f, 0.7f, 0.7f, 1.0f, "Click a slot to select it, then use the properties panel to configure items and actions.");
+        ImGe.textColored(0.7f, 0.7f, 0.7f, 1.0f, "Right-click a slot to quickly clear it.");
 
-        if(ImGui.button(ImIcons.SAVE.get() + " Save")) {
+        if(ImGe.button(ImIcons.SAVE.get() + " Save")) {
             saveChestUI();
         }
     }
@@ -189,7 +186,7 @@ public class ScribeWindow extends EditorWindow {
                 float slotY = chestPos.y + startY + (row * SLOT_SIZE);
 
                 // Check if mouse is over this slot
-                ImVec2 mousePos = ImGui.getMousePos();
+                ImVec2 mousePos = ImGe.getMousePos();
                 boolean isHovered = mousePos.x >= slotX && mousePos.x < slotX + SLOT_SIZE &&
                         mousePos.y >= slotY && mousePos.y < slotY + SLOT_SIZE;
 
@@ -198,7 +195,7 @@ public class ScribeWindow extends EditorWindow {
 
                 if (isSelected || isHovered) {
                     int color = isSelected ? 0x80FFFFFF : 0x40FFFFFF; // White highlight
-                    ImGui.getWindowDrawList().addRectFilled(
+                    ImGe.getWindowDrawList().addRectFilled(
                             slotX, slotY, slotX + SLOT_SIZE, slotY + SLOT_SIZE, color
                     );
                 }
@@ -210,17 +207,17 @@ public class ScribeWindow extends EditorWindow {
 
                     // Draw stack size if > 1
                     if (slotData.stackSize > 1) {
-                        ImGui.getWindowDrawList().addText(
+                        ImGe.getWindowDrawList().addText(
                                 slotX + 10, slotY + 10, 0xFFFFFFFF, String.valueOf(slotData.stackSize)
                         );
                     }
                 }
 
                 // Handle clicks
-                if (isHovered && ImGui.isMouseClicked(0)) { // Left click
+                if (isHovered && ImGe.isMouseClicked(0)) { // Left click
                     selectedSlot = slotIndex;
                 }
-                if (isHovered && ImGui.isMouseClicked(1)) { // Right click
+                if (isHovered && ImGe.isMouseClicked(1)) { // Right click
                     currentUI.clearSlot(slotIndex);
                     if (selectedSlot == slotIndex) {
                         selectedSlot = -1;
@@ -242,44 +239,44 @@ public class ScribeWindow extends EditorWindow {
         float v1 = sprite.getV1();
 
         long textureId = ImGraphics.getTextureId(atlas);
-        ImGui.getWindowDrawList().addImage(
+        ImGe.getWindowDrawList().addImage(
                 textureId,
                 x, y,
                 x + SLOT_SIZE, y + SLOT_SIZE,
                 u0, v0, u1, v1
         );
 
-        ImVec2 mousePos = ImGui.getMousePos();
+        ImVec2 mousePos = ImGe.getMousePos();
         if (mousePos.x >= x && mousePos.x < x + SLOT_SIZE && mousePos.y >= y && mousePos.y < y + SLOT_SIZE) {
-            ImGui.setTooltip(BuiltInRegistries.ITEM.getKey(item).toString());
+            ImGe.setTooltip(BuiltInRegistries.ITEM.getKey(item).toString());
         }
     }
 
     private void renderPropertiesPanel() {
-        ImGui.text(ImIcons.SETTINGS.get() + " Properties");
-        ImGui.separator();
+        ImGe.text(ImIcons.SETTINGS.get() + " Properties");
+        ImGe.separator();
 
         // UI Name
         ImString uiName = new ImString(currentUI.name, 256);
-        if (ImGui.inputText("UI Name", uiName)) {
+        if (ImGe.inputText("UI Name", uiName)) {
             currentUI.name = uiName.get();
         }
 
         // UI Title (displayed to player)
         ImString uiTitle = new ImString(currentUI.title, 256);
-        if (ImGui.inputText("Display Title", uiTitle)) {
+        if (ImGe.inputText("Display Title", uiTitle)) {
             currentUI.title = uiTitle.get();
         }
 
-        ImGui.separator();
+        ImGe.separator();
 
         if (selectedSlot == -1) {
-            ImGui.textColored(0.7f, 0.7f, 0.7f, 1.0f, "Select a slot to edit its properties");
+            ImGe.textColored(0.7f, 0.7f, 0.7f, 1.0f, "Select a slot to edit its properties");
             return;
         }
 
-        ImGui.text("Slot " + selectedSlot + " Properties");
-        ImGui.separator();
+        ImGe.text("Slot " + selectedSlot + " Properties");
+        ImGe.separator();
 
         ChestSlotData slotData = currentUI.getSlot(selectedSlot);
         if (slotData == null) {
@@ -291,78 +288,78 @@ public class ScribeWindow extends EditorWindow {
         String itemDisplayName = slotData.item != null ?
                 BuiltInRegistries.ITEM.getKey(slotData.item).toString() : "None";
 
-        if (ImGui.button("Item: " + itemDisplayName, 250, 0)) {
+        if (ImGe.button("Item: " + itemDisplayName, 250, 0)) {
             showItemPicker = true;
         }
 
         // Stack size
         ImInt stackSize = new ImInt(slotData.stackSize);
-        if (ImGui.sliderInt("Stack Size", stackSize.getData(), 1, 64)) {
+        if (ImGe.sliderInt("Stack Size", stackSize.getData(), 1, 64)) {
             slotData.stackSize = stackSize.get();
         }
 
         // Display name override
         ImString displayName = new ImString(slotData.displayName != null ? slotData.displayName : "", 256);
-        if (ImGui.inputText("Display Name", displayName)) {
+        if (ImGe.inputText("Display Name", displayName)) {
             slotData.displayName = displayName.get().isEmpty() ? null : displayName.get();
         }
 
         // Script actions
-        ImGui.separator();
-        ImGui.text(ImIcons.CLICK.get() + " Click Actions");
+        ImGe.separator();
+        ImGe.text(ImIcons.CLICK.get() + " Click Actions");
 
         // Left click action
         String leftClickDisplay = slotData.leftClickAction != null ? slotData.leftClickAction : "None";
-        if (ImGui.button("Left Click: " + leftClickDisplay, 250, 0)) {
+        if (ImGe.button("Left Click: " + leftClickDisplay, 250, 0)) {
             tempLeftClick = slotData.leftClickAction != null ? slotData.leftClickAction : "";
             showScriptEditor = true;
         }
 
         // Right click action
         String rightClickDisplay = slotData.rightClickAction != null ? slotData.rightClickAction : "None";
-        if (ImGui.button("Right Click: " + rightClickDisplay, 250, 0)) {
+        if (ImGe.button("Right Click: " + rightClickDisplay, 250, 0)) {
             tempRightClick = slotData.rightClickAction != null ? slotData.rightClickAction : "";
             showScriptEditor = true;
         }
 
-        ImGui.separator();
+        ImGe.separator();
 
         // Slot options
         ImBoolean moveable = new ImBoolean(slotData.moveable);
-        if (ImGui.checkbox("Players can move this item", moveable)) {
+        if (ImGe.checkbox("Players can move this item", moveable)) {
             slotData.moveable = moveable.get();
         }
 
         ImBoolean visible = new ImBoolean(slotData.visible);
-        if (ImGui.checkbox("Slot is visible", visible)) {
+        if (ImGe.checkbox("Slot is visible", visible)) {
             slotData.visible = visible.get();
         }
 
         // Clear slot button
-        if (ImGui.button("Clear Slot", 100, 0)) {
+        if (ImGe.button("Clear Slot", 100, 0)) {
             currentUI.clearSlot(selectedSlot);
             selectedSlot = -1;
         }
     }
 
     private void renderItemPickerModal() {
-        ImGui.setNextWindowSize(500, 400);
-        if (ImGui.beginPopupModal("Select Item", ImGuiWindowFlags.NoResize)) {
+        ImGe.setNextWindowSize(500, 400);
+        if (ImGe.beginPopupModal("Select Item", ImGuiWindowFlags.NoResize)) {
 
             // Search filter
             ImString searchArray = new ImString(searchFilter, 256);
-            if (ImGui.inputText("Search", searchArray)) {
+            if (ImGe.inputText("Search", searchArray)) {
                 searchFilter = searchArray.get();
                 initializeFilteredItems();
             }
 
-            ImGui.separator();
+            ImGe.separator();
 
             // Item list
-            if (ImGui.beginListBox("Items", -1, 300)) {
+            if (ImGe.beginListBox("Items", -1, 300)) {
                 for (Item item : filteredItems) {
                     String itemName = BuiltInRegistries.ITEM.getKey(item).toString();
-                    if (ImGui.selectable(itemName)) {
+                    if (ImGe.selectable(itemName)) {
                         ChestSlotData slotData = currentUI.getSlot(selectedSlot);
                         if (slotData == null) {
                             slotData = new ChestSlotData();
@@ -370,83 +367,83 @@ public class ScribeWindow extends EditorWindow {
                         }
                         slotData.item = item;
                         showItemPicker = false;
-                        ImGui.closeCurrentPopup();
+                        ImGe.closeCurrentPopup();
                     }
                 }
-                ImGui.endListBox();
+                ImGe.endListBox();
             }
 
-            if (ImGui.button("Cancel")) {
+            if (ImGe.button("Cancel")) {
                 showItemPicker = false;
-                ImGui.closeCurrentPopup();
+                ImGe.closeCurrentPopup();
             }
 
-            ImGui.endPopup();
+            ImGe.endPopup();
         }
 
-        if (showItemPicker && !ImGui.isPopupOpen("Select Item")) {
-            ImGui.openPopup("Select Item");
+        if (showItemPicker && !ImGe.isPopupOpen("Select Item")) {
+            ImGe.openPopup("Select Item");
         }
     }
 
     private void renderScriptEditorModal() {
-        ImGui.setNextWindowSize(400, 300);
-        if (ImGui.beginPopupModal("Edit Click Action", ImGuiWindowFlags.NoResize)) {
+        ImGe.setNextWindowSize(400, 300);
+        if (ImGe.beginPopupModal("Edit Click Action", ImGuiWindowFlags.NoResize)) {
 
-            ImGui.text("Enter script method in format: ScriptName.methodName");
-            ImGui.text("Example: MyCustomScript.stickLeftClick");
-            ImGui.separator();
+            ImGe.text("Enter script method in format: ScriptName.methodName");
+            ImGe.text("Example: MyCustomScript.stickLeftClick");
+            ImGe.separator();
 
             // Left click action input
-            ImGui.text("Left Click Action:");
+            ImGe.text("Left Click Action:");
             ImString leftClickArray = new ImString(tempLeftClick, 256);
-            ImGui.inputText("##leftclick", leftClickArray);
+            ImGe.inputText("##leftclick", leftClickArray);
             tempLeftClick = leftClickArray.get();
 
-            ImGui.separator();
+            ImGe.separator();
 
             // Right click action input
-            ImGui.text("Right Click Action:");
+            ImGe.text("Right Click Action:");
             ImString rightClickArray = new ImString(tempRightClick, 256);
-            ImGui.inputText("##rightclick", rightClickArray);
+            ImGe.inputText("##rightclick", rightClickArray);
             tempRightClick = rightClickArray.get();
 
-            ImGui.separator();
+            ImGe.separator();
 
             // Validation
             boolean leftValid = validateScriptMethod(tempLeftClick);
             boolean rightValid = validateScriptMethod(tempRightClick);
 
             if (!tempLeftClick.isEmpty() && !leftValid) {
-                ImGui.textColored(1.0f, 0.3f, 0.3f, 1.0f, "Invalid left click format");
+                ImGe.textColored(1.0f, 0.3f, 0.3f, 1.0f, "Invalid left click format");
             }
             if (!tempRightClick.isEmpty() && !rightValid) {
-                ImGui.textColored(1.0f, 0.3f, 0.3f, 1.0f, "Invalid right click format");
+                ImGe.textColored(1.0f, 0.3f, 0.3f, 1.0f, "Invalid right click format");
             }
 
             // Buttons
-            if (ImGui.button("Save")) {
+            if (ImGe.button("Save")) {
                 ChestSlotData slotData = currentUI.getSlot(selectedSlot);
                 if (slotData != null) {
                     slotData.leftClickAction = tempLeftClick.isEmpty() ? null : tempLeftClick;
                     slotData.rightClickAction = tempRightClick.isEmpty() ? null : tempRightClick;
                 }
                 showScriptEditor = false;
-                ImGui.closeCurrentPopup();
+                ImGe.closeCurrentPopup();
             }
 
-            ImGui.sameLine();
+            ImGe.sameLine();
 
-            if (ImGui.button("Cancel")) {
+            if (ImGe.button("Cancel")) {
                 showScriptEditor = false;
-                ImGui.closeCurrentPopup();
+                ImGe.closeCurrentPopup();
             }
 
-            ImGui.endPopup();
+            ImGe.endPopup();
         }
 
-        if (showScriptEditor && !ImGui.isPopupOpen("Edit Click Action")) {
-            ImGui.openPopup("Edit Click Action");
+        if (showScriptEditor && !ImGe.isPopupOpen("Edit Click Action")) {
+            ImGe.openPopup("Edit Click Action");
         }
     }
 

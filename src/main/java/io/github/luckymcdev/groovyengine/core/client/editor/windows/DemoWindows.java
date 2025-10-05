@@ -1,12 +1,14 @@
 package io.github.luckymcdev.groovyengine.core.client.editor.windows;
 
-import imgui.ImGui;
 import imgui.ImGuiIO;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
+import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
+import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcon;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
-import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
+import java.lang.reflect.Field;
 
 @OnlyIn(Dist.CLIENT)
 public class DemoWindows {
@@ -18,7 +20,7 @@ public class DemoWindows {
 
         @Override
         public void render(ImGuiIO io) {
-            ImGui.showAboutWindow();
+            ImGe.showAboutWindow();
         }
     }
 
@@ -29,7 +31,7 @@ public class DemoWindows {
 
         @Override
         public void render(ImGuiIO io) {
-            ImGui.showDemoWindow();
+            ImGe.showDemoWindow();
         }
     }
 
@@ -40,7 +42,7 @@ public class DemoWindows {
 
         @Override
         public void render(ImGuiIO io) {
-            ImGui.showMetricsWindow();
+            ImGe.showMetricsWindow();
         }
     }
 
@@ -52,25 +54,25 @@ public class DemoWindows {
 
         @Override
         public void render(ImGuiIO io) {
-            ImUtil.window("IconsWindow", () -> {
-                ImGui.spacing();
+            ImGe.window("IconsWindow", () -> {
+                ImGe.spacing();
 
-                ImGui.beginChild("IconsGrid");
+                ImGe.beginChild("IconsGrid");
 
-                if (ImGui.collapsingHeader("Basic Shapes")) {
+                if (ImGe.collapsingHeader("Basic Shapes")) {
                     renderIconSection(new String[]{
                             "SQUARE", "CIRCLE", "HEXAGON", "ASTERIX", "STAR", "HEART"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Arrows & Navigation")) {
+                if (ImGe.collapsingHeader("Arrows & Navigation")) {
                     renderIconSection(new String[]{
                             "ARROW_LEFT", "ARROW_RIGHT", "ARROW_UP", "ARROW_DOWN",
                             "EXPAND", "COLLAPSE", "SWAP", "ROTATE", "NAVIGATION", "TARGET"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Actions & Operations")) {
+                if (ImGe.collapsingHeader("Actions & Operations")) {
                     renderIconSection(new String[]{
                             "ADD", "ADD_CIRCLE", "REMOVE", "DELETE", "CLOSE", "CHECK", "CHECK_CIRCLE",
                             "EDIT", "COPY", "CUT", "PASTE", "UNDO", "REDO", "RELOAD", "REPEAT",
@@ -78,14 +80,14 @@ public class DemoWindows {
                     });
                 }
 
-                if (ImGui.collapsingHeader("Toggles & States")) {
+                if (ImGe.collapsingHeader("Toggles & States")) {
                     renderIconSection(new String[]{
                             "TOGGLE_OFF", "TOGGLE_ON", "VISIBLE", "INVISIBLE",
                             "LOCK", "LOCK_OPEN", "FULLSCREEN"
                     });
                 }
 
-                if (ImGui.collapsingHeader("UI Elements")) {
+                if (ImGe.collapsingHeader("UI Elements")) {
                     renderIconSection(new String[]{
                             "MENU", "MORE", "MORE_VERTICAL", "SETTINGS", "WRENCH",
                             "SEARCH", "FILTER", "SORT", "QUESTION", "LABEL", "NO_LABEL",
@@ -93,90 +95,90 @@ public class DemoWindows {
                     });
                 }
 
-                if (ImGui.collapsingHeader("Status & Alerts")) {
+                if (ImGe.collapsingHeader("Status & Alerts")) {
                     renderIconSection(new String[]{
                             "ERROR", "WARNING"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Media Controls")) {
+                if (ImGe.collapsingHeader("Media Controls")) {
                     renderIconSection(new String[]{
                             "PLAY", "PAUSE", "STOP", "PLAY_CIRCLE", "PAUSE_CIRCLE", "STOP_CIRCLE",
                             "FAST_REWIND", "FAST_FORWARD", "MUSIC_NOTE", "MUSIC_NOTE_OFF", "TUNE"
                     });
                 }
 
-                if (ImGui.collapsingHeader("File System")) {
+                if (ImGe.collapsingHeader("File System")) {
                     renderIconSection(new String[]{
                             "HOME_FILE", "FOLDER", "DOCUMENT", "TEXT_DOCUMENT", "NOTES",
                             "STORAGE", "DATABASE", "OPEN_IN_NEW"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Data Visualization")) {
+                if (ImGe.collapsingHeader("Data Visualization")) {
                     renderIconSection(new String[]{
                             "GRAPH", "FLOWCHART", "POLYLINE", "NUMBERS", "PERCENT"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Nature & Environment")) {
+                if (ImGe.collapsingHeader("Nature & Environment")) {
                     renderIconSection(new String[]{
                             "SUN", "MOON", "FREEZE", "FIRE", "LEAF", "TREE", "WORLD",
                             "VOLCANO", "BOLT", "ROCKET", "ROCKET_LAUNCH", "EXPLOSION", "BOMB"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Science & Technology")) {
+                if (ImGe.collapsingHeader("Science & Technology")) {
                     renderIconSection(new String[]{
                             "SCIENCE", "SCIENCE_OFF", "EXPERIMENT", "HIVE", "BUG",
                             "MEMORY", "CODE", "ANIMATION", "BLUR"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Animals & Biology")) {
+                if (ImGe.collapsingHeader("Animals & Biology")) {
                     renderIconSection(new String[]{
                             "PAW", "BONE", "EGG"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Security & Access")) {
+                if (ImGe.collapsingHeader("Security & Access")) {
                     renderIconSection(new String[]{
                             "KEY", "PASSWORD", "PASSKEY", "ACCOUNT", "PERSON", "SHIELD"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Tools & Utilities")) {
+                if (ImGe.collapsingHeader("Tools & Utilities")) {
                     renderIconSection(new String[]{
                             "WRENCH", "TOOLTIP", "PALETTE", "CAMERA", "APERTURE",
                             "LIGHTBULB", "LIGHTBULB_OFF", "ANCHOR", "FLAG", "DIAMOND"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Time & Scheduling")) {
+                if (ImGe.collapsingHeader("Time & Scheduling")) {
                     renderIconSection(new String[]{
                             "SCHEDULE", "TIMELAPSE", "SPEED"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Commerce")) {
+                if (ImGe.collapsingHeader("Commerce")) {
                     renderIconSection(new String[]{
                             "MONEY", "PAID"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Objects")) {
+                if (ImGe.collapsingHeader("Objects")) {
                     renderIconSection(new String[]{
                             "BACKPACK", "BACKPACK_OFF", "FRAMED_CUBE"
                     });
                 }
 
-                if (ImGui.collapsingHeader("Accessibility")) {
+                if (ImGe.collapsingHeader("Accessibility")) {
                     renderIconSection(new String[]{
                             "SWITCH_ACCESS", "SLASH"
                     });
                 }
 
-                ImGui.endChild();
+                ImGe.endChild();
             });
         }
 
@@ -186,39 +188,39 @@ public class DemoWindows {
 
             for (String iconName : iconNames) {
                 try {
-                    java.lang.reflect.Field field = ImIcons.class.getField(iconName);
+                    Field field = ImIcons.class.getField(iconName);
                     Object iconObj = field.get(null);
 
-                    if (iconObj instanceof io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcon) {
-                        io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcon icon =
-                                (io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcon) iconObj;
+                    if (iconObj instanceof ImIcon) {
+                        ImIcon icon =
+                                (ImIcon) iconObj;
 
                         if (iconCount % columns != 0) {
-                            ImGui.sameLine();
+                            ImGe.sameLine();
                         }
 
-                        ImUtil.pushIconScale();
+                        ImGe.pushIconScale();
 
-                        ImGui.text(icon.get());
+                        ImGe.text(icon.get());
 
-                        ImUtil.popIconScale();
+                        ImGe.popIconScale();
 
-                        if (ImGui.isItemHovered()) {
-                            ImGui.beginTooltip();
+                        if (ImGe.isItemHovered()) {
+                            ImGe.beginTooltip();
 
-                            ImUtil.pushIconScale(1.5f);
-                            ImGui.text(icon.get());
-                            ImUtil.popIconScale();
+                            ImGe.pushIconScale(1.5f);
+                            ImGe.text(icon.get());
+                            ImGe.popIconScale();
 
-                            ImGui.sameLine();
-                            ImGui.text(iconName);
-                            ImGui.text("Unicode: U+" + Integer.toHexString(icon.toChar()).toUpperCase());
-                            ImGui.text("Click to copy character");
-                            ImGui.endTooltip();
+                            ImGe.sameLine();
+                            ImGe.text(iconName);
+                            ImGe.text("Unicode: U+" + Integer.toHexString(icon.toChar()).toUpperCase());
+                            ImGe.text("Click to copy character");
+                            ImGe.endTooltip();
                         }
 
-                        if (ImGui.isItemClicked()) {
-                            ImGui.setClipboardText(icon.get());
+                        if (ImGe.isItemClicked()) {
+                            ImGe.setClipboardText(icon.get());
                         }
 
                         iconCount++;
@@ -229,7 +231,7 @@ public class DemoWindows {
             }
 
             if (iconCount > 0) {
-                ImGui.spacing();
+                ImGe.spacing();
             }
         }
     }

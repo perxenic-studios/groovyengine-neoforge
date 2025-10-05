@@ -5,8 +5,8 @@ import imgui.ImGuiIO;
 import imgui.type.ImBoolean;
 import io.github.luckymcdev.groovyengine.construct.client.movement.MovementController;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
+import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
-import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import io.github.luckymcdev.groovyengine.core.registry.ModAttachmentTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -89,7 +89,7 @@ public class ConstructChanges extends EditorWindow {
      */
     @Override
     public void render(ImGuiIO io) {
-        ImUtil.window(title, () -> {
+        ImGe.window(title, () -> {
             renderBuildingSettingsSection();
             renderMovementSettingsSection();
         });
@@ -101,36 +101,36 @@ public class ConstructChanges extends EditorWindow {
      */
     private void renderBuildingSettingsSection() {
         // Building Settings Section
-        ImUtil.title(ImIcons.WIDGETS.get() + " Building Settings");
+        ImGe.title(ImIcons.WIDGETS.get() + " Building Settings");
 
         // Block Updates Toggle
-        ImUtil.checkbox(ImIcons.BLOCK.get() + " Block Updates", blockUpdatesEnabled, () -> {
+        ImGe.checkbox(ImIcons.BLOCK.get() + " Block Updates", blockUpdatesEnabled, () -> {
             System.out.println("Block updates: " + blockUpdatesEnabled.get());
             // TODO: Implement block updates toggle functionality
             // This could hook into block placement events to suppress updates
         });
-        ImUtil.helpMarker("Disables block updates when placing blocks. " +
+        ImGe.helpMarker("Disables block updates when placing blocks. " +
                 "This can significantly improve performance during large-scale " +
                 "building operations but may cause rendering issues with " +
                 "blocks that depend on updates (like redstone).");
 
         // Instant Placement Toggle
-        ImUtil.checkbox(ImIcons.ADD.get() + " Instant Placement", instantPlacement, () -> {
+        ImGe.checkbox(ImIcons.ADD.get() + " Instant Placement", instantPlacement, () -> {
             System.out.println("Instant placement: " + instantPlacement.get());
             // TODO: Implement instant placement functionality
             // This would modify the block placement cooldown mechanism
         });
-        ImUtil.helpMarker("Removes the block placement cooldown for rapid building. " +
+        ImGe.helpMarker("Removes the block placement cooldown for rapid building. " +
                 "Allows placing multiple blocks simultaneously without delay. " +
                 "Useful for fast construction but may feel less vanilla.");
 
         // Extended Reach Toggle
-        ImUtil.checkbox(ImIcons.ARROW_RIGHT.get() + " Extended Reach", extendedReach, () -> {
+        ImGe.checkbox(ImIcons.ARROW_RIGHT.get() + " Extended Reach", extendedReach, () -> {
             System.out.println("Extended reach: " + extendedReach.get());
             // TODO: Implement extended reach functionality
             // This would modify the player's block interaction range
         });
-        ImUtil.helpMarker("Extends block interaction range from 3 blocks to 10 blocks. " +
+        ImGe.helpMarker("Extends block interaction range from 3 blocks to 10 blocks. " +
                 "Useful for building tall structures or making precise placements " +
                 "from a distance. May affect PvP balance if enabled in multiplayer.");
     }
@@ -141,11 +141,11 @@ public class ConstructChanges extends EditorWindow {
      */
     private void renderMovementSettingsSection() {
         // Movement Settings Section
-        ImUtil.title(ImIcons.SPEED.get() + " Movement Settings");
+        ImGe.title(ImIcons.SPEED.get() + " Movement Settings");
 
         // Flying Changes Toggle
-        ImUtil.checkbox(ImIcons.ROCKET.get() + " Flying Changes", flyingChanges, MovementController::toggleFlyingChanges);
-        ImUtil.helpMarker("Improves flight responsiveness by eliminating momentum-based sliding. " +
+        ImGe.checkbox(ImIcons.ROCKET.get() + " Flying Changes", flyingChanges, MovementController::toggleFlyingChanges);
+        ImGe.helpMarker("Improves flight responsiveness by eliminating momentum-based sliding. " +
                 "When enabled, flying stops immediately when movement keys are released. " +
                 "Provides more precise control for building and navigation.");
 
@@ -158,7 +158,7 @@ public class ConstructChanges extends EditorWindow {
             // Optional: Add visual feedback or logging
             System.out.println("Fly speed updated to: " + flySpeedInt[0] + "%");
         }
-        ImUtil.helpMarker("Controls flight movement speed as a percentage of maximum. " +
+        ImGe.helpMarker("Controls flight movement speed as a percentage of maximum. " +
                 "0% = No movement, 100% = Maximum flight speed. " +
                 "Adjust for precise building control or fast travel.");
     }

@@ -1,6 +1,5 @@
 package io.github.luckymcdev.groovyengine.threads.client.editor;
 
-import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiInputTextFlags;
@@ -8,8 +7,8 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
+import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
-import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import io.github.luckymcdev.groovyengine.threads.core.logging.InMemoryLogAppender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -36,62 +35,62 @@ public class ThreadsWindow extends EditorWindow {
 
     @Override
     public void render(ImGuiIO io) {
-        ImUtil.window(ImIcons.CODE.get() + " Script Console", () -> {
+        ImGe.window(ImIcons.CODE.get() + " Script Console", () -> {
             renderLogsSection();
-            ImGui.separator();
+            ImGe.separator();
             renderCommandSection();
         });
     }
 
     private void renderLogsSection() {
         // Header with controls
-        ImGui.beginGroup();
-        ImGui.sameLine();
-        if (ImGui.button("Copy")) {
+        ImGe.beginGroup();
+        ImGe.sameLine();
+        if (ImGe.button("Copy")) {
             copyLogsToClipboard();
         }
-        ImGui.sameLine();
-        ImGui.checkbox("Auto-scroll", autoScroll);
-        ImGui.sameLine();
-        ImGui.textDisabled("Lines: " + InMemoryLogAppender.getLogLines().size());
-        ImGui.endGroup();
+        ImGe.sameLine();
+        ImGe.checkbox("Auto-scroll", autoScroll);
+        ImGe.sameLine();
+        ImGe.textDisabled("Lines: " + InMemoryLogAppender.getLogLines().size());
+        ImGe.endGroup();
 
-        ImGui.spacing();
+        ImGe.spacing();
 
         // Logs display with styled background
-        ImGui.pushStyleVar(ImGuiStyleVar.ChildRounding, 3.0f);
-        ImGui.pushStyleColor(ImGuiCol.ChildBg, 0xFF1E1E1E);
+        ImGe.pushStyleVar(ImGuiStyleVar.ChildRounding, 3.0f);
+        ImGe.pushStyleColor(ImGuiCol.ChildBg, 0xFF1E1E1E);
 
-        if (ImGui.beginChild("LogsScrollArea", 0, -ImGui.getFrameHeightWithSpacing() * 1.5f, true, ImGuiWindowFlags.HorizontalScrollbar)) {
+        if (ImGe.beginChild("LogsScrollArea", 0, -ImGe.getFrameHeightWithSpacing() * 1.5f, true, ImGuiWindowFlags.HorizontalScrollbar)) {
             List<String> logLines = InMemoryLogAppender.getLogLines();
 
             // Use text wrapped for better readability
-            ImGui.pushTextWrapPos(0);
+            ImGe.pushTextWrapPos(0);
             for (String logLine : logLines) {
                 // Apply different colors based on log level
                 if (logLine.contains("[ERROR]") || logLine.toLowerCase().contains("error")) {
-                    ImGui.pushStyleColor(ImGuiCol.Text, 0xFFFF5555);
+                    ImGe.pushStyleColor(ImGuiCol.Text, 0xFFFF5555);
                 } else if (logLine.contains("[WARN]") || logLine.toLowerCase().contains("warn")) {
-                    ImGui.pushStyleColor(ImGuiCol.Text, 0xFFFFFF55);
+                    ImGe.pushStyleColor(ImGuiCol.Text, 0xFFFFFF55);
                 } else if (logLine.contains("[DEBUG]") || logLine.toLowerCase().contains("debug")) {
-                    ImGui.pushStyleColor(ImGuiCol.Text, 0xFF55FFFF);
+                    ImGe.pushStyleColor(ImGuiCol.Text, 0xFF55FFFF);
                 } else if (logLine.contains("[INFO]") || logLine.startsWith("> ")) {
-                    ImGui.pushStyleColor(ImGuiCol.Text, 0xFF55FF55);
+                    ImGe.pushStyleColor(ImGuiCol.Text, 0xFF55FF55);
                 } else {
-                    ImGui.pushStyleColor(ImGuiCol.Text, 0xFFCCCCCC);
+                    ImGe.pushStyleColor(ImGuiCol.Text, 0xFFCCCCCC);
                 }
 
-                ImGui.textUnformatted(logLine);
-                ImGui.popStyleColor();
+                ImGe.textUnformatted(logLine);
+                ImGe.popStyleColor();
             }
-            ImGui.popTextWrapPos();
+            ImGe.popTextWrapPos();
 
             // Auto-scroll logic
             handleAutoScroll(logLines);
         }
-        ImGui.endChild();
-        ImGui.popStyleColor();
-        ImGui.popStyleVar();
+        ImGe.endChild();
+        ImGe.popStyleColor();
+        ImGe.popStyleVar();
     }
 
     private void handleAutoScroll(List<String> logLines) {
@@ -102,19 +101,19 @@ public class ThreadsWindow extends EditorWindow {
             previousLogCount = currentLogCount;
 
             // Only auto-scroll if we're already near the bottom or auto-scroll is enabled
-            scrollY = ImGui.getScrollY();
-            scrollMaxY = ImGui.getScrollMaxY();
+            scrollY = ImGe.getScrollY();
+            scrollMaxY = ImGe.getScrollMaxY();
 
             if (autoScroll || scrollY >= scrollMaxY - 50.0f) {
-                ImGui.setScrollHereY(1.0f);
+                ImGe.setScrollHereY(1.0f);
                 autoScroll = true; // Re-enable auto-scroll if user was at bottom
             }
         }
 
         // If user manually scrolls up, disable auto-scroll
-        if (ImGui.isMouseDragging(0) && ImGui.isWindowHovered()) {
-            scrollY = ImGui.getScrollY();
-            scrollMaxY = ImGui.getScrollMaxY();
+        if (ImGe.isMouseDragging(0) && ImGe.isWindowHovered()) {
+            scrollY = ImGe.getScrollY();
+            scrollMaxY = ImGe.getScrollMaxY();
             if (scrollY < scrollMaxY - 100.0f) {
                 autoScroll = false;
             }
@@ -122,27 +121,27 @@ public class ThreadsWindow extends EditorWindow {
     }
 
     private void renderCommandSection() {
-        ImGui.text("Command:");
-        ImGui.sameLine();
+        ImGe.text("Command:");
+        ImGe.sameLine();
 
         // Command input with execute button
-        ImGui.pushItemWidth(ImGui.getContentRegionAvailX() - 80.0f);
-        boolean execute = ImGui.inputText("##CommandInput", commandBuffer,
+        ImGe.pushItemWidth(ImGe.getContentRegionAvailX() - 80.0f);
+        boolean execute = ImGe.inputText("##CommandInput", commandBuffer,
                 ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.CallbackResize);
-        ImGui.popItemWidth();
+        ImGe.popItemWidth();
 
-        ImGui.sameLine();
+        ImGe.sameLine();
 
-        if (ImGui.button("Execute") || execute) {
+        if (ImGe.button("Execute") || execute) {
             executeCommand(commandBuffer.toString());
             commandBuffer.clear();
-            ImGui.setKeyboardFocusHere(-1);
+            ImGe.setKeyboardFocusHere(-1);
         }
 
         // Command history hint
         if (commandBuffer.getLength() == 0) {
-            ImGui.sameLine();
-            ImGui.textDisabled("Type a command and press Enter...");
+            ImGe.sameLine();
+            ImGe.textDisabled("Type a command and press Enter...");
         }
     }
 
@@ -161,6 +160,6 @@ public class ThreadsWindow extends EditorWindow {
             logs.append(line).append("\n");
         }
 
-        ImGui.setClipboardText(logs.toString());
+        ImGe.setClipboardText(logs.toString());
     }
 }

@@ -2,8 +2,8 @@ package io.github.luckymcdev.groovyengine.construct.client.editor;
 
 import imgui.ImGuiIO;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
+import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
-import io.github.luckymcdev.groovyengine.core.client.imgui.util.ImUtil;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -18,8 +18,9 @@ public class ConstructEditorWindow extends EditorWindow {
 
     @Override
     public void render(ImGuiIO io) {
-        ImUtil.window(title, () -> {
-
+        ImGe.window(title, () -> {
+            ImGe.begin("hello");
+            ImGe.end();
         });
     }
 }
