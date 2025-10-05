@@ -53,24 +53,45 @@ public class ObjParser {
     }
 
     private @NotNull Face getFace(String line) {
-        String[] tokens = line.split(" ");
+        String[] tokens = line.trim().split("\\s+");
         List<Vertex> faceVertices = new ArrayList<>();
 
         for (int i = 1; i < tokens.length; i++) {
             String[] parts = tokens[i].split("/");
+
             int vertexIndex = Integer.parseInt(parts[0]) - 1;
-            int textureIndex = parts.length > 1 && !parts[1].isEmpty() ? Integer.parseInt(parts[1]) - 1 : 0;
-            int normalIndex = parts.length > 2 ? Integer.parseInt(parts[2]) - 1 : 0;
+            int textureIndex = (parts.length > 1 && !parts[1].isEmpty()) ? Integer.parseInt(parts[1]) - 1 : -1;
+            int normalIndex  = (parts.length > 2 && !parts[2].isEmpty()) ? Integer.parseInt(parts[2]) - 1 : -1;
 
-            Vector3f position = vertices.get(vertexIndex);
-            Vector3f normal = normals.get(normalIndex);
-            //Vec2 uv = uvs.get(textureIndex);
+            Vector3f position = safeGetVertex(vertexIndex);
+            Vector3f normal = safeGetNormal(normalIndex);
+            Vec2 uv = safeGetUV(textureIndex);
 
-            Vertex vertex = new Vertex(position, normal, new Vec2(0,0));
-            faceVertices.add(vertex);
+            faceVertices.add(new Vertex(position, normal, uv));
         }
 
         return new Face(faceVertices);
+    }
+
+    private Vector3f safeGetNormal(int index) {
+        if (index >= 0 && index < normals.size()) {
+            return normals.get(index);
+        }
+        return new Vector3f(0, 0, 0);
+    }
+
+    private Vec2 safeGetUV(int index) {
+        if (index >= 0 && index < uvs.size()) {
+            return uvs.get(index);
+        }
+        return new Vec2(0, 0);
+    }
+
+    private Vector3f safeGetVertex(int index) {
+        if (index >= 0 && index < vertices.size()) {
+            return vertices.get(index);
+        }
+        throw new IllegalArgumentException("Invalid vertex index: " + index);
     }
 
     public ArrayList<Face> getFaces() {

@@ -15,9 +15,6 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.tes
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.PoseScope;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.vertex.CubeVertexData;
-import io.github.luckymcdev.groovyengine.lens.client.systems.gltf.GltfModel;
-import io.github.luckymcdev.groovyengine.lens.client.systems.gltf.GltfModelManager;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModelManager;
 import net.minecraft.client.Camera;
@@ -63,6 +60,7 @@ public class GroovyEngineClient {
     private static boolean initializedModuleWindows = false;
 
     private static final ObjModel suzanneModel = new ObjModel(GE.id("suzanne"));
+    private static final ObjModel cubeModel = new ObjModel(GE.id("cube"));
 
     public GroovyEngineClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
@@ -79,6 +77,7 @@ public class GroovyEngineClient {
         NeoForge.EVENT_BUS.addListener(ImGuiRenderer::onRender);
 
         ObjModelManager.registerObjModel(suzanneModel);
+        ObjModelManager.registerObjModel(cubeModel);
 
 
         Minecraft.getInstance().execute(() -> {
@@ -172,6 +171,11 @@ public class GroovyEngineClient {
                 .run(() -> {
                     renderSuzanne(stack);
                 });
+
+        new PoseScope(stack)
+                .run(() -> {
+                    renderCube(stack);
+                });
     }
 
     static void renderSuzanne(PoseStack stack) {
@@ -193,6 +197,28 @@ public class GroovyEngineClient {
         int packedLight = RenderUtils.FULL_BRIGHT;
 
         suzanneModel.renderModel(stack, OBJ_MODEL, packedLight);
+
+        stack.popPose();
+    }
+
+    static void renderCube(PoseStack stack) {
+        RenderUtils.setupWorldRendering(stack);
+
+        Minecraft mc = Minecraft.getInstance();
+        Camera camera = mc.gameRenderer.getMainCamera();
+        Vec3 cameraPos = camera.getPosition();
+
+
+        stack.pushPose();
+
+        // Model position in world
+        stack.translate(0, 125, 0);
+        stack.scale(10f, 10f, 10f);
+
+        // Get proper lighting at the model's position
+        int packedLight = RenderUtils.FULL_BRIGHT;
+
+        cubeModel.renderModel(stack, OBJ_MODEL, packedLight);
 
         stack.popPose();
     }
