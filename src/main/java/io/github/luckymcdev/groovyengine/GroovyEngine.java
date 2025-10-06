@@ -9,7 +9,6 @@ import io.github.luckymcdev.groovyengine.core.systems.module.ModuleManager;
 import io.github.luckymcdev.groovyengine.core.systems.packs.generator.GroovyDatagen;
 import io.github.luckymcdev.groovyengine.core.systems.structure.FileTreeGenerator;
 import io.github.luckymcdev.groovyengine.lens.LensModule;
-import io.github.luckymcdev.groovyengine.scribe.ScribeModule;
 import io.github.luckymcdev.groovyengine.threads.ThreadsModule;
 import io.github.luckymcdev.groovyengine.threads.core.logging.LogCapture;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManager;
@@ -51,7 +50,7 @@ public class GroovyEngine {
 
         ModuleManager.registerModules(List.of(new CoreModule(),
                 new ThreadsModule(), new LensModule()
-                , new ScribeModule(), new ConstructModule()
+                , new ConstructModule()
         ));
 
         moduleManager.runInit(modEventBus);
