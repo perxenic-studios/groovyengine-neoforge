@@ -4,6 +4,7 @@ import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 public class AnimationController {
     private final ObjModel model;
-    private final Map<String, Animation> animations;
+    private final Map<String, Animation> animationMap;
     private Animation currentAnimation;
     private float currentTime;
     private boolean playing;
@@ -19,7 +20,7 @@ public class AnimationController {
 
     public AnimationController(ObjModel model) {
         this.model = model;
-        this.animations = new HashMap<>();
+        this.animationMap = new HashMap<>();
         this.currentTime = 0;
         this.playing = false;
         this.playbackSpeed = 1.0f;
@@ -29,14 +30,23 @@ public class AnimationController {
      * Register an animation.
      */
     public void addAnimation(Animation animation) {
-        animations.put(animation.getName(), animation);
+        animationMap.put(animation.getName(), animation);
+    }
+
+    /**
+     * Register an animation.
+     */
+    public void addAnimations(List<Animation> animations) {
+        animations.forEach(animation -> {
+            animationMap.put(animation.getName(), animation);
+        });
     }
 
     /**
      * Play an animation by name.
      */
     public void play(String animationName) {
-        Animation anim = animations.get(animationName);
+        Animation anim = animationMap.get(animationName);
         if (anim != null) {
             this.currentAnimation = anim;
             this.currentTime = 0;
@@ -68,12 +78,30 @@ public class AnimationController {
     }
 
     /**
-     * Reset animation to start.
+     * Reset animation to start and reset all object transforms to identity.
      */
     public void reset() {
         this.currentTime = 0;
+        resetObjectTransforms();
     }
 
+    /**
+     * Reset all model objects to their identity transforms.
+     */
+    private void resetObjectTransforms() {
+        for (ObjObject obj : model.getObjects().values()) {
+            obj.setPosition(0, 0, 0);
+            obj.setRotation(0, 0, 0);
+            obj.setScale(1, 1, 1);
+        }
+    }
+
+    /**
+     * Reset all object transforms without affecting playback time.
+     */
+    public void resetTransforms() {
+        resetObjectTransforms();
+    }
     /**
      * Set playback speed (1.0 = normal speed).
      */
@@ -152,6 +180,6 @@ public class AnimationController {
      * Get all registered animations.
      */
     public Map<String, Animation> getAnimations() {
-        return animations;
+        return animationMap;
     }
 }

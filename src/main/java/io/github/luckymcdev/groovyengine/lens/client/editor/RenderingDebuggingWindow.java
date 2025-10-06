@@ -103,22 +103,87 @@ public class RenderingDebuggingWindow extends EditorWindow {
 
                 ImGe.separator();
 
-                ImGe.button("Head Bob", () -> {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.HEAD_BOB);
-                });
+                // Display current animation
+                String currentAnim = ChupacabraAnimations.getCurrentAnimationName();
+                ImGe.text("Current: " + (currentAnim != null ? currentAnim : "None"));
+                ImGe.text("Playing: " + ChupacabraAnimations.isPlaying());
+
+                ImGe.separator();
+                ImGe.text("Idle Animations");
                 ImGe.separator();
 
-                ImGe.button("Head Bounce", () -> {
+                ImGe.button("Idle Breathing", () -> {
                     chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.HEAD_BOUNCE);
+                    chupacabraController.play(ChupacabraAnimations.IDLE_BREATHING);
                 });
+
+                ImGe.button("Idle Look Around", () -> {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                    chupacabraController.play(ChupacabraAnimations.IDLE_LOOK_AROUND);
+                });
+
+                ImGe.separator();
+                ImGe.text("Locomotion");
                 ImGe.separator();
 
-                ImGe.button("Head Wiggle", () -> {
+                ImGe.button("Walk", () -> {
                     chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.HEAD_WIGGLE);
+                    chupacabraController.play(ChupacabraAnimations.WALK);
                 });
+
+                ImGe.button("Run", () -> {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                    chupacabraController.play(ChupacabraAnimations.RUN);
+                });
+
+                ImGe.separator();
+                ImGe.text("Actions");
+                ImGe.separator();
+
+                ImGe.button("Attack Bite", () -> {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                    chupacabraController.play(ChupacabraAnimations.ATTACK_BITE);
+                });
+
+                ImGe.button("Howl", () -> {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                    chupacabraController.play(ChupacabraAnimations.HOWL);
+                });
+
+                ImGe.button("Sniff", () -> {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                    chupacabraController.play(ChupacabraAnimations.SNIFF);
+                });
+
+                ImGe.button("Crouch", () -> {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                    chupacabraController.play(ChupacabraAnimations.CROUCH);
+                });
+
+                ImGe.button("Jump", () -> {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                    chupacabraController.play(ChupacabraAnimations.JUMP);
+                });
+
+                ImGe.button("Tail Wag", () -> {
+                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
+                    chupacabraController.play(ChupacabraAnimations.TAIL_WAG);
+                });
+
+                ImGe.separator();
+                ImGe.text("Playback Controls");
+                ImGe.separator();
+
+                ImGe.button("Pause", chupacabraController::pause);
+                ImGe.sameLine();
+
+                ImGe.button("Resume", chupacabraController::resume);
+                ImGe.sameLine();
+
+                ImGe.button("Stop", chupacabraController::stop);
+                ImGe.sameLine();
+
+                ImGe.button("Reset", chupacabraController::reset);
             });
         });
     }
