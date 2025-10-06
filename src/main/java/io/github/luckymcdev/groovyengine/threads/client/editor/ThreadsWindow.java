@@ -137,12 +137,6 @@ public class ThreadsWindow extends EditorWindow {
             commandBuffer.clear();
             ImGe.setKeyboardFocusHere(-1);
         }
-
-        // Command history hint
-        if (commandBuffer.getLength() == 0) {
-            ImGe.sameLine();
-            ImGe.textDisabled("Type a command and press Enter...");
-        }
     }
 
     private void executeCommand(String command) {
