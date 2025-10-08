@@ -14,7 +14,6 @@ import imgui.flag.ImGuiDockNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.lens.client.editor.RenderingDebuggingWindow;
-import io.github.luckymcdev.groovyengine.scribe.client.editor.ScribeWindow;
 import io.github.luckymcdev.groovyengine.threads.client.editor.ThreadsWindow;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
