@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 /**
  * Holds transformation data from keyframe interpolation.
  */
+@Deprecated
 public class KeyframeTransform {
     public final Vector3f position;
     public final Vector3f rotation;

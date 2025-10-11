@@ -1,6 +1,8 @@
 package io.github.luckymcdev.groovyengine.lens.client.editor;
 
+import imgui.ImGui;
 import imgui.ImGuiIO;
+import io.github.luckymcdev.groovyengine.GroovyEngineClient;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
@@ -17,7 +19,16 @@ public class AnimationWindow extends EditorWindow {
 
     @Override
     public void render(ImGuiIO io) {
-        renderChupacabraAnimationController(io);
+        //renderChupacabraAnimationController(io);
+        renderAmoController(io);
+    }
+
+    private void renderAmoController(ImGuiIO io) {
+        ImGe.window(ImIcons.ANIMATION.get() + " Animation Controller", () -> {
+            ImGe.button("play animation", () -> GroovyEngineClient.animatedModel.playAnimation("rotate_x"));
+
+            ImGe.button("stop animation", GroovyEngineClient.animatedModel::stopAnimation);
+        });
     }
 
     private void renderChupacabraAnimationController(ImGuiIO io) {

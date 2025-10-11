@@ -8,6 +8,7 @@ import org.joml.Vector3f;
 /**
  * Fluent builder for creating animations more easily.
  */
+@Deprecated
 public class AnimationBuilder {
     private final Animation animation;
     private String currentObject;

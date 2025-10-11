@@ -2,6 +2,7 @@ package io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.tran
 
 import org.joml.Vector3f;
 
+@Deprecated
 public class Transform {
     public final Vector3f position;
     public final Vector3f rotation;

@@ -15,6 +15,7 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.util.PoseScope;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModelManager;
+import io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo.AmoModel;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.ChupacabraAnimations;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -58,6 +59,9 @@ public class GroovyEngineClient {
     private static final ObjModel chupacabraModel = new ObjModel(GE.id("chupacabra"));
     private static final ResourceLocation chupacabraTexture = GE.id("obj/chupacabra.png");
 
+    // Add AMO model registration
+    public static final AmoModel animatedModel = new AmoModel(GE.id("animated"));
+
     private static final Renderer renderer = Renderer.getInstance();
 
     public GroovyEngineClient(ModContainer container) {
@@ -78,8 +82,9 @@ public class GroovyEngineClient {
 
         ObjModelManager.registerObjModel(suzanneModel);
         ObjModelManager.registerObjModel(cubeModel);
-
         ObjModelManager.registerObjModel(chupacabraModel);
+
+        ObjModelManager.registerObjModel(animatedModel);
 
         // Add this line after model registration:
         ChupacabraAnimations.initialize(chupacabraModel);
@@ -121,8 +126,10 @@ public class GroovyEngineClient {
 
     @SubscribeEvent
     static void tick(ClientTickEvent.Pre event) {
-        float deltaTime = Minecraft.getInstance().getTimer().getGameTimeDeltaTicks();
-        ChupacabraAnimations.update(deltaTime);
+        float deltaTime = Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
+        if (animatedModel.isModelLoaded()) {
+            animatedModel.updateAnimation(deltaTime * 0.05f); // Scale to seconds
+        }
     }
 
     @SubscribeEvent
@@ -191,7 +198,32 @@ public class GroovyEngineClient {
                         renderObjModelAnimated(poseStack, chupacabraModel, new Vec3(0, 150, 0), OBJ_MODEL.withTexture(chupacabraTexture));
                     });
 
+            // Add AMO model rendering at position (45, 120, 0)
+            new PoseScope(stack)
+                    .world()
+                    .run(poseStack -> {
+                        renderAmoModel(poseStack, animatedModel, new Vec3(45, 120, 0));
+                    });
+
         });
+    }
+
+    static void renderAmoModel(PoseStack stack, AmoModel model, Vec3 position) {
+        Minecraft mc = Minecraft.getInstance();
+
+        stack.pushPose();
+        stack.translate(position.x, position.y, position.z);
+        stack.scale(5, 5, 5);
+
+        int packedLight = RenderUtils.FULL_BRIGHT;
+
+        try {
+            model.renderAnimated(stack, OBJ_MODEL.withTexture(RenderUtils.CONCRETE_RES_LOC), packedLight);
+        } catch (Exception e) {
+            GE.LENS_LOG.error("Error rendering AMO model: {}", e.getMessage(), e);
+        }
+
+        stack.popPose();
     }
 
     static void renderObjModel(PoseStack stack, ObjModel model, Vec3 position) {

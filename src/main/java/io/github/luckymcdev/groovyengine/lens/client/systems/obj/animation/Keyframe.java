@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 /**
  * Represents a single keyframe in an animation.
  */
+@Deprecated
 public class Keyframe {
     private final float time; // Time in seconds or ticks
     private final Vector3f position;

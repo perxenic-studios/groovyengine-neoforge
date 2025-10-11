@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Animation track for a single object.
  */
+@Deprecated
 public class AnimationTrack {
     private final String objectName;
     private final List<Keyframe> keyframes;

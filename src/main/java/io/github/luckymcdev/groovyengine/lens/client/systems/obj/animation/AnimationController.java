@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * Controls animation playback for an ObjModel.
  */
+@Deprecated
 public class AnimationController {
     private final ObjModel model;
     private final Map<String, Animation> animationMap;

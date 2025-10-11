@@ -7,6 +7,7 @@ import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.trans
 
 import java.util.List;
 
+@Deprecated
 public class ChupacabraAnimations {
 
     private static AnimationController controller;

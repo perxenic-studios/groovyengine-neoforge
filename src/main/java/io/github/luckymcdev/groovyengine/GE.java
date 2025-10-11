@@ -3,12 +3,17 @@ package io.github.luckymcdev.groovyengine;
 import io.github.luckymcdev.groovyengine.core.systems.packs.loader.GroovyEngineRepositorySource;
 import io.github.luckymcdev.groovyengine.util.CachedSupplier;
 import io.github.luckymcdev.groovyengine.util.DecoratedLogger;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.RepositorySource;
+import net.minecraft.server.packs.resources.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 
 public class GE {

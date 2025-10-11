@@ -21,8 +21,8 @@ public class ObjParser {
     public List<Face> faces = new ArrayList<>();
     public Map<String, ObjObject> objects = new LinkedHashMap<>();
 
-    private ObjObject currentObject;
-    private String currentObjectName = "default";
+    protected ObjObject currentObject;
+    protected String currentObjectName = "default";
 
     public void parseObjFile(Resource resource) throws IOException {
         // Initialize default object
@@ -101,21 +101,21 @@ public class ObjParser {
         return new Face(faceVertices);
     }
 
-    private Vector3f safeGetNormal(int index) {
+    protected Vector3f safeGetNormal(int index) {
         if (index >= 0 && index < normals.size()) {
             return normals.get(index);
         }
         return new Vector3f(0, 0, 0);
     }
 
-    private Vec2 safeGetUV(int index) {
+    protected Vec2 safeGetUV(int index) {
         if (index >= 0 && index < uvs.size()) {
             return uvs.get(index);
         }
         return new Vec2(0, 0);
     }
 
-    private Vector3f safeGetVertex(int index) {
+    protected Vector3f safeGetVertex(int index) {
         if (index >= 0 && index < vertices.size()) {
             return vertices.get(index);
         }

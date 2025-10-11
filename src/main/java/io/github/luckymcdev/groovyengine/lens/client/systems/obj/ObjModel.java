@@ -73,6 +73,7 @@ public class ObjModel {
      * @param renderType    The render type.
      * @param packedLight   The packed light.
      */
+    @Deprecated
     public void renderModelAnimated(PoseStack poseStack, RenderType renderType, int packedLight) {
         objects.values().forEach(obj -> obj.render(poseStack, renderType, packedLight));
     }
@@ -83,6 +84,7 @@ public class ObjModel {
      * @param material      The material.
      * @param packedLight   The packed light.
      */
+    @Deprecated
     public void renderModelAnimated(PoseStack poseStack, Material material, int packedLight) {
         objects.values().forEach(obj -> obj.render(poseStack, material.renderType(), packedLight));
     }

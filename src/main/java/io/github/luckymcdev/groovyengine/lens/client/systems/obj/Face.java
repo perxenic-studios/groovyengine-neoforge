@@ -7,13 +7,21 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.phys.Vec2;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.List;
 
-public record Face(List<Vertex> vertices) {
+public class Face {
+    private final List<Vertex> vertices;
+
+    public Face(List<Vertex> vertices) {
+        this.vertices = vertices;
+    }
+
+    public List<Vertex> vertices() {
+        return vertices;
+    }
+
     public void renderFace(PoseStack poseStack, RenderType renderType, int packedLight) {
         MultiBufferSource.BufferSource mcBufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         VertexConsumer buffer = mcBufferSource.getBuffer(renderType);
@@ -23,16 +31,17 @@ public record Face(List<Vertex> vertices) {
         else if (vertexCount == 3) renderTriangle(poseStack, buffer, packedLight);
         else throw new RuntimeException("Face has invalid number of vertices. Supported vertex counts are 3 and 4.");
     }
+
     public void renderTriangle(PoseStack poseStack, VertexConsumer buffer, int packedLight) {
-        this.vertices().forEach(vertex -> addVertex(buffer, vertex, poseStack, packedLight));
-        addVertex(buffer, this.vertices().get(0), poseStack, packedLight);
+        this.vertices.forEach(vertex -> addVertex(buffer, vertex, poseStack, packedLight));
+        addVertex(buffer, this.vertices.get(0), poseStack, packedLight);
     }
 
     public void renderQuad(PoseStack poseStack, VertexConsumer buffer, int packedLight) {
-        this.vertices().forEach(vertex -> addVertex(buffer, vertex, poseStack, packedLight));
+        this.vertices.forEach(vertex -> addVertex(buffer, vertex, poseStack, packedLight));
     }
 
-    private void addVertex(VertexConsumer buffer, Vertex vertex, PoseStack poseStack, int packedLight) {
+    protected void addVertex(VertexConsumer buffer, Vertex vertex, PoseStack poseStack, int packedLight) {
         PoseStack.Pose pose = poseStack.last();
 
         Vector3f position = vertex.position();

@@ -6,6 +6,7 @@ import java.util.Map;
 /**
  * Complete animation with multiple tracks.
  */
+@Deprecated
 public class Animation {
     private final String name;
     private final Map<String, AnimationTrack> tracks;

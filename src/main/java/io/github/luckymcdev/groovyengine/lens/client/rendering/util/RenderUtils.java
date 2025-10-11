@@ -7,6 +7,7 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -23,6 +24,9 @@ import java.util.function.Consumer;
 @OnlyIn(Dist.CLIENT)
 public class RenderUtils {
     public static final int FULL_BRIGHT = 15728880;
+
+    public static final String CONCRETE_RES_LOC_STRING = "textures/block/white_concrete.png";
+    public static final ResourceLocation CONCRETE_RES_LOC = ResourceLocation.withDefaultNamespace(CONCRETE_RES_LOC_STRING);
 
     public static void setupWorldRendering(PoseStack poseStack) {
         Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
