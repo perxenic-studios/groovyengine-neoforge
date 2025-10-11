@@ -7,6 +7,7 @@ import io.github.luckymcdev.groovyengine.core.client.editor.core.EditorState;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.GroovyEngineEditor;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.KeybindManager;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
+import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -15,7 +16,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 public class EditorControlWindow extends EditorWindow {
 
     public EditorControlWindow() {
-        super("Editor Control", "editor_control");
+        super(ImIcons.SETTINGS.get() + " Editor Control", "editor_control");
     }
 
     @Override

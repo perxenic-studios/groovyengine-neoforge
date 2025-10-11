@@ -21,6 +21,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,13 +34,14 @@ public class ImGuiRenderer {
 
     private static void initializeWindows() {
         if (initialized) return;
-        WindowManager.registerWindow(new EditorControlWindow(), "Debug");
+        WindowManager.registerWindow(new EditorControlWindow(), ImIcons.SETTINGS.get() + " Debug");
+        WindowManager.registerWindow(new MetricsWindow(), ImIcons.SETTINGS.get() + " Debug");
 
         // Register demo windows
-        WindowManager.registerWindow(new DemoWindows.AboutWindow(), "ImGui");
-        WindowManager.registerWindow(new DemoWindows.DemoWindow(), "ImGui");
-        WindowManager.registerWindow(new DemoWindows.MetricsWindow(), "ImGui");
-        WindowManager.registerWindow(new DemoWindows.IconsWindow(), "ImGui");
+        WindowManager.registerWindow(new DemoWindows.AboutWindow(), ImIcons.STACKS.get() + " ImGui");
+        WindowManager.registerWindow(new DemoWindows.DemoWindow(), ImIcons.STACKS.get() + " ImGui");
+        WindowManager.registerWindow(new DemoWindows.ImGuiMetricsWindow(), ImIcons.STACKS.get() + " ImGui");
+        WindowManager.registerWindow(new DemoWindows.IconsWindow(), ImIcons.STACKS.get() + " ImGui");
 
         initialized = true;
     }
@@ -98,36 +100,16 @@ public class ImGuiRenderer {
         if (ImGui.beginMainMenuBar()) {
             // Define the exact order you want
             List<String> desiredOrder = Arrays.asList(
-                    "ImGui",        // Leftmost
+                    ImIcons.STACKS.get() + " ImGui",        // Leftmost
                     ImIcons.WRENCH.get()+" Construct",    //
                     ImIcons.CAMERA.get() + " Lens",         //
                     ImIcons.CODE.get()+" Threads",      //
                     ImIcons.EDIT.get()+" Scribe",       //
-                    "Debug"         // Rightmost before View/Help
+                    ImIcons.SETTINGS.get() + " Debug"         // Rightmost before View/Help
             );
 
             // Get all categories and sort according to desired order
-            List<String> sortedCategories = new ArrayList<>(WindowManager.getCategories());
-            sortedCategories.sort((a, b) -> {
-                int indexA = desiredOrder.indexOf(a);
-                int indexB = desiredOrder.indexOf(b);
-
-                // If both are in the desired order list, sort by that order
-                if (indexA != -1 && indexB != -1) {
-                    return Integer.compare(indexA, indexB);
-                }
-                // If only one is in the desired order, that one comes first
-                else if (indexA != -1) {
-                    return -1;
-                }
-                else if (indexB != -1) {
-                    return 1;
-                }
-                // If neither are in the desired order, sort alphabetically
-                else {
-                    return a.compareTo(b);
-                }
-            });
+            List<String> sortedCategories = getSortedCategoriesFor(desiredOrder);
 
             // Render categories in the desired order
             for (String category : sortedCategories) {
@@ -143,7 +125,7 @@ public class ImGuiRenderer {
             }
 
             // Additional menu items (View, Help) - these will appear on the right
-            if (ImGui.beginMenu("View")) {
+            if (ImGui.beginMenu(ImIcons.VISIBLE.get() + " View")) {
                 if (ImGui.menuItem("Close All Windows")) {
                     WindowManager.closeAllWindows();
                 }
@@ -155,7 +137,7 @@ public class ImGuiRenderer {
             }
 
             // Help menu with keybind info
-            if (ImGui.beginMenu("Help")) {
+            if (ImGui.beginMenu(ImIcons.QUESTION.get() + " Help")) {
                 ImGui.text("Keybinds:");
                 ImGui.text(KeybindManager.TOGGLE_IMGUI.getTranslatedKeyMessage().getString()+" - Toggle ImGui");
                 ImGui.text(KeybindManager.OPEN_EDITOR_SCREEN.getTranslatedKeyMessage().getString()+" - Open Editor Screen");
@@ -166,5 +148,30 @@ public class ImGuiRenderer {
 
             ImGui.endMainMenuBar();
         }
+    }
+
+    private static @NotNull List<String> getSortedCategoriesFor(List<String> desiredOrder) {
+        List<String> sortedCategories = new ArrayList<>(WindowManager.getCategories());
+        sortedCategories.sort((a, b) -> {
+            int indexA = desiredOrder.indexOf(a);
+            int indexB = desiredOrder.indexOf(b);
+
+            // If both are in the desired order list, sort by that order
+            if (indexA != -1 && indexB != -1) {
+                return Integer.compare(indexA, indexB);
+            }
+            // If only one is in the desired order, that one comes first
+            else if (indexA != -1) {
+                return -1;
+            }
+            else if (indexB != -1) {
+                return 1;
+            }
+            // If neither are in the desired order, sort alphabetically
+            else {
+                return a.compareTo(b);
+            }
+        });
+        return sortedCategories;
     }
 }

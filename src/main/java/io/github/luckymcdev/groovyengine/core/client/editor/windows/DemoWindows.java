@@ -15,7 +15,7 @@ public class DemoWindows {
 
     public static class AboutWindow extends EditorWindow {
         public AboutWindow() {
-            super("About", "about");
+            super(ImIcons.QUESTION.get() + " About", "about");
         }
 
         @Override
@@ -26,7 +26,7 @@ public class DemoWindows {
 
     public static class DemoWindow extends EditorWindow {
         public DemoWindow() {
-            super("Demo", "demo");
+            super(ImIcons.DASHBOARD.get() + " Demo", "demo");
         }
 
         @Override
@@ -35,9 +35,9 @@ public class DemoWindows {
         }
     }
 
-    public static class MetricsWindow extends EditorWindow {
-        public MetricsWindow() {
-            super("Metrics", "metrics");
+    public static class ImGuiMetricsWindow extends EditorWindow {
+        public ImGuiMetricsWindow() {
+            super(ImIcons.GRAPH.get() + " Metrics", "metrics");
         }
 
         @Override
@@ -49,7 +49,7 @@ public class DemoWindows {
     public static class IconsWindow extends EditorWindow {
 
         public IconsWindow() {
-            super(ImIcons.CIRCLE.get()+" Icons Window");
+            super(ImIcons.CIRCLE.get() + " Icons");
         }
 
         @Override
@@ -192,8 +192,7 @@ public class DemoWindows {
                     Object iconObj = field.get(null);
 
                     if (iconObj instanceof ImIcon) {
-                        ImIcon icon =
-                                (ImIcon) iconObj;
+                        ImIcon icon = (ImIcon) iconObj;
 
                         if (iconCount % columns != 0) {
                             ImGe.sameLine();
