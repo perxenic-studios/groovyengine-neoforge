@@ -11,31 +11,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class Material {
-    private final String name;
-    private final ShaderInstance shader;
-    private final ResourceLocation texture;
-    private final PipelineState pipeline;
-    private final VertexFormat format;
-    private final VertexFormat.Mode vertexMode;
-    private final int bufferSize;
-    private final boolean affectsCrumbling;
-    private final boolean sortOnUpload;
-
-    // Main constructor
-    public Material(String name, ShaderInstance shader, ResourceLocation texture, PipelineState pipeline,
-                    VertexFormat format, VertexFormat.Mode vertexMode, int bufferSize,
-                    boolean affectsCrumbling, boolean sortOnUpload) {
-        this.name = name;
-        this.shader = shader;
-        this.texture = texture;
-        this.pipeline = pipeline;
-        this.format = format;
-        this.vertexMode = vertexMode;
-        this.bufferSize = bufferSize;
-        this.affectsCrumbling = affectsCrumbling;
-        this.sortOnUpload = sortOnUpload;
-    }
+public record Material(String name, ShaderInstance shader, ResourceLocation texture, PipelineState pipeline,
+                       VertexFormat format, VertexFormat.Mode vertexMode, int bufferSize, boolean affectsCrumbling,
+                       boolean sortOnUpload) {
 
     // Simplified constructor with defaults
     public Material(ShaderInstance shader, ResourceLocation texture, PipelineState pipeline) {
@@ -45,17 +23,6 @@ public class Material {
                 false, false);
     }
 
-    // Getters
-    public String name() { return name; }
-    public ShaderInstance shader() { return shader; }
-    public ResourceLocation texture() { return texture; }
-    public PipelineState pipeline() { return pipeline; }
-    public VertexFormat format() { return format; }
-    public VertexFormat.Mode vertexMode() { return vertexMode; }
-    public int bufferSize() { return bufferSize; }
-    public boolean affectsCrumbling() { return affectsCrumbling; }
-    public boolean sortOnUpload() { return sortOnUpload; }
-
     /**
      * Convert this Material to a Minecraft RenderType
      */
@@ -64,7 +31,7 @@ public class Material {
                 .setShaderState(new RenderStateShard.ShaderStateShard(() -> shader))
                 .setTransparencyState(pipeline.toTransparencyState())
                 .setDepthTestState(pipeline.toDepthState())
-                .setCullState(pipeline.cullFaces ? RenderStateShard.CULL : RenderStateShard.NO_CULL)
+                .setCullState(pipeline.cullFaces() ? RenderStateShard.CULL : RenderStateShard.NO_CULL)
                 .setLightmapState(pipeline.toLightmapState())
                 .setOverlayState(pipeline.toOverlayState())
                 .setWriteMaskState(pipeline.toWriteMaskState());

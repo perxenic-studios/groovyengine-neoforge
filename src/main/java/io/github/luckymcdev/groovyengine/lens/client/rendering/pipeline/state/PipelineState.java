@@ -5,30 +5,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class PipelineState {
-    public final boolean depthTest;
-    public final boolean depthWrite;
-    public final boolean cullFaces;
-    public final BlendMode blendMode;
-    public final boolean lightmap;
-    public final boolean overlay;
-    public final TransparencyMode transparency;
-    public final WriteMask writeMask;
-
+public record PipelineState(boolean depthTest, boolean depthWrite, boolean cullFaces, BlendMode blendMode,
+                            boolean lightmap, boolean overlay, TransparencyMode transparency, WriteMask writeMask) {
     public PipelineState(boolean depthTest, boolean depthWrite, boolean cullFaces, BlendMode blendMode) {
         this(depthTest, depthWrite, cullFaces, blendMode, true, false, TransparencyMode.NONE, WriteMask.COLOR_DEPTH);
-    }
-
-    public PipelineState(boolean depthTest, boolean depthWrite, boolean cullFaces, BlendMode blendMode,
-                         boolean lightmap, boolean overlay, TransparencyMode transparency, WriteMask writeMask) {
-        this.depthTest = depthTest;
-        this.depthWrite = depthWrite;
-        this.cullFaces = cullFaces;
-        this.blendMode = blendMode;
-        this.lightmap = lightmap;
-        this.overlay = overlay;
-        this.transparency = transparency;
-        this.writeMask = writeMask;
     }
 
     public RenderStateShard.TransparencyStateShard toTransparencyState() {
