@@ -24,6 +24,7 @@ public class AmoModel extends ObjModel {
     private Animation currentAnimation;
     private float animationTime;
     private boolean isPlaying;
+    private static final Minecraft mc = Minecraft.getInstance();
 
     public AmoModel(ResourceLocation modelLocation) {
         super(modelLocation);
@@ -70,7 +71,7 @@ public class AmoModel extends ObjModel {
      * @param deltaTime Time since last frame in seconds.
      */
     public void updateAnimation(float deltaTime) {
-        if (isPlaying && currentAnimation != null) {
+        if (isPlaying && currentAnimation != null && !mc.isPaused() ) {
             animationTime += deltaTime;
             currentAnimation.applyAtTime(animationTime, joints);
         }
@@ -158,10 +159,10 @@ public class AmoModel extends ObjModel {
     public void renderAnimated(PoseStack poseStack, Material material, int packedLight) {
         renderAnimated(poseStack, material.renderType(), packedLight);
     }
-
     /**
      * Get all available animation names.
      */
+
     public java.util.Set<String> getAnimationNames() {
         return animations.keySet();
     }
