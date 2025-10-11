@@ -36,3 +36,4 @@ repo
 /run/groovyengine/src/resources/.cache
 /run/groovyengine/.idea
 /run/groovyengine/build
+/docs
