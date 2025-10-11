@@ -25,9 +25,11 @@ public class AnimationWindow extends EditorWindow {
 
     private void renderAmoController(ImGuiIO io) {
         ImGe.window(ImIcons.ANIMATION.get() + " Animation Controller", () -> {
-            ImGe.button("play animation", () -> GroovyEngineClient.animatedModel.playAnimation("rotate_x"));
+            ImGe.button("Play animation", () -> GroovyEngineClient.animatedModel.playAnimation("rotate_x"));
 
-            ImGe.button("stop animation", GroovyEngineClient.animatedModel::stopAnimation);
+            ImGe.button("Resume animation", GroovyEngineClient.animatedModel::resumeAnimation);
+
+            ImGe.button("Stop animation", GroovyEngineClient.animatedModel::stopAnimation);
         });
     }
 
