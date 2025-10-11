@@ -62,7 +62,10 @@ public class WorldRenderer extends BaseRenderer {
         }
     }
 
-    // Convenience methods
+    public <T extends Event> void onWorldRender(RenderWorldEvent eventType, Consumer<T> callback) {
+        registerCallback(eventType, callback);
+    }
+
     public void onRenderLevelStage(Consumer<RenderLevelStageEvent> callback) {
         registerCallback(RenderWorldEvent.RENDER_LEVEL_STAGE, callback);
     }
