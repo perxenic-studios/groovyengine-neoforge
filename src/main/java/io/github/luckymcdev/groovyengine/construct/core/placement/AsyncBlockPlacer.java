@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -18,25 +19,21 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Asynchronously places blocks in the world with performance optimization.
- * This system uses queues to batch block placements and updates to maintain game performance.
+ * Enhanced asynchronous block placer with shape operations and advanced features.
  */
 @EventBusSubscriber(value = Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
 public class AsyncBlockPlacer {
     private static final AsyncBlockPlacer INSTANCE = new AsyncBlockPlacer();
 
-    /** Gets the singleton instance of the AsyncBlockPlacer */
     public static AsyncBlockPlacer getInstance() {
         return INSTANCE;
     }
 
-    // Queues for managing block placements
     private final Queue<PlacementTask> immediatePlacementQueue = new ConcurrentLinkedQueue<>();
     private final Queue<PlacementTask> delayedUpdateQueue = new ConcurrentLinkedQueue<>();
     private final Random random = new Random();
 
-    // Performance tuning parameters
     private int blocksPerTick = 1000;
     private int updatesPerTick = blocksPerTick / 2;
     private int tickCounter = 0;
@@ -50,26 +47,16 @@ public class AsyncBlockPlacer {
     public int getBlocksPerTick() { return blocksPerTick; }
     public int getUpdatesPerTick() { return updatesPerTick; }
 
-    /**
-     * Sets the maximum number of blocks to place per tick.
-     * @param blocksPerTick The number of blocks (minimum 1)
-     */
     public void setBlocksPerTick(int blocksPerTick) {
         this.blocksPerTick = Math.max(1, blocksPerTick);
     }
 
-    /**
-     * Sets the maximum number of block updates to send per tick.
-     * @param updatesPerTick The number of updates (minimum 1)
-     */
     public void setUpdatesPerTick(int updatesPerTick) {
         this.updatesPerTick = Math.max(1, updatesPerTick);
     }
 
     /**
      * Fills a selection with blocks from a specified pattern.
-     * @param selection The selection area to fill
-     * @param pattern The block pattern to use for filling
      */
     public void fillSelection(Selection selection, BlockPattern pattern) {
         if (!selection.hasValidSelection()) return;
@@ -80,13 +67,226 @@ public class AsyncBlockPlacer {
         Set<BlockPos> positions = selection.getSelectedBlocks();
         BlockPos origin = selection.getPos1();
 
-        // Queue all block placements
+        queueBlockPlacements(positions, pattern, origin);
+    }
+
+    /**
+     * Fills only the hollow shell of a selection.
+     */
+    public void fillHollow(Selection selection, BlockPattern pattern, int thickness) {
+        if (!selection.hasValidSelection()) return;
+
+        Level level = Minecraft.getInstance().level;
+        if (level == null) return;
+
+        Set<BlockPos> positions = selection.getHollowBlocks(thickness);
+        BlockPos origin = selection.getPos1();
+
+        queueBlockPlacements(positions, pattern, origin);
+    }
+
+    /**
+     * Fills only the walls (vertical faces) of a selection.
+     */
+    public void fillWalls(Selection selection, BlockPattern pattern) {
+        if (!selection.hasValidSelection()) return;
+
+        Level level = Minecraft.getInstance().level;
+        if (level == null) return;
+
+        Set<BlockPos> positions = selection.getWallBlocks();
+        BlockPos origin = selection.getPos1();
+
+        queueBlockPlacements(positions, pattern, origin);
+    }
+
+    /**
+     * Fills only the outline (edges) of a selection.
+     */
+    public void fillOutline(Selection selection, BlockPattern pattern) {
+        if (!selection.hasValidSelection()) return;
+
+        Level level = Minecraft.getInstance().level;
+        if (level == null) return;
+
+        Set<BlockPos> positions = selection.getEdgeBlocks();
+        BlockPos origin = selection.getPos1();
+
+        queueBlockPlacements(positions, pattern, origin);
+    }
+
+    /**
+     * Creates a sphere at the specified center with the given radius.
+     */
+    public void createSphere(BlockPos center, int radius, BlockPattern pattern) {
+        Level level = Minecraft.getInstance().level;
+        if (level == null) return;
+
+        Set<BlockPos> positions = new HashSet<>();
+        int radiusSquared = radius * radius;
+
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (x * x + y * y + z * z <= radiusSquared) {
+                        positions.add(center.offset(x, y, z));
+                    }
+                }
+            }
+        }
+
+        queueBlockPlacements(positions, pattern, center);
+    }
+
+    /**
+     * Creates a hollow sphere at the specified center.
+     */
+    public void createHollowSphere(BlockPos center, int radius, int thickness, BlockPattern pattern) {
+        Level level = Minecraft.getInstance().level;
+        if (level == null) return;
+
+        Set<BlockPos> positions = new HashSet<>();
+        int outerRadiusSquared = radius * radius;
+        int innerRadius = Math.max(0, radius - thickness);
+        int innerRadiusSquared = innerRadius * innerRadius;
+
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    int distSquared = x * x + y * y + z * z;
+                    if (distSquared <= outerRadiusSquared && distSquared >= innerRadiusSquared) {
+                        positions.add(center.offset(x, y, z));
+                    }
+                }
+            }
+        }
+
+        queueBlockPlacements(positions, pattern, center);
+    }
+
+    /**
+     * Creates a cylinder between two points.
+     */
+    public void createCylinder(BlockPos pos1, BlockPos pos2, int radius, BlockPattern pattern) {
+        Level level = Minecraft.getInstance().level;
+        if (level == null) return;
+
+        Set<BlockPos> positions = new HashSet<>();
+        int minY = Math.min(pos1.getY(), pos2.getY());
+        int maxY = Math.max(pos1.getY(), pos2.getY());
+        int centerX = (pos1.getX() + pos2.getX()) / 2;
+        int centerZ = (pos1.getZ() + pos2.getZ()) / 2;
+        int radiusSquared = radius * radius;
+
+        for (int y = minY; y <= maxY; y++) {
+            for (int x = centerX - radius; x <= centerX + radius; x++) {
+                for (int z = centerZ - radius; z <= centerZ + radius; z++) {
+                    int dx = x - centerX;
+                    int dz = z - centerZ;
+                    if (dx * dx + dz * dz <= radiusSquared) {
+                        positions.add(new BlockPos(x, y, z));
+                    }
+                }
+            }
+        }
+
+        queueBlockPlacements(positions, pattern, pos1);
+    }
+
+    /**
+     * Creates a hollow cylinder between two points.
+     */
+    public void createHollowCylinder(BlockPos pos1, BlockPos pos2, int radius, int thickness, BlockPattern pattern) {
+        Level level = Minecraft.getInstance().level;
+        if (level == null) return;
+
+        Set<BlockPos> positions = new HashSet<>();
+        int minY = Math.min(pos1.getY(), pos2.getY());
+        int maxY = Math.max(pos1.getY(), pos2.getY());
+        int centerX = (pos1.getX() + pos2.getX()) / 2;
+        int centerZ = (pos1.getZ() + pos2.getZ()) / 2;
+        int outerRadiusSquared = radius * radius;
+        int innerRadius = Math.max(0, radius - thickness);
+        int innerRadiusSquared = innerRadius * innerRadius;
+
+        for (int y = minY; y <= maxY; y++) {
+            for (int x = centerX - radius; x <= centerX + radius; x++) {
+                for (int z = centerZ - radius; z <= centerZ + radius; z++) {
+                    int dx = x - centerX;
+                    int dz = z - centerZ;
+                    int distSquared = dx * dx + dz * dz;
+                    if (distSquared <= outerRadiusSquared && distSquared >= innerRadiusSquared) {
+                        positions.add(new BlockPos(x, y, z));
+                    }
+                }
+            }
+        }
+
+        queueBlockPlacements(positions, pattern, pos1);
+    }
+
+    /**
+     * Creates a pyramid at the specified base position.
+     */
+    public void createPyramid(BlockPos base, int baseSize, int height, BlockPattern pattern) {
+        Level level = Minecraft.getInstance().level;
+        if (level == null) return;
+
+        Set<BlockPos> positions = new HashSet<>();
+
+        for (int y = 0; y < height; y++) {
+            float progress = (float) y / height;
+            int currentSize = (int) (baseSize * (1 - progress));
+
+            for (int x = -currentSize; x <= currentSize; x++) {
+                for (int z = -currentSize; z <= currentSize; z++) {
+                    positions.add(base.offset(x, y, z));
+                }
+            }
+        }
+
+        queueBlockPlacements(positions, pattern, base);
+    }
+
+    /**
+     * Replaces all blocks of one type with another in a selection.
+     */
+    public void replaceBlocks(Selection selection, Block targetBlock, Block replacementBlock) {
+        if (!selection.hasValidSelection()) return;
+
+        Level level = Minecraft.getInstance().level;
+        if (level == null) return;
+
+        Set<BlockPos> positions = selection.getSelectedBlocks();
+        BlockState targetState = targetBlock.defaultBlockState();
+        BlockState replacementState = replacementBlock.defaultBlockState();
+
+        for (BlockPos pos : positions) {
+            BlockState currentState = level.getBlockState(pos);
+            if (currentState.getBlock() == targetBlock) {
+                immediatePlacementQueue.offer(new PlacementTask(pos, replacementState, false));
+            }
+        }
+
+        if (shouldSendUpdates()) {
+            for (BlockPos pos : positions) {
+                BlockState currentState = level.getBlockState(pos);
+                if (currentState.getBlock() == targetBlock) {
+                    delayedUpdateQueue.offer(new PlacementTask(pos, null, true));
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper method to queue block placements for a set of positions.
+     */
+    private void queueBlockPlacements(Set<BlockPos> positions, BlockPattern pattern, BlockPos origin) {
         for (BlockPos pos : positions) {
             BlockState state = pattern.getBlockState(pos, origin, random);
             immediatePlacementQueue.offer(new PlacementTask(pos, state, false));
         }
 
-        // Queue block updates if needed
         if (shouldSendUpdates()) {
             for (BlockPos pos : positions) {
                 delayedUpdateQueue.offer(new PlacementTask(pos, null, true));
@@ -96,9 +296,6 @@ public class AsyncBlockPlacer {
 
     /**
      * Queues a single block placement operation.
-     * @param pos The target position
-     * @param state The block state to place
-     * @param sendUpdates Whether to send block updates
      */
     public void setBlock(BlockPos pos, BlockState state, boolean sendUpdates) {
         if (sendUpdates) {
@@ -121,10 +318,8 @@ public class AsyncBlockPlacer {
         Level level = event.getServer().getLevel(playerLevel.dimension());
         if (level == null) return;
 
-        // Skip if no work to do
         if (INSTANCE.immediatePlacementQueue.isEmpty() && INSTANCE.delayedUpdateQueue.isEmpty()) return;
 
-        // Adjust performance parameters based on FPS
         INSTANCE.tickCounter++;
         if (INSTANCE.immediatePlacementQueue.size() > 10000 && INSTANCE.tickCounter % INSTANCE.adjustmentInterval == 0) {
             INSTANCE.adjustPerformanceParameters();
@@ -201,11 +396,9 @@ public class AsyncBlockPlacer {
         return true;
     }
 
-    // Queue status methods
     public int getQueuedPlacements() { return immediatePlacementQueue.size(); }
     public int getQueuedUpdates() { return delayedUpdateQueue.size(); }
 
-    /** Clears all pending block operations */
     public void clearQueues() {
         immediatePlacementQueue.clear();
         delayedUpdateQueue.clear();

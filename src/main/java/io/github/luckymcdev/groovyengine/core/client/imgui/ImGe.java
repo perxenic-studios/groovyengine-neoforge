@@ -3,6 +3,7 @@ package io.github.luckymcdev.groovyengine.core.client.imgui;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImBoolean;
 import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
 import net.neoforged.api.distmarker.Dist;
@@ -79,6 +80,11 @@ public class ImGe extends ImGui {
     // Collapsing header
     public static void collapsingHeader(String label, Runnable body) {
         if (collapsingHeader(label)) body.run();
+    }
+
+    public static boolean collapsingHeader(String label, boolean defaultOpen) {
+        int flags = defaultOpen ? ImGuiTreeNodeFlags.DefaultOpen : 0;
+        return ImGui.collapsingHeader(label, flags);
     }
 
     // Icon scale

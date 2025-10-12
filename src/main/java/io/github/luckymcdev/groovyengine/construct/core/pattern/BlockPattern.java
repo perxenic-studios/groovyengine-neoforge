@@ -1,4 +1,3 @@
-// File: BlockPattern.java
 package io.github.luckymcdev.groovyengine.construct.core.pattern;
 
 import net.minecraft.core.BlockPos;
@@ -108,17 +107,78 @@ public interface BlockPattern {
     }
 
     /**
+     * Pattern that creates horizontal layers alternating between two blocks.
+     */
+    class LayeredPattern implements BlockPattern {
+        private final BlockState primary;
+        private final BlockState secondary;
+        private final int layerThickness;
+
+        public LayeredPattern(BlockState primary, BlockState secondary, int layerThickness) {
+            this.primary = primary;
+            this.secondary = secondary;
+            this.layerThickness = layerThickness;
+        }
+
+        @Override
+        public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
+            int relativeY = pos.getY() - origin.getY();
+            int layer = relativeY / layerThickness;
+            return layer % 2 == 0 ? primary : secondary;
+        }
+    }
+
+    /**
+     * Pattern that creates a gradient between two blocks based on Y position.
+     */
+    class GradientPattern implements BlockPattern {
+        private final BlockState bottomBlock;
+        private final BlockState topBlock;
+        private BlockPos minPos;
+        private BlockPos maxPos;
+
+        public GradientPattern(BlockState bottomBlock, BlockState topBlock) {
+            this.bottomBlock = bottomBlock;
+            this.topBlock = topBlock;
+        }
+
+        @Override
+        public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
+            // Initialize bounds on first call if needed
+            if (minPos == null) {
+                minPos = origin;
+                maxPos = origin;
+            }
+
+            // Calculate the gradient based on Y position
+            int minY = minPos.getY();
+            int maxY = maxPos.getY();
+            int range = maxY - minY;
+
+            if (range == 0) return bottomBlock;
+
+            float normalizedY = (float)(pos.getY() - minY) / range;
+
+            // Use random threshold to create gradient effect
+            return random.nextFloat() < normalizedY ? topBlock : bottomBlock;
+        }
+
+        /**
+         * Sets the bounds for the gradient calculation.
+         */
+        public void setBounds(BlockPos min, BlockPos max) {
+            this.minPos = min;
+            this.maxPos = max;
+        }
+    }
+
+    /**
      * Pattern that randomly selects blocks based on weighted probabilities.
-     * Weights are specified as percentages (0-100) and are automatically normalized.
      */
     class WeightedPattern implements BlockPattern {
         private final List<WeightedBlock> weightedBlocks;
         private final float totalWeight;
 
-        /**
-         * Creates a weighted pattern from BlockState and weight pairs.
-         * @param blocks Varargs of BlockState and weight pairs (e.g., blockState1, 50, blockState2, 30, blockState3, 20)
-         */
         public WeightedPattern(Object... blocks) {
             if (blocks.length % 2 != 0) {
                 throw new IllegalArgumentException("Must provide pairs of BlockState and weight");
@@ -148,16 +208,11 @@ public interface BlockPattern {
 
             this.totalWeight = sum;
 
-            // Normalize weights to percentages if they don't sum to 100 (within tolerance)
             if (Math.abs(totalWeight - 100.0f) > 0.001f) {
                 System.out.println("Weights sum to " + totalWeight + ", normalizing to 100%");
             }
         }
 
-        /**
-         * Creates a weighted pattern from Block and weight pairs.
-         * @param blocks Varargs of Block and weight pairs (e.g., block1, 50, block2, 30, block3, 20)
-         */
         public static WeightedPattern fromBlocks(Object... blocks) {
             if (blocks.length % 2 != 0) {
                 throw new IllegalArgumentException("Must provide pairs of Block and weight");
@@ -175,10 +230,6 @@ public interface BlockPattern {
             return new WeightedPattern(blockStates);
         }
 
-        /**
-         * Creates a weighted pattern from a map of BlockState to weight.
-         * @param blockWeights Map containing BlockState to weight mappings
-         */
         public WeightedPattern(Map<BlockState, Float> blockWeights) {
             this.weightedBlocks = new ArrayList<>();
             float sum = 0;
@@ -214,29 +265,17 @@ public interface BlockPattern {
                 }
             }
 
-            // Fallback: return the last block (should rarely happen due to floating point precision)
             return weightedBlocks.get(weightedBlocks.size() - 1).blockState;
         }
 
-        /**
-         * Gets the list of weighted blocks with their normalized percentages.
-         * @return List of weighted blocks with actual percentages
-         */
         public List<WeightedBlock> getWeightedBlocks() {
             return new ArrayList<>(weightedBlocks);
         }
 
-        /**
-         * Gets the total weight of all blocks in the pattern.
-         * @return The sum of all weights
-         */
         public float getTotalWeight() {
             return totalWeight;
         }
 
-        /**
-         * Represents a block with its associated weight.
-         */
         public static class WeightedBlock {
             public final BlockState blockState;
             public final float weight;
@@ -248,11 +287,6 @@ public interface BlockPattern {
                 this.percentage = weight;
             }
 
-            /**
-             * Gets the actual percentage this block represents in the pattern.
-             * @param totalWeight The total weight to calculate percentage against
-             * @return The percentage (0-100)
-             */
             public float getPercentage(float totalWeight) {
                 return (weight / totalWeight) * 100.0f;
             }
@@ -261,6 +295,69 @@ public interface BlockPattern {
             public String toString() {
                 return String.format("WeightedBlock{blockState=%s, weight=%.1f}", blockState, weight);
             }
+        }
+    }
+
+    /**
+     * Pattern that creates noise-based terrain using Perlin-like noise.
+     */
+    class NoisePattern implements BlockPattern {
+        private final BlockState primary;
+        private final BlockState secondary;
+        private final double scale;
+        private final double threshold;
+
+        public NoisePattern(BlockState primary, BlockState secondary, double scale, double threshold) {
+            this.primary = primary;
+            this.secondary = secondary;
+            this.scale = scale;
+            this.threshold = threshold;
+        }
+
+        @Override
+        public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
+            double noise = generateNoise(
+                    (pos.getX() - origin.getX()) * scale,
+                    (pos.getY() - origin.getY()) * scale,
+                    (pos.getZ() - origin.getZ()) * scale
+            );
+            return noise > threshold ? primary : secondary;
+        }
+
+        private double generateNoise(double x, double y, double z) {
+            // Simple 3D noise function (simplified Perlin-like noise)
+            double n = Math.sin(x * 12.9898 + y * 78.233 + z * 37.719) * 43758.5453;
+            return (n - Math.floor(n)) * 2.0 - 1.0;
+        }
+    }
+
+    /**
+     * Pattern that creates stripes along a specified axis.
+     */
+    class StripePattern implements BlockPattern {
+        private final BlockState primary;
+        private final BlockState secondary;
+        private final int stripeWidth;
+        private final Axis axis;
+
+        public enum Axis { X, Y, Z }
+
+        public StripePattern(BlockState primary, BlockState secondary, int stripeWidth, Axis axis) {
+            this.primary = primary;
+            this.secondary = secondary;
+            this.stripeWidth = stripeWidth;
+            this.axis = axis;
+        }
+
+        @Override
+        public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
+            int coord = switch (axis) {
+                case X -> pos.getX() - origin.getX();
+                case Y -> pos.getY() - origin.getY();
+                case Z -> pos.getZ() - origin.getZ();
+            };
+
+            return (coord / stripeWidth) % 2 == 0 ? primary : secondary;
         }
     }
 }
