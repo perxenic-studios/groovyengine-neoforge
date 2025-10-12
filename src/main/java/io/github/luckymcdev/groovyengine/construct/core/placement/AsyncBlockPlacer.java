@@ -164,7 +164,7 @@ public class AsyncBlockPlacer {
         while (processed < blocksPerTick && !immediatePlacementQueue.isEmpty()) {
             PlacementTask task = immediatePlacementQueue.poll();
             if (task != null && isValidPosition(task.position(), level)) {
-                level.setBlock(task.position(), task.blockState(), BlockPlacementFlags.UPDATE_CLIENTS.value);
+                level.setBlock(task.position(), task.blockState(), BlockPlacementFlags.UPDATE_CLIENTS);
                 processed++;
             }
         }
@@ -181,7 +181,7 @@ public class AsyncBlockPlacer {
             PlacementTask task = delayedUpdateQueue.poll();
             if (task != null && isValidPosition(task.position(), level)) {
                 BlockState currentState = level.getBlockState(task.position());
-                level.sendBlockUpdated(task.position(), currentState, currentState, BlockPlacementFlags.UPDATE_ALL.value);
+                level.sendBlockUpdated(task.position(), currentState, currentState, BlockPlacementFlags.UPDATE_ALL);
                 processed++;
             }
         }
