@@ -47,3 +47,39 @@ idea {
     }
 }
 
+tasks.forEach { task ->
+    task.group = 'Zinternal'
+}
+
+// Optional: Configure specific task groups if needed
+tasks.named('build') {
+    group = 'build'
+}
+
+tasks.named('test') {
+    group = 'verification'
+}
+
+tasks.named('clean') {
+    group = 'build'
+}
+
+tasks.register('buildModule', Copy) {
+    group = 'build'
+    description = 'Copies the src folder to modules directory'
+
+    def moduleName = project.hasProperty('module_name') ? project.property('module_name') : project.name
+    println "Module name determined as: $moduleName" // This runs at configuration time
+
+    from 'src'
+    into "modules/${moduleName}"
+
+    doFirst {
+        println "Starting copy from src to ../modules/${moduleName}"
+    }
+
+    doLast {
+        println "Copy completed!"
+    }
+}
+

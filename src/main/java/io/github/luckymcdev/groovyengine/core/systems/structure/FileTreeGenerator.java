@@ -64,17 +64,11 @@ public class FileTreeGenerator {
                  id 'java'
              }
             
+            
+            
+           
              // Apply internal build logic
              apply from: 'internal.gradle'
-            
-             // Optional user additions
-             repositories {
-                 //maven { url 'https://my.custom.repo/repo' }
-             }
-            
-             dependencies {
-                 //implementation 'com.example:my-lib:1.0.0'
-             }
             """);
 
         createGradleFile(FileConstants.INTERNAL_GRADLE, """
@@ -126,6 +120,42 @@ public class FileTreeGenerator {
                     downloadJavadoc = true
                 }
             }
+            
+            tasks.forEach { task ->
+                task.group = 'Zinternal'
+            }
+            
+            // Optional: Configure specific task groups if needed
+            tasks.named('build') {
+                group = 'build'
+            }
+            
+            tasks.named('test') {
+                group = 'verification'
+            }
+            
+            tasks.named('clean') {
+                group = 'build'
+            }
+            
+            tasks.register('buildModule', Copy) {
+                group = 'build'
+                description = 'Copies the src folder to modules directory'
+            
+                def moduleName = project.hasProperty('module_name') ? project.property('module_name') : project.name
+                println "Module name determined as: $moduleName" // This runs at configuration time
+            
+                from 'src'
+                into "modules/${moduleName}"
+            
+                doFirst {
+                    println "Starting copy from src to ../modules/${moduleName}"
+                }
+            
+                doLast {
+                    println "Copy completed!"
+                }
+            }
 
             """);
 
@@ -147,6 +177,11 @@ public class FileTreeGenerator {
             neoforge_version=%s
             mappings_channel=parchment
             mappings_version=%s
+            
+           
+            ## Here is your Modules Definition
+            
+            module_name=myModule
             """.formatted(MINECRAFT_VERSION, NEOFORGE_VERSION, MAPPINGS_VERSION));
     }
 
