@@ -3,6 +3,7 @@ package io.github.luckymcdev.groovyengine.construct.client.editor;
 import imgui.ImGuiIO;
 import imgui.type.ImInt;
 import imgui.type.ImString;
+import io.github.luckymcdev.groovyengine.construct.client.rendering.SelectionRenderer;
 import io.github.luckymcdev.groovyengine.construct.core.pattern.BlockPattern;
 import io.github.luckymcdev.groovyengine.construct.core.placement.AsyncBlockPlacer;
 import io.github.luckymcdev.groovyengine.construct.core.selection.Selection;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 @OnlyIn(Dist.CLIENT)
 public class ConstructEditorWindow extends EditorWindow {
@@ -56,6 +58,7 @@ public class ConstructEditorWindow extends EditorWindow {
 
     public ConstructEditorWindow() {
         super(ImIcons.WRENCH.get() + " Construct Editor");
+        NeoForge.EVENT_BUS.register(new SelectionRenderer(selectionManager));
     }
 
     @Override

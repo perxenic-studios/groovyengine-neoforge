@@ -1,10 +1,8 @@
-// RegisterRenderable.java - Updated
 package io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.core;
 
 import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.*;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class Renderer {
     private static final Renderer INSTANCE = new Renderer();
@@ -13,7 +11,6 @@ public class Renderer {
         return INSTANCE;
     }
 
-    private final Map<Class<?>, List<Consumer<?>>> renderCallbacks = new HashMap<>();
     private final Map<Class<? extends BaseRenderer>, BaseRenderer> renderers = new HashMap<>();
 
     private Renderer() {
@@ -22,9 +19,6 @@ public class Renderer {
         registerRenderer(GuiRenderer.class, new GuiRenderer());
         registerRenderer(PlayerRenderer.class, new PlayerRenderer());
         registerRenderer(WorldRenderer.class, new WorldRenderer());
-
-        // Register with NeoForge event bus
-        EventBusHandler.register(this);
     }
 
     private <T extends BaseRenderer> void registerRenderer(Class<T> rendererClass, T renderer) {

@@ -6,6 +6,7 @@ import io.github.luckymcdev.groovyengine.GroovyEngineClient;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
+import io.github.luckymcdev.groovyengine.lens.LensRendering;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.AnimationController;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.ChupacabraAnimations;
 
@@ -25,11 +26,11 @@ public class AnimationWindow extends EditorWindow {
 
     private void renderAmoController(ImGuiIO io) {
         ImGe.window(ImIcons.ANIMATION.get() + " Animation Controller", () -> {
-            ImGe.button("Play animation", () -> GroovyEngineClient.animatedModel.playAnimation("rotate_x"));
+            ImGe.button("Play animation", () -> LensRendering.animatedModel.playAnimation("rotate_x"));
 
-            ImGe.button("Resume animation", GroovyEngineClient.animatedModel::resumeAnimation);
+            ImGe.button("Resume animation", LensRendering.animatedModel::resumeAnimation);
 
-            ImGe.button("Stop animation", GroovyEngineClient.animatedModel::stopAnimation);
+            ImGe.button("Stop animation", LensRendering.animatedModel::stopAnimation);
         });
     }
 

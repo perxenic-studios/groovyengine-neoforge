@@ -84,21 +84,27 @@ public class GroovyEngineClient {
         });
     }
 
+    @SubscribeEvent
+    static void tick(ClientTickEvent.Pre event) {
+        registerModuleWindows();
+        LensRendering.onClientTick(event);
+    }
+
     private static void registerModuleWindows() {
         if (initializedModuleWindows) return;
+
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null || mc.level == null) {
+            return;
+        }
+
         ModuleManager instance = ModuleManager.getInstance();
         instance.runRegisterWindows();
         initializedModuleWindows = true;
     }
 
     @SubscribeEvent
-    static void tick(ClientTickEvent.Pre event) {
-        LensRendering.onClientTick(event);
-    }
-
-    @SubscribeEvent
     static void onRegisterShader(RegisterShadersEvent event) {
-        registerModuleWindows();
         LensRendering.onRegisterShaders(event);
     }
 }

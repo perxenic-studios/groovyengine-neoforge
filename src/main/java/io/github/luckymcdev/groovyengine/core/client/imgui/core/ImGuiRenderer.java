@@ -16,6 +16,7 @@ import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.lens.client.editor.RenderingDebuggingWindow;
 import io.github.luckymcdev.groovyengine.threads.client.editor.ThreadsWindow;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -51,29 +52,12 @@ public class ImGuiRenderer {
 
         ImGuiImpl.draw(io -> {
             boolean isImGuiEnabled = GroovyEngineEditor.getEditorState() == EditorState.ENABLED;
-            boolean isOnEditorScreen = Minecraft.getInstance().screen instanceof EditorScreen;
 
-            // Always show editor control if ImGui is enabled OR if we're on the editor screen
-            // This is the only window that should be accessible when ImGui is disabled
-            if (isImGuiEnabled || isOnEditorScreen) {
-                WindowManager.getWindow("editor_control").setEnabled(true);
-            } else {
-                WindowManager.getWindow("editor_control").setEnabled(false);
-            }
-
-            // Only show docking, main menu bar, and other windows when ImGui is fully enabled
             if (isImGuiEnabled) {
                 setupDockingAndMainWindow();
                 renderMainMenuBar();
 
-                // Render all enabled windows (including editor control)
                 WindowManager.renderAllWindows(io);
-            } else {
-                // When ImGui is disabled, only render the editor control window if it's enabled
-                EditorWindow editorControl = WindowManager.getWindow("editor_control");
-                if (editorControl != null && editorControl.isEnabled()) {
-                    editorControl.render(io);
-                }
             }
         });
     }
