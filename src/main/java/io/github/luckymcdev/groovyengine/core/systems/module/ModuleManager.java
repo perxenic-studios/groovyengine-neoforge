@@ -30,6 +30,10 @@ public class ModuleManager {
         modules.forEach(Module::onServerStarting);
     }
 
+    public void runOnClientSetup() {
+        modules.forEach(Module::onClientSetup);
+    }
+
     public void runOnCommonSetup() {
         modules.forEach(Module::onCommonSetup);
     }

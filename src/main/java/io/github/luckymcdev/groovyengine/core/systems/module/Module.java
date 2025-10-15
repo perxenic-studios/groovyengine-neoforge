@@ -9,5 +9,7 @@ public interface Module {
     default void onServerStarting() {}
     default void onCommonSetup() {}
     @OnlyIn(Dist.CLIENT)
+    default void onClientSetup() {}
+    @OnlyIn(Dist.CLIENT)
     void registerWindows();
 }
