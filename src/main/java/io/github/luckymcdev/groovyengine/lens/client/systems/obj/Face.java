@@ -2,6 +2,7 @@ package io.github.luckymcdev.groovyengine.lens.client.systems.obj;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import io.github.luckymcdev.groovyengine.GE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -27,9 +28,17 @@ public class Face {
         VertexConsumer buffer = mcBufferSource.getBuffer(renderType);
         int vertexCount = vertices.size();
 
-        if (vertexCount == 4) renderQuad(poseStack, buffer, packedLight);
-        else if (vertexCount == 3) renderTriangle(poseStack, buffer, packedLight);
-        else throw new RuntimeException("Face has invalid number of vertices. Supported vertex counts are 3 and 4.");
+        if (vertexCount == 4) {
+            renderQuad(poseStack, buffer, packedLight);
+        } else if (vertexCount == 3) {
+            renderTriangle(poseStack, buffer, packedLight);
+        } else if (vertexCount > 4) {
+            // Handle Ngons by triangulating them
+            renderNgon(poseStack, buffer, packedLight);
+        } else {
+            // Skip invalid faces (less than 3 vertices)
+            GE.LENS_LOG.warn("Skipping face with invalid vertex count: {}", vertexCount);
+        }
     }
 
     public void renderTriangle(PoseStack poseStack, VertexConsumer buffer, int packedLight) {
@@ -39,6 +48,22 @@ public class Face {
 
     public void renderQuad(PoseStack poseStack, VertexConsumer buffer, int packedLight) {
         this.vertices.forEach(vertex -> addVertex(buffer, vertex, poseStack, packedLight));
+    }
+
+    public void renderNgon(PoseStack poseStack, VertexConsumer buffer, int packedLight) {
+        // Simple fan triangulation for Ngons
+        // Use vertex 0 as the anchor and create triangles: (0,1,2), (0,2,3), (0,3,4), etc.
+        Vertex anchor = vertices.get(0);
+
+        for (int i = 1; i < vertices.size() - 1; i++) {
+            Vertex v1 = vertices.get(i);
+            Vertex v2 = vertices.get(i + 1);
+
+            // Render each triangle
+            addVertex(buffer, anchor, poseStack, packedLight);
+            addVertex(buffer, v1, poseStack, packedLight);
+            addVertex(buffer, v2, poseStack, packedLight);
+        }
     }
 
     protected void addVertex(VertexConsumer buffer, Vertex vertex, PoseStack poseStack, int packedLight) {
@@ -59,7 +84,7 @@ public class Face {
     public Vector3f getCentroid() {
         Vector3f centroid = new Vector3f();
         for (Vertex vertex : vertices) centroid.add(vertex.position());
-        centroid.mul(1f/vertices.size()); // centroid.div(vertices.size()); ImplNote: same functionality
+        centroid.mul(1f/vertices.size());
         return centroid;
     }
 }

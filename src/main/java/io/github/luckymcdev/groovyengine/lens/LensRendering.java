@@ -20,6 +20,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
@@ -29,11 +31,21 @@ import java.util.List;
 
 import static io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials.DEBUG_TRIANGLES;
 import static io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials.OBJ_MODEL;
+import static io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModelManager.registerObjModel;
 
+@EventBusSubscriber
 public class LensRendering {
 
-    private static final ObjModel suzanneModel = new ObjModel(GE.id("suzanne"));
-    private static final ObjModel cubeModel = new ObjModel(GE.id("cube"));
+    private static final ObjModel circle = new ObjModel(GE.id("mesh/circle/circle"));
+    private static final ObjModel cone = new ObjModel(GE.id("mesh/cone/cone"));
+    private static final ObjModel cube = new ObjModel(GE.id("mesh/cube/cube"));
+    private static final ObjModel cylinder = new ObjModel(GE.id("mesh/cylinder/cylinder"));
+    private static final ObjModel icosphere = new ObjModel(GE.id("mesh/icosphere/ico_sphere"));
+    private static final ObjModel plane = new ObjModel(GE.id("mesh/plane/plane"));
+    private static final ObjModel sphere = new ObjModel(GE.id("mesh/sphere/sphere"));
+    private static final ObjModel suzanne = new ObjModel(GE.id("mesh/suzanne/suzanne"));
+    private static final ObjModel torus = new ObjModel(GE.id("mesh/torus/torus"));
+
     private static final ObjModel chupacabraModel = new ObjModel(GE.id("chupacabra"));
     private static final ResourceLocation chupacabraTexture = GE.id("obj/chupacabra.png");
 
@@ -44,16 +56,22 @@ public class LensRendering {
 
     public static void initialize() {
         // Register models
-        ObjModelManager.registerObjModel(suzanneModel);
-        ObjModelManager.registerObjModel(cubeModel);
-        ObjModelManager.registerObjModel(chupacabraModel);
-        ObjModelManager.registerObjModel(animatedModel);
+
+        registerObjModel(circle);
+        registerObjModel(cone);
+        registerObjModel(cube);
+        registerObjModel(cylinder);
+        registerObjModel(icosphere);
+        registerObjModel(plane);
+        registerObjModel(sphere);
+        registerObjModel(suzanne);
+        registerObjModel(torus);
+
+        registerObjModel(chupacabraModel);
+        registerObjModel(animatedModel);
 
         // Initialize animations
         ChupacabraAnimations.initialize(chupacabraModel);
-
-        // Setup rendering
-        setupRendering();
     }
 
     public static void onClientTick(ClientTickEvent.Pre event) {
@@ -71,25 +89,24 @@ public class LensRendering {
         }
     }
 
-    private static void setupRendering() {
-        renderer.getWorldRenderer().onRenderLevelStage(event -> {
-            ClientLevel level = Minecraft.getInstance().level;
+    @SubscribeEvent
+    private static void setupRendering(RenderLevelStageEvent event) {
+        ClientLevel level = Minecraft.getInstance().level;
 
-            // Particle effects
-            createParticleEffects(level);
+        // Particle effects
+        createParticleEffects(level);
 
-            if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
 
-            Minecraft mc = Minecraft.getInstance();
-            PoseStack stack = event.getPoseStack();
-            MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
+        Minecraft mc = Minecraft.getInstance();
+        PoseStack stack = event.getPoseStack();
+        MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
 
-            // Render VFX shapes
-            renderVFXShapes(stack, buffers);
+        // Render VFX shapes
+        renderVFXShapes(stack, buffers);
 
-            // Render models
-            renderModels(stack);
-        });
+        // Render models
+        renderModels(stack);
     }
 
     private static void createParticleEffects(ClientLevel level) {
@@ -192,31 +209,42 @@ public class LensRendering {
     }
 
     private static void renderModels(PoseStack stack) {
+        // Render all primitive models in a grid at position (35, 140, 0)
         new PoseScope(stack)
                 .world()
                 .run(poseStack -> {
-                    renderObjModel(poseStack, suzanneModel, new Vec3(0, 100, 0));
+                    renderAllObjModels(poseStack, new Vec3(35, 140, 0));
                 });
 
         new PoseScope(stack)
                 .world()
                 .run(poseStack -> {
-                    renderObjModel(poseStack, cubeModel, new Vec3(0, 125, 0));
+                    renderObjModelAnimated(poseStack, chupacabraModel, new Vec3(35, 140, 20), OBJ_MODEL.withTexture(chupacabraTexture));
                 });
 
+        // Add AMO model rendering with offset
         new PoseScope(stack)
                 .world()
                 .run(poseStack -> {
-                    renderObjModelAnimated(poseStack, chupacabraModel, new Vec3(0, 150, 0), OBJ_MODEL.withTexture(chupacabraTexture));
-                });
-
-        // Add AMO model rendering at position (45, 120, 0)
-        new PoseScope(stack)
-                .world()
-                .run(poseStack -> {
-                    renderAmoModel(poseStack, animatedModel, new Vec3(45, 120, 0));
+                    renderAmoModel(poseStack, animatedModel, new Vec3(35, 140, 40));
                 });
     }
+
+    static void renderAllObjModels(PoseStack stack, Vec3 startPosition) {
+        new PoseScope(stack).world().run(p -> renderObjModel(p, cube, startPosition.add(0, 0, 0)));
+        new PoseScope(stack).world().run(p -> renderObjModel(p, sphere, startPosition.add(30, 0, 0)));
+        new PoseScope(stack).world().run(p -> renderObjModel(p, cylinder, startPosition.add(60, 0, 0)));
+        new PoseScope(stack).world().run(p -> renderObjModel(p, cone, startPosition.add(90, 0, 0)));
+
+        new PoseScope(stack).world().run(p -> renderObjModel(p, plane, startPosition.add(0, 0, 30)));
+        new PoseScope(stack).world().run(p -> renderObjModel(p, circle, startPosition.add(30, 0, 30)));
+        new PoseScope(stack).world().run(p -> renderObjModel(p, icosphere, startPosition.add(60, 0, 30)));
+        new PoseScope(stack).world().run(p -> renderObjModel(p, torus, startPosition.add(90, 0, 30)));
+
+        new PoseScope(stack).world().run(p -> renderObjModel(p, suzanne, startPosition.add(30, 0, 60)));
+
+    }
+
 
     static void renderAmoModel(PoseStack stack, AmoModel model, Vec3 position) {
         Minecraft mc = Minecraft.getInstance();
