@@ -15,12 +15,14 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo.AmoModel;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.ChupacabraAnimations;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -49,6 +51,7 @@ public class LensRendering {
     private static final ObjModel torus = new ObjModel(GE.id("mesh/torus/torus"));
     private static final ObjModel chupacabraModel = new ObjModel(GE.id("chupacabra"));
     private static final ResourceLocation chupacabraTexture = GE.id("obj/chupacabra.png");
+
     private static final Renderer renderer = Renderer.getInstance();
 
     private static final PostProcessChain postProcessChain = new PostProcessChain();
@@ -106,10 +109,6 @@ public class LensRendering {
     private static void renderFinal(RenderLevelStageEvent event) {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
 
-        // Clear previous effects
-        postProcessChain.clearEffects();
-
-        // Add effects based on debug window settings
         if (RenderingDebuggingWindow.isChromaticAberrationEnabled()) {
             postProcessChain.addEffect(
                     ShaderEffectTest.createChromaticEffect(
@@ -135,8 +134,15 @@ public class LensRendering {
                     )
             );
         }
+    }
 
-        // Execute the chain (automatically handles ping-pong buffers)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    private static void resetPostChain(RenderLevelStageEvent event) {
+        postProcessChain.clearEffects();
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    private static void renderPostChain(RenderLevelStageEvent event) {
         postProcessChain.execute();
     }
 
@@ -250,14 +256,14 @@ public class LensRendering {
         new PoseScope(stack)
                 .world()
                 .run(poseStack -> {
-                    renderObjModelAnimated(poseStack, chupacabraModel, new Vec3(35, 140, 20), OBJ_MODEL.withTexture(chupacabraTexture));
+                    renderObjModelAnimated(poseStack, chupacabraModel, new Vec3(35, 140, 60), OBJ_MODEL.withTexture(chupacabraTexture));
                 });
 
         // Add AMO model rendering with offset
         new PoseScope(stack)
                 .world()
                 .run(poseStack -> {
-                    renderAmoModel(poseStack, animatedModel, new Vec3(35, 140, 40));
+                    renderAmoModel(poseStack, animatedModel, new Vec3(65, 140, 60));
                 });
     }
 
@@ -272,7 +278,7 @@ public class LensRendering {
         new PoseScope(stack).world().run(p -> renderObjModel(p, icosphere, startPosition.add(60, 0, 30)));
         new PoseScope(stack).world().run(p -> renderObjModel(p, torus, startPosition.add(90, 0, 30)));
 
-        new PoseScope(stack).world().run(p -> renderObjModel(p, suzanne, startPosition.add(30, 0, 60)));
+        new PoseScope(stack).world().run(p -> renderObjModel(p, suzanne, startPosition.add(30, 0, 30)));
 
     }
 

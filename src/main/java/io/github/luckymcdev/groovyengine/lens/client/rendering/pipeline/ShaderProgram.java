@@ -2,83 +2,76 @@ package io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.FragmentShader;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.GeometryShader;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.Shader;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.VertexShader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL32;
-import org.lwjgl.opengl.GL40;
-import org.lwjgl.opengl.GL43;
 import org.lwjgl.system.MemoryStack;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShaderProgram {
     private int programId;
-    private final Map<ShaderType, Integer> shaders;
+    private final List<Shader> attachedShaders;
     private final Map<String, Integer> uniformLocations;
     private static int quadVAO = -1;
     private static int quadVBO = -1;
 
-    public enum ShaderType {
-        VERTEX(GL20.GL_VERTEX_SHADER),
-        FRAGMENT(GL20.GL_FRAGMENT_SHADER),
-        GEOMETRY(GL32.GL_GEOMETRY_SHADER),
-        TESS_CONTROL(GL40.GL_TESS_CONTROL_SHADER),
-        TESS_EVALUATION(GL40.GL_TESS_EVALUATION_SHADER),
-        COMPUTE(GL43.GL_COMPUTE_SHADER);
-
-        public final int glType;
-
-        ShaderType(int glType) {
-            this.glType = glType;
-        }
-    }
-
     public ShaderProgram() {
         this.programId = GlStateManager.glCreateProgram();
-        this.shaders = new HashMap<>();
+        this.attachedShaders = new ArrayList<>();
         this.uniformLocations = new HashMap<>();
     }
 
     /**
-     * Add a shader from source code string
+     * Add a shader to the program
      */
-    public ShaderProgram addShader(ShaderType type, String source) {
-        int shaderId = GlStateManager.glCreateShader(type.glType);
-        GL20.glShaderSource(shaderId, source);
-        GlStateManager.glCompileShader(shaderId);
-
-        if (GlStateManager.glGetShaderi(shaderId, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-            String log = GlStateManager.glGetShaderInfoLog(shaderId, 1024);
-            GlStateManager.glDeleteShader(shaderId);
-            throw new RuntimeException("Failed to compile " + type + " shader:\n" + log);
+    public ShaderProgram addShader(Shader shader) {
+        if (!shader.isCompiled()) {
+            throw new IllegalStateException("Shader must be compiled before adding to program");
         }
 
-        shaders.put(type, shaderId);
+        attachedShaders.add(shader);
+        GlStateManager.glAttachShader(programId, shader.getShaderId());
         return this;
     }
 
     /**
-     * Add a shader from a resource file
+     * Add a vertex shader from source
      */
-    public ShaderProgram addShaderFromResource(ShaderType type, String resourcePath) {
-        String source = loadShaderSource(resourcePath);
-        return addShader(type, source);
+    public ShaderProgram addVertexShader(String source) {
+        Shader shader = new VertexShader(source);
+        return addShader(shader);
+    }
+
+    /**
+     * Add a fragment shader from source
+     */
+    public ShaderProgram addFragmentShader(String source) {
+        Shader shader = new FragmentShader(source);
+        return addShader(shader);
+    }
+
+    /**
+     * Add a geometry shader from source
+     */
+    public ShaderProgram addGeometryShader(String source) {
+        Shader shader = new GeometryShader(source);
+        return addShader(shader);
     }
 
     /**
      * Link all added shaders into the program
      */
     public ShaderProgram link() {
-        for (int shaderId : shaders.values()) {
-            GlStateManager.glAttachShader(programId, shaderId);
-        }
+        RenderSystem.assertOnRenderThread();
 
         GlStateManager.glLinkProgram(programId);
 
@@ -87,10 +80,9 @@ public class ShaderProgram {
             throw new RuntimeException("Failed to link shader program:\n" + log);
         }
 
-        // Detach and delete shaders after linking
-        for (int shaderId : shaders.values()) {
-            GL20.glDetachShader(programId, shaderId);
-            GlStateManager.glDeleteShader(shaderId);
+        // Detach shaders after linking (they're still needed for disposal)
+        for (Shader shader : attachedShaders) {
+            GL20.glDetachShader(programId, shader.getShaderId());
         }
 
         return this;
@@ -100,6 +92,7 @@ public class ShaderProgram {
      * Bind this shader program for use
      */
     public void bind() {
+        RenderSystem.assertOnRenderThread();
         GlStateManager._glUseProgram(programId);
     }
 
@@ -107,6 +100,7 @@ public class ShaderProgram {
      * Unbind the current shader program
      */
     public static void unbind() {
+        RenderSystem.assertOnRenderThread();
         GlStateManager._glUseProgram(0);
     }
 
@@ -123,7 +117,7 @@ public class ShaderProgram {
         return location;
     }
 
-    // Uniform setters - CORRECTED VERSION using GlStateManager
+    // Uniform setters
     public void setUniform(String name, int value) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer buffer = stack.mallocInt(1);
@@ -234,33 +228,16 @@ public class ShaderProgram {
     }
 
     /**
-     * Load shader source from resource file
-     */
-    private String loadShaderSource(String resourcePath) {
-        try (InputStream in = getClass().getResourceAsStream(resourcePath)) {
-            if (in == null) {
-                throw new RuntimeException("Shader resource not found: " + resourcePath);
-            }
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            StringBuilder source = new StringBuilder();
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                source.append(line).append("\n");
-            }
-
-            return source.toString();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load shader: " + resourcePath, e);
-        }
-    }
-
-    /**
-     * Clean up shader program
+     * Clean up shader program and attached shaders
      */
     public void dispose() {
         if (programId != 0) {
+            // Dispose of all attached shaders
+            for (Shader shader : attachedShaders) {
+                shader.dispose();
+            }
+            attachedShaders.clear();
+
             GlStateManager.glDeleteProgram(programId);
             programId = 0;
         }
@@ -282,5 +259,12 @@ public class ShaderProgram {
 
     public int getProgramId() {
         return programId;
+    }
+
+    /**
+     * Get the number of attached shaders
+     */
+    public int getShaderCount() {
+        return attachedShaders.size();
     }
 }

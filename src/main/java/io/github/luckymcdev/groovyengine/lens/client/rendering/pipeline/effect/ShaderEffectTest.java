@@ -4,6 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.PostProcessChain;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.ShaderProgram;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.ShaderUtils;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.FragmentShader;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.Shader;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.VertexShader;
+import io.github.luckymcdev.groovyengine.lens.client.systems.obj.Vertex;
 
 public class ShaderEffectTest {
 
@@ -143,18 +147,18 @@ public class ShaderEffectTest {
         RenderSystem.assertOnRenderThread();
 
         chromaticShader = new ShaderProgram()
-                .addShader(ShaderProgram.ShaderType.VERTEX, FULLSCREEN_VERTEX)
-                .addShader(ShaderProgram.ShaderType.FRAGMENT, CHROMATIC_FRAGMENT)
+                .addShader(VertexShader.createFullscreen())
+                .addShader(new FragmentShader(CHROMATIC_FRAGMENT))
                 .link();
 
         waveShader = new ShaderProgram()
-                .addShader(ShaderProgram.ShaderType.VERTEX, FULLSCREEN_VERTEX)
-                .addShader(ShaderProgram.ShaderType.FRAGMENT, WAVE_FRAGMENT)
+                .addShader(VertexShader.createFullscreen())
+                .addShader(new FragmentShader(WAVE_FRAGMENT))
                 .link();
 
         glitchShader = new ShaderProgram()
-                .addShader(ShaderProgram.ShaderType.VERTEX, FULLSCREEN_VERTEX)
-                .addShader(ShaderProgram.ShaderType.FRAGMENT, GLITCH_FRAGMENT)
+                .addShader(VertexShader.createFullscreen())
+                .addShader(new FragmentShader(GLITCH_FRAGMENT))
                 .link();
 
         // Create helpers for easy rendering

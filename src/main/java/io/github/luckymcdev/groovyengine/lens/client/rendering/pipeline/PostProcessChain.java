@@ -4,6 +4,8 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.fbo.ExtendedFBO;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.FragmentShader;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.VertexShader;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
@@ -75,8 +77,8 @@ public class PostProcessChain {
         // Initialize blit shader if needed
         if (blitShader == null) {
             blitShader = new ShaderProgram()
-                    .addShader(ShaderProgram.ShaderType.VERTEX, BLIT_VERTEX)
-                    .addShader(ShaderProgram.ShaderType.FRAGMENT, BLIT_FRAGMENT)
+                    .addShader(new VertexShader(BLIT_VERTEX))
+                    .addShader(new FragmentShader(BLIT_FRAGMENT))
                     .link();
         }
 
