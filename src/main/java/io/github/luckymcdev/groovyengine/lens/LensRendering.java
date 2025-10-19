@@ -134,6 +134,15 @@ public class LensRendering {
                     )
             );
         }
+
+        if (RenderingDebuggingWindow.isDepthVisualizationEnabled()) {
+            postProcessChain.addEffect(
+                    ShaderEffectTest.createDepthVisualizationEffect(
+                            RenderingDebuggingWindow.getCurrentDepthTexture(),
+                            RenderingDebuggingWindow.getDepthVisualizationMode()
+                    )
+            );
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -144,6 +153,8 @@ public class LensRendering {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     private static void renderPostChain(RenderLevelStageEvent event) {
         postProcessChain.execute();
+
+        ShaderEffectTest.dispose();
     }
 
     private static void createParticleEffects(ClientLevel level) {

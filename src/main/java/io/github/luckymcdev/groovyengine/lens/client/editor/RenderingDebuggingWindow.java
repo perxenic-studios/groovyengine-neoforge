@@ -1,6 +1,7 @@
 package io.github.luckymcdev.groovyengine.lens.client.editor;
 
 import imgui.ImGuiIO;
+import imgui.type.ImInt;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
@@ -31,11 +32,9 @@ public class RenderingDebuggingWindow extends EditorWindow {
     private static boolean glitchEffectEnabled = false;
     private static float glitchIntensity = 0.05f;
 
-    private static boolean bloomEnabled = false;
-    private static float bloomIntensity = 1.0f;
-    private static float bloomThreshold = 0.8f;
-    private static float bloomSoftness = 0.1f;
-    private static int bloomQuality = 2; // 0: Low, 1: Medium, 2: High, 3: Ultra
+    private static boolean depthVisualizationEnabled = false;
+    private static int depthVisualizationMode = 0; // 0: Linear, 1: Non-linear, 2: Heat map, 3: Overlay
+    private static int currentDepthTexture = 0; // Changed from -1 to 0 for valid default
 
     public RenderingDebuggingWindow() {
         super(ImIcons.CAMERA.get() + " Rendering Debug", "rendering_debug");
@@ -126,12 +125,48 @@ public class RenderingDebuggingWindow extends EditorWindow {
                     ImGe.unindent();
                 }
 
+                ImGe.separator();
+                ImGe.text(ImIcons.LAYERS.get() + " Depth Visualization:");
+
+                ImGe.button(ImIcons.SQUARE.get() + " Depth Visualization", () -> {
+                    depthVisualizationEnabled = !depthVisualizationEnabled;
+                });
+                ImGe.sameLine();
+                ImGe.text(depthVisualizationEnabled ? "ON" : "OFF");
+
+                if (depthVisualizationEnabled) {
+                    ImGe.indent();
+
+                    // Depth texture selection - FIXED: Use ImInt instead of int[]
+                    String[] depthTextures = {
+                            "Main Depth Buffer",
+                            "After Sky",
+                            "After Solid Blocks",
+                            "After Translucent Blocks"
+                    };
+
+                    ImInt currentDepth = new ImInt(currentDepthTexture);
+                    if (ImGe.combo("Depth Source", currentDepth, depthTextures)) {
+                        currentDepthTexture = currentDepth.get();
+                    }
+
+                    // Visualization mode - FIXED: Use ImInt instead of int[]
+                    String[] modes = {"Linear", "Non-linear", "Heat Map", "Overlay"};
+                    imgui.type.ImInt mode = new ImInt(depthVisualizationMode);
+                    if (ImGe.combo("Visualization Mode", mode, modes)) {
+                        depthVisualizationMode = mode.get();
+                    }
+
+                    ImGe.unindent();
+                }
+
                 // Reset all button
                 ImGe.separator();
                 ImGe.button(ImIcons.STOP.get() + " Disable All Effects", () -> {
                     chromaticAberrationEnabled = false;
                     waveEffectEnabled = false;
                     glitchEffectEnabled = false;
+                    depthVisualizationEnabled = false;
                     CrtPostShader.INSTANCE.setActive(false);
                     SuperDuperPostShader.INSTANCE.setActive(false);
                 });
@@ -270,5 +305,24 @@ public class RenderingDebuggingWindow extends EditorWindow {
 
     public static float getGlitchIntensity() {
         return glitchIntensity;
+    }
+
+    public static boolean isDepthVisualizationEnabled() {
+        return depthVisualizationEnabled;
+    }
+
+    public static int getDepthVisualizationMode() {
+        return depthVisualizationMode;
+    }
+
+    public static int getCurrentDepthTexture() {
+        // Map the combo box selection to actual texture IDs
+        switch (currentDepthTexture) {
+            case 0: return Minecraft.getInstance().getMainRenderTarget().getDepthTextureId();
+            case 1: return LensRenderTargets.getAfterSkyDepthTextureId();
+            case 2: return LensRenderTargets.getAfterSolidBlocksDepthTextureId();
+            case 3: return LensRenderTargets.getAfterTranslucentBlocksDepthTextureId();
+            default: return Minecraft.getInstance().getMainRenderTarget().getDepthTextureId();
+        }
     }
 }

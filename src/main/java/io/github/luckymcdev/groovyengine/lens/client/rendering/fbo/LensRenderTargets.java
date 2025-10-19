@@ -96,6 +96,18 @@ public class LensRenderTargets {
         return afterLevelTarget != null ? afterLevelTarget.getColorTextureId() : 0;
     }
 
+    public static int getAfterSkyDepthTextureId() {
+        return afterSkyTarget.getDepthTextureId();
+    }
+
+    public static int getAfterSolidBlocksDepthTextureId() {
+        return afterSolidBlocksTarget.getDepthTextureId();
+    }
+
+    public static int getAfterTranslucentBlocksDepthTextureId() {
+        return afterTranslucentBlocksTarget.getDepthTextureId();
+    }
+
     public static void cleanup() {
         if (afterSkyTarget != null) {
             afterSkyTarget.destroyBuffers();

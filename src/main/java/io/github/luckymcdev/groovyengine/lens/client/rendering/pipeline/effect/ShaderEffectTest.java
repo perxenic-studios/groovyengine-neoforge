@@ -8,6 +8,8 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.F
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.Shader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.VertexShader;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.Vertex;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 
 public class ShaderEffectTest {
 
@@ -127,10 +129,78 @@ public class ShaderEffectTest {
         }
         """;
 
+    private static final String DEPTH_VISUALIZATION_FRAGMENT = """
+    #version 330 core
+    
+    in vec2 texCoord;
+    out vec4 fragColor;
+    
+    uniform sampler2D screenTexture;
+    uniform sampler2D depthTexture;
+    uniform float nearPlane;
+    uniform float farPlane;
+    uniform int visualizationMode; // 0: Linear, 1: Non-linear, 2: Heat map
+    
+    float linearizeDepth(float depth) {
+        float z = depth * 2.0 - 1.0; // Back to NDC
+        return (2.0 * nearPlane * farPlane) / (farPlane + nearPlane - z * (farPlane - nearPlane));
+    }
+    
+    vec3 heatMap(float value) {
+        vec3 color = vec3(0.0);
+        
+        // Red to yellow
+        if (value < 0.5) {
+            color.r = 1.0;
+            color.g = value * 2.0;
+        }
+        // Yellow to green
+        else if (value < 0.75) {
+            color.r = 2.0 - value * 2.0;
+            color.g = 1.0;
+        }
+        // Green to blue
+        else {
+            color.g = 4.0 - value * 4.0;
+            color.b = value * 4.0 - 3.0;
+        }
+        
+        return color;
+    }
+    
+    void main() {
+        float depth = texture(depthTexture, texCoord).r;
+        vec3 color = texture(screenTexture, texCoord).rgb;
+        
+        if (visualizationMode == 0) {
+            // Linear depth visualization
+            float linearDepth = linearizeDepth(depth) / farPlane;
+            fragColor = vec4(vec3(linearDepth), 1.0);
+        }
+        else if (visualizationMode == 1) {
+            // Non-linear depth (raw depth buffer)
+            fragColor = vec4(vec3(depth), 1.0);
+        }
+        else if (visualizationMode == 2) {
+            // Heat map visualization
+            float linearDepth = linearizeDepth(depth) / farPlane;
+            fragColor = vec4(heatMap(linearDepth), 1.0);
+        }
+        else {
+            // Overlay depth on original scene
+            float linearDepth = linearizeDepth(depth) / farPlane;
+            vec3 depthColor = heatMap(linearDepth);
+            fragColor = vec4(mix(color, depthColor, 0.7), 1.0);
+        }
+    }
+    """;
+
     private static ShaderProgram chromaticShader;
     private static ShaderProgram waveShader;
     private static ShaderProgram glitchShader;
+    private static ShaderProgram depthVisualizationShader;
 
+    private static ShaderUtils.PostProcessHelper depthVisualizationHelper;
     private static ShaderUtils.PostProcessHelper chromaticHelper;
     private static ShaderUtils.PostProcessHelper waveHelper;
     private static ShaderUtils.PostProcessHelper glitchHelper;
@@ -223,6 +293,68 @@ public class ShaderEffectTest {
         });
     }
 
+    private static void initializeDepthVisualization() {
+        if (depthVisualizationShader != null) return;
+
+        RenderSystem.assertOnRenderThread();
+
+        depthVisualizationShader = new ShaderProgram()
+                .addShader(VertexShader.createFullscreen())
+                .addShader(new FragmentShader(DEPTH_VISUALIZATION_FRAGMENT))
+                .link();
+
+        depthVisualizationHelper = new ShaderUtils.PostProcessHelper(depthVisualizationShader);
+    }
+
+    /**
+     * Render depth buffer visualization
+     */
+    public static void renderDepthVisualization(int depthTexture, int visualizationMode) {
+        if (!initialized) initialize();
+        initializeDepthVisualization();
+
+        depthVisualizationHelper.execute(shader -> {
+            // Bind depth texture to texture unit 1
+            RenderSystem.activeTexture(com.mojang.blaze3d.platform.GlConst.GL_TEXTURE1);
+            RenderSystem.bindTexture(depthTexture);
+            RenderSystem.activeTexture(com.mojang.blaze3d.platform.GlConst.GL_TEXTURE0);
+
+            shader.setUniform("depthTexture", 1);
+            shader.setUniform("visualizationMode", visualizationMode);
+
+            shader.setUniform("nearPlane", 0.05f);
+            shader.setUniform("farPlane", (float)Minecraft.getInstance().options.getEffectiveRenderDistance() * 16.0f);
+        });
+    }
+
+    /**
+     * Create a PostProcessChain effect for depth visualization
+     */
+    public static PostProcessChain.PostProcessEffect createDepthVisualizationEffect(int depthTexture, int visualizationMode) {
+        return () -> {
+            if (!initialized) initialize();
+            initializeDepthVisualization();
+
+            depthVisualizationShader.bind();
+
+            // Set common uniforms
+            ShaderUtils.CommonUniforms.setScreenUniforms(depthVisualizationShader);
+
+            // Bind depth texture
+            RenderSystem.activeTexture(com.mojang.blaze3d.platform.GlConst.GL_TEXTURE1);
+            RenderSystem.bindTexture(depthTexture);
+            RenderSystem.activeTexture(com.mojang.blaze3d.platform.GlConst.GL_TEXTURE0);
+
+            depthVisualizationShader.setUniform("depthTexture", 1);
+            depthVisualizationShader.setUniform("visualizationMode", visualizationMode);
+
+            depthVisualizationShader.setUniform("nearPlane", 0.05f);
+            depthVisualizationShader.setUniform("farPlane", (float)Minecraft.getInstance().options.getEffectiveRenderDistance() * 16.0f);
+
+            depthVisualizationShader.drawFullscreenQuad();
+        };
+    }
+
     /**
      * Clean up all shader resources - call on shutdown
      */
@@ -238,6 +370,10 @@ public class ShaderEffectTest {
         if (glitchShader != null) {
             glitchShader.dispose();
             glitchShader = null;
+        }
+        if (depthVisualizationShader != null) {
+            depthVisualizationShader.dispose();
+            depthVisualizationShader = null;
         }
         initialized = false;
     }
