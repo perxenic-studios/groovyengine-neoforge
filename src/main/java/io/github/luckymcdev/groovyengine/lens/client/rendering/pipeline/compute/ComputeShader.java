@@ -2,8 +2,10 @@ package io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.LensRenderSystem;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.LensRenderingCapabilities;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.Shader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -23,11 +25,11 @@ import java.util.function.Function;
 import static org.lwjgl.opengl.GL43C.*;
 
 /**
- * A generic compute shader implementation that supports various data types
- * through ByteBuffer-based data management.
+ * A compute shader implementation that extends the base Shader class
+ * and supports various data types through ByteBuffer-based data management.
  */
 @OnlyIn(Dist.CLIENT)
-public class ComputeShader implements AutoCloseable {
+public class ComputeShader extends Shader implements AutoCloseable {
     private int ssbo;
     private int program;
     private int elementCount;
@@ -68,6 +70,7 @@ public class ComputeShader implements AutoCloseable {
      * @param shaderConfigPath The resource location of the compute shader config JSON
      */
     public ComputeShader(ByteBuffer initialData, int elementSize, ResourceLocation shaderConfigPath) {
+        super(ShaderType.COMPUTE);
         checkSupport();
         init(initialData, elementSize, shaderConfigPath);
     }
@@ -76,22 +79,28 @@ public class ComputeShader implements AutoCloseable {
      * Constructs a compute shader with float data (convenience constructor)
      */
     public ComputeShader(float[] floatData, ResourceLocation shaderConfigPath) {
+        super(ShaderType.COMPUTE);
         init(floatData, shaderConfigPath);
+    }
+
+    /**
+     * Constructs a compute shader from source code
+     */
+    public ComputeShader(String source) {
+        super(ShaderType.COMPUTE, source);
+        checkSupport();
+        compileProgram();
     }
 
     /**
      * Default constructor for deferred initialization
      */
     public ComputeShader() {
-        // Empty constructor for deferred initialization
+        super(ShaderType.COMPUTE);
     }
 
     /**
      * Initializes the compute shader with initial data
-     *
-     * @param initialData The initial data to load into the SSBO
-     * @param elementSize The size of each element in bytes
-     * @param shaderConfigPath The resource location of the compute shader config JSON
      */
     public void init(ByteBuffer initialData, int elementSize, ResourceLocation shaderConfigPath) {
         checkSupport();
@@ -106,7 +115,7 @@ public class ComputeShader implements AutoCloseable {
         createSSBO(initialData);
 
         // Load shader config and compile the compute shader
-        compileAndLinkShader(shaderConfigPath);
+        loadAndCompileFromConfig(shaderConfigPath);
     }
 
     /**
@@ -124,6 +133,24 @@ public class ComputeShader implements AutoCloseable {
     }
 
     /**
+     * Initializes from source string with data
+     */
+    public void initFromSource(String source, ByteBuffer initialData, int elementSize) {
+        checkSupport();
+
+        if (ssbo != 0 || program != 0) {
+            cleanup(); // Clean up any existing resources
+        }
+
+        this.elementCount = initialData.remaining() / elementSize;
+        this.dataSizeBytes = initialData.remaining();
+
+        createSSBO(initialData);
+        compile(source);
+        compileProgram();
+    }
+
+    /**
      * Creates and initializes the Shader Storage Buffer Object (SSBO)
      */
     private void createSSBO(ByteBuffer initialData) {
@@ -135,23 +162,27 @@ public class ComputeShader implements AutoCloseable {
     }
 
     /**
-     * Compiles and links the compute shader from a config file
+     * Loads and compiles shader from config file
      */
-    private void compileAndLinkShader(ResourceLocation shaderConfigPath) {
+    private void loadAndCompileFromConfig(ResourceLocation shaderConfigPath) {
         ResourceLocation computeShaderPath = loadShaderConfig(shaderConfigPath);
         String source = loadComputeSource(computeShaderPath);
+        compile(source);
+        compileProgram();
+    }
 
-        int computeShader = LensRenderSystem.createShader(GL_COMPUTE_SHADER);
-        LensRenderSystem.shaderSource(computeShader, source);
-        LensRenderSystem.compileShader(computeShader);
-        LensRenderSystem.checkShaderCompile(computeShader, "compute");
+    /**
+     * Compiles the shader program (separate from shader compilation)
+     */
+    private void compileProgram() {
+        if (!isCompiled()) {
+            throw new IllegalStateException("Compute shader must be compiled before creating program");
+        }
 
         program = LensRenderSystem.createProgram();
-        LensRenderSystem.attachShader(program, computeShader);
+        LensRenderSystem.attachShader(program, getShaderId());
         LensRenderSystem.linkProgram(program);
         LensRenderSystem.checkProgramLink(program);
-
-        LensRenderSystem.deleteShader(computeShader);
     }
 
     /**
@@ -310,40 +341,6 @@ public class ComputeShader implements AutoCloseable {
     }
 
     /**
-     * Initializes from source string instead of file
-     */
-    public void initFromSource(String source, ByteBuffer initialData, int elementSize) {
-        checkSupport();
-
-        if (ssbo != 0 || program != 0) {
-            cleanup(); // Clean up any existing resources
-        }
-
-        this.elementCount = initialData.remaining() / elementSize;
-        this.dataSizeBytes = initialData.remaining();
-
-        createSSBO(initialData);
-        compileFromSource(source);
-    }
-
-    /**
-     * Compiles shader from source string
-     */
-    private void compileFromSource(String source) {
-        int computeShader = LensRenderSystem.createShader(GL_COMPUTE_SHADER);
-        LensRenderSystem.shaderSource(computeShader, source);
-        LensRenderSystem.compileShader(computeShader);
-        LensRenderSystem.checkShaderCompile(computeShader, "compute");
-
-        program = LensRenderSystem.createProgram();
-        LensRenderSystem.attachShader(program, computeShader);
-        LensRenderSystem.linkProgram(program);
-        LensRenderSystem.checkProgramLink(program);
-
-        LensRenderSystem.deleteShader(computeShader);
-    }
-
-    /**
      * Gets the SSBO handle
      */
     public int getSSBO() {
@@ -375,7 +372,35 @@ public class ComputeShader implements AutoCloseable {
      * Checks if the shader is initialized and ready for use
      */
     public boolean isInitialized() {
-        return ssbo != 0 && program != 0;
+        return ssbo != 0 && program != 0 && isCompiled();
+    }
+
+    /**
+     * Binds the compute shader for use
+     */
+    public void bind() {
+        if (program != 0) {
+            LensRenderSystem.useProgram(program);
+        }
+    }
+
+    /**
+     * Unbinds the compute shader
+     */
+    public void unbind() {
+        LensRenderSystem.useProgram(0);
+    }
+
+    /**
+     * Sets a uniform value (convenience method for compute shaders)
+     */
+    public void setUniform(String name, int value) {
+        if (program != 0) {
+            int location = GlStateManager._glGetUniformLocation(program, name);
+            if (location != -1) {
+                GlStateManager._glUniform1(location, IntBuffer.allocate(value));
+            }
+        }
     }
 
     /**
@@ -392,6 +417,9 @@ public class ComputeShader implements AutoCloseable {
         }
         elementCount = 0;
         dataSizeBytes = 0;
+
+        // Call parent cleanup
+        super.dispose();
     }
 
     /**
@@ -399,6 +427,14 @@ public class ComputeShader implements AutoCloseable {
      */
     @Override
     public void close() {
+        cleanup();
+    }
+
+    /**
+     * Override dispose to include compute-specific cleanup
+     */
+    @Override
+    public void dispose() {
         cleanup();
     }
 }
