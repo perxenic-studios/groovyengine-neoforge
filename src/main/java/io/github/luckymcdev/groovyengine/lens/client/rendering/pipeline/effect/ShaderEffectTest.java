@@ -1,7 +1,9 @@
-package io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline;
+package io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.effect;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.PostProcessChain;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.ShaderProgram;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.ShaderUtils;
 
 public class ShaderEffectTest {
 

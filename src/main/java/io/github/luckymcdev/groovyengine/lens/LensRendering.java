@@ -7,7 +7,7 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.core.VFXBuilders;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.material.Material;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.particle.ParticleBuilder;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.PostProcessChain;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.ShaderEffectTest;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.effect.ShaderEffectTest;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.test.TestShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.core.Renderer;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.PoseScope;
