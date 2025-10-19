@@ -11,6 +11,8 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 
 public class LensModule implements Module {
+    private static final String LENS_CATEGORY = ImIcons.CAMERA.get() + " Lens";
+
     @Override
     public void init(IEventBus modEventBus) {
         GE.LENS_LOG.info("Lens Initialization");
@@ -19,7 +21,7 @@ public class LensModule implements Module {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void registerWindows() {
-        WindowManager.registerWindow(new RenderingDebuggingWindow(), ImIcons.CAMERA.get() + " Lens");
-        WindowManager.registerWindow(new AnimationWindow(), ImIcons.CAMERA.get() + " Lens");
+        WindowManager.registerWindow(new RenderingDebuggingWindow(), LENS_CATEGORY);
+        WindowManager.registerWindow(new AnimationWindow(), LENS_CATEGORY);
     }
 }

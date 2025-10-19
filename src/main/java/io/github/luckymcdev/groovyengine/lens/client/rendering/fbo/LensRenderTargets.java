@@ -1,4 +1,4 @@
-package io.github.luckymcdev.groovyengine.lens.client.rendering.target;
+package io.github.luckymcdev.groovyengine.lens.client.rendering.fbo;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderTargetUtil;

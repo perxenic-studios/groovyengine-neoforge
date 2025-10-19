@@ -7,6 +7,7 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute.
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.PostProcessManager;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.event.RenderEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -43,6 +44,8 @@ public class GroovyEngineClient {
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         ModuleManager.getInstance().runOnClientSetup();
+
+        NeoForge.EVENT_BUS.post(new RenderEvent());
 
         PostProcessManager.addInstances(List.of(SuperDuperPostShader.INSTANCE));
         PostProcessManager.addStageInstance(RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS, CrtPostShader.INSTANCE);

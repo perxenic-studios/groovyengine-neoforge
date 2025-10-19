@@ -72,7 +72,4 @@ public class Materials {
             .lightmap(true)
             .overlay(true)
             .build();
-
-    // And update all other predefined materials similarly...
-    // (You would update all the existing ones in your Materials.java to use the new system)
 }

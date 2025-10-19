@@ -2,15 +2,17 @@ package io.github.luckymcdev.groovyengine.lens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.luckymcdev.groovyengine.GE;
+import io.github.luckymcdev.groovyengine.lens.client.editor.RenderingDebuggingWindow;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.VFXBuilders;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.material.Material;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.particle.ParticleBuilder;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.PostProcessChain;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.ShaderEffectTest;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.test.TestShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.core.Renderer;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.PoseScope;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModelManager;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo.AmoModel;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.ChupacabraAnimations;
 import net.minecraft.client.Camera;
@@ -27,7 +29,6 @@ import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 import java.io.IOException;
-import java.util.List;
 
 import static io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials.DEBUG_TRIANGLES;
 import static io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials.OBJ_MODEL;
@@ -36,6 +37,8 @@ import static io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel
 @EventBusSubscriber
 public class LensRendering {
 
+    // Add AMO model registration
+    public static final AmoModel animatedModel = new AmoModel(GE.id("animated"));
     private static final ObjModel circle = new ObjModel(GE.id("mesh/circle/circle"));
     private static final ObjModel cone = new ObjModel(GE.id("mesh/cone/cone"));
     private static final ObjModel cube = new ObjModel(GE.id("mesh/cube/cube"));
@@ -45,14 +48,11 @@ public class LensRendering {
     private static final ObjModel sphere = new ObjModel(GE.id("mesh/sphere/sphere"));
     private static final ObjModel suzanne = new ObjModel(GE.id("mesh/suzanne/suzanne"));
     private static final ObjModel torus = new ObjModel(GE.id("mesh/torus/torus"));
-
     private static final ObjModel chupacabraModel = new ObjModel(GE.id("chupacabra"));
     private static final ResourceLocation chupacabraTexture = GE.id("obj/chupacabra.png");
-
-    // Add AMO model registration
-    public static final AmoModel animatedModel = new AmoModel(GE.id("animated"));
-
     private static final Renderer renderer = Renderer.getInstance();
+
+    private static final PostProcessChain postProcessChain = new PostProcessChain();
 
     public static void initialize() {
         // Register models
@@ -93,20 +93,52 @@ public class LensRendering {
     private static void setupRendering(RenderLevelStageEvent event) {
         ClientLevel level = Minecraft.getInstance().level;
 
-        // Particle effects
-        createParticleEffects(level);
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
+            renderFinal(event);
+        }
 
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
+            createParticleEffects(level);
+            renderVFXShapes(event.getPoseStack(), Minecraft.getInstance().renderBuffers().bufferSource());
+            renderModels(event.getPoseStack());
+        }
+    }
 
-        Minecraft mc = Minecraft.getInstance();
-        PoseStack stack = event.getPoseStack();
-        MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
+    private static void renderFinal(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
 
-        // Render VFX shapes
-        renderVFXShapes(stack, buffers);
+        // Clear previous effects
+        postProcessChain.clearEffects();
 
-        // Render models
-        renderModels(stack);
+        // Add effects based on debug window settings
+        if (RenderingDebuggingWindow.isChromaticAberrationEnabled()) {
+            postProcessChain.addEffect(
+                    ShaderEffectTest.createChromaticEffect(
+                            RenderingDebuggingWindow.getChromaticAmount(),
+                            RenderingDebuggingWindow.getVignetteStrength()
+                    )
+            );
+        }
+
+        if (RenderingDebuggingWindow.isWaveEffectEnabled()) {
+            postProcessChain.addEffect(
+                    ShaderEffectTest.createWaveEffect(
+                            RenderingDebuggingWindow.getWaveStrength(),
+                            RenderingDebuggingWindow.getWaveFrequency()
+                    )
+            );
+        }
+
+        if (RenderingDebuggingWindow.isGlitchEffectEnabled()) {
+            postProcessChain.addEffect(
+                    ShaderEffectTest.createGlitchEffect(
+                            RenderingDebuggingWindow.getGlitchIntensity()
+                    )
+            );
+        }
+
+        // Execute the chain (automatically handles ping-pong buffers)
+        postProcessChain.execute();
     }
 
     private static void createParticleEffects(ClientLevel level) {

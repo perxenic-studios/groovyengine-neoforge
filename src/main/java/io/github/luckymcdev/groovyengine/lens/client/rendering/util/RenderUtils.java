@@ -2,7 +2,6 @@ package io.github.luckymcdev.groovyengine.lens.client.rendering.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.core.GERenderTypes;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -81,10 +80,6 @@ public class RenderUtils {
 
     public static VertexConsumer getMaterialConsumer(MultiBufferSource bufferSource) {
         return bufferSource.getBuffer(GeMaterials.CUSTOM_QUADS.renderType());
-    }
-
-    public static VertexConsumer getLegacyConsumer(MultiBufferSource bufferSource) {
-        return bufferSource.getBuffer(GERenderTypes.CUSTOM_QUADS);
     }
 
     public static void renderQuad(VertexConsumer consumer, Matrix4f matrix,

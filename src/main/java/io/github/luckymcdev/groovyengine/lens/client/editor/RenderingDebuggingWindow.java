@@ -1,16 +1,13 @@
 package io.github.luckymcdev.groovyengine.lens.client.editor;
 
 import imgui.ImGuiIO;
-import imgui.type.ImFloat;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.target.LensRenderTargets;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.AnimationController;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.ChupacabraAnimations;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.fbo.LensRenderTargets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +18,24 @@ import net.neoforged.api.distmarker.OnlyIn;
 public class RenderingDebuggingWindow extends EditorWindow {
 
     public static boolean lightingChangesEnabled = false;
+
+    // Shader effect states
+    private static boolean chromaticAberrationEnabled = false;
+    private static float chromaticAmount = 0.02f;
+    private static float vignetteStrength = 0.4f;
+
+    private static boolean waveEffectEnabled = false;
+    private static float waveStrength = 0.01f;
+    private static float waveFrequency = 20.0f;
+
+    private static boolean glitchEffectEnabled = false;
+    private static float glitchIntensity = 0.05f;
+
+    private static boolean bloomEnabled = false;
+    private static float bloomIntensity = 1.0f;
+    private static float bloomThreshold = 0.8f;
+    private static float bloomSoftness = 0.1f;
+    private static int bloomQuality = 2; // 0: Low, 1: Medium, 2: High, 3: Ultra
 
     public RenderingDebuggingWindow() {
         super(ImIcons.CAMERA.get() + " Rendering Debug", "rendering_debug");
@@ -34,12 +49,91 @@ public class RenderingDebuggingWindow extends EditorWindow {
     private void renderMainWindow() {
         ImGe.window(title, () -> {
             ImGe.collapsingHeader(ImIcons.TUNE.get() + " Post Processing", () -> {
+                // Existing post shaders
+                ImGe.text(ImIcons.FOLDER.get() + " Custom Post Shaders:");
                 ImGe.button(ImIcons.APERTURE.get() + " Toggle CrtPostShader", () -> {
                     CrtPostShader.INSTANCE.setActive(!CrtPostShader.INSTANCE.isActive());
                 });
+                ImGe.sameLine();
+                ImGe.text(CrtPostShader.INSTANCE.isActive() ? "ON" : "OFF");
 
                 ImGe.button(ImIcons.APERTURE.get() + " Toggle SuperDuperPostShader", () -> {
                     SuperDuperPostShader.INSTANCE.setActive(!SuperDuperPostShader.INSTANCE.isActive());
+                });
+                ImGe.sameLine();
+                ImGe.text(SuperDuperPostShader.INSTANCE.isActive() ? "ON" : "OFF");
+
+                ImGe.separator();
+
+                // Test shader effects
+                ImGe.text(ImIcons.ADD_CIRCLE.get() + " Test Shader Effects:");
+
+                // Chromatic Aberration
+                ImGe.button(ImIcons.BLUR.get() + " Chromatic Aberration", () -> {
+                    chromaticAberrationEnabled = !chromaticAberrationEnabled;
+                });
+                ImGe.sameLine();
+                ImGe.text(chromaticAberrationEnabled ? "ON" : "OFF");
+
+                if (chromaticAberrationEnabled) {
+                    ImGe.indent();
+                    float[] aberrationArray = {chromaticAmount};
+                    if (ImGe.sliderFloat("Aberration Amount", aberrationArray, 0.0f, 0.1f)) {
+                        chromaticAmount = aberrationArray[0];
+                    }
+
+                    float[] vignetteArray = {vignetteStrength};
+                    if (ImGe.sliderFloat("Vignette Strength", vignetteArray, 0.0f, 1.0f)) {
+                        vignetteStrength = vignetteArray[0];
+                    }
+                    ImGe.unindent();
+                }
+
+                // Wave Effect
+                ImGe.button(ImIcons.BLOCK.get() + " Wave Distortion", () -> {
+                    waveEffectEnabled = !waveEffectEnabled;
+                });
+                ImGe.sameLine();
+                ImGe.text(waveEffectEnabled ? "ON" : "OFF");
+
+                if (waveEffectEnabled) {
+                    ImGe.indent();
+                    float[] strengthArray = {waveStrength};
+                    if (ImGe.sliderFloat("Wave Strength", strengthArray, 0.0f, 0.05f)) {
+                        waveStrength = strengthArray[0];
+                    }
+
+                    float[] frequencyArray = {waveFrequency};
+                    if (ImGe.sliderFloat("Wave Frequency", frequencyArray, 1.0f, 50.0f)) {
+                        waveFrequency = frequencyArray[0];
+                    }
+                    ImGe.unindent();
+                }
+
+                // Glitch Effect
+                ImGe.button(ImIcons.ANIMATION.get() + " Glitch Effect", () -> {
+                    glitchEffectEnabled = !glitchEffectEnabled;
+                });
+                ImGe.sameLine();
+                ImGe.text(glitchEffectEnabled ? "ON" : "OFF");
+
+                if (glitchEffectEnabled) {
+                    ImGe.indent();
+                    float[] intensityArray = {glitchIntensity};
+                    if (ImGe.sliderFloat("Glitch Intensity", intensityArray, 0.0f, 0.2f)) {
+                        glitchIntensity = intensityArray[0];
+                    }
+                    ImGe.unindent();
+                }
+
+                // Reset all button
+                ImGe.separator();
+                ImGe.button(ImIcons.STOP.get() + " Disable All Effects", () -> {
+                    chromaticAberrationEnabled = false;
+                    waveEffectEnabled = false;
+                    glitchEffectEnabled = false;
+                    CrtPostShader.INSTANCE.setActive(false);
+                    SuperDuperPostShader.INSTANCE.setActive(false);
                 });
             });
 
@@ -143,5 +237,38 @@ public class RenderingDebuggingWindow extends EditorWindow {
             ImGe.text("[ No texture captured ]");
             ImGe.dummy(displayWidth, displayHeight);
         }
+    }
+
+    // Getters for the shader states
+    public static boolean isChromaticAberrationEnabled() {
+        return chromaticAberrationEnabled;
+    }
+
+    public static float getChromaticAmount() {
+        return chromaticAmount;
+    }
+
+    public static float getVignetteStrength() {
+        return vignetteStrength;
+    }
+
+    public static boolean isWaveEffectEnabled() {
+        return waveEffectEnabled;
+    }
+
+    public static float getWaveStrength() {
+        return waveStrength;
+    }
+
+    public static float getWaveFrequency() {
+        return waveFrequency;
+    }
+
+    public static boolean isGlitchEffectEnabled() {
+        return glitchEffectEnabled;
+    }
+
+    public static float getGlitchIntensity() {
+        return glitchIntensity;
     }
 }
