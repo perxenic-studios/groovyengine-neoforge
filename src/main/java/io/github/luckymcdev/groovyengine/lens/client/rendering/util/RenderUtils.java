@@ -3,9 +3,12 @@ package io.github.luckymcdev.groovyengine.lens.client.rendering.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
@@ -26,6 +29,44 @@ public class RenderUtils {
 
     public static final String CONCRETE_RES_LOC_STRING = "textures/block/white_concrete.png";
     public static final ResourceLocation CONCRETE_RES_LOC = ResourceLocation.withDefaultNamespace(CONCRETE_RES_LOC_STRING);
+
+
+    public static boolean isInCameraFrustum(Camera camera, Vec3 worldPos) {
+        Camera.NearPlane nearPlane = camera.getNearPlane();
+        Vec3 cameraPos = camera.getPosition();
+
+        Vec3[] frustumCorners = {
+                cameraPos.add(nearPlane.getTopLeft()),
+                cameraPos.add(nearPlane.getTopRight()),
+                cameraPos.add(nearPlane.getBottomLeft()),
+                cameraPos.add(nearPlane.getBottomRight())
+        };
+
+        return isPointInPyramidFrustum(cameraPos, frustumCorners, worldPos);
+    }
+
+    private static boolean isPointInPyramidFrustum(Vec3 apex, Vec3[] baseCorners, Vec3 point) {
+        for (int i = 0; i < baseCorners.length; i++) {
+            Vec3 corner1 = baseCorners[i];
+            Vec3 corner2 = baseCorners[(i + 1) % baseCorners.length];
+
+            if (!isPointInsidePlane(apex, corner1, corner2, point)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isPointInsidePlane(Vec3 planePoint1, Vec3 planePoint2, Vec3 planePoint3, Vec3 testPoint) {
+        Vec3 edge1 = planePoint2.subtract(planePoint1);
+        Vec3 edge2 = planePoint3.subtract(planePoint1);
+        Vec3 normal = edge1.cross(edge2).normalize();
+
+        Vec3 toTestPoint = testPoint.subtract(planePoint1);
+        double dotProduct = toTestPoint.dot(normal);
+
+        return dotProduct <= 0.0;
+    }
 
     public static void setupWorldRendering(PoseStack poseStack) {
         Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
@@ -80,6 +121,18 @@ public class RenderUtils {
 
     public static VertexConsumer getMaterialConsumer(MultiBufferSource bufferSource) {
         return bufferSource.getBuffer(GeMaterials.CUSTOM_QUADS.renderType());
+    }
+
+    public static int getPackedLightAt(Vec3 pos) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null) return FULL_BRIGHT;
+
+        BlockPos blockPos = BlockPos.containing(pos);
+        return LevelRenderer.getLightColor(mc.level, blockPos);
+    }
+
+    public static Camera getMainCamera() {
+        return Minecraft.getInstance().gameRenderer.getMainCamera();
     }
 
     public static void renderQuad(VertexConsumer consumer, Matrix4f matrix,

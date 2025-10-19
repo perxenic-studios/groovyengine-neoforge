@@ -15,7 +15,6 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo.AmoModel;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.ChupacabraAnimations;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -279,13 +278,12 @@ public class LensRendering {
 
 
     static void renderAmoModel(PoseStack stack, AmoModel model, Vec3 position) {
-        Minecraft mc = Minecraft.getInstance();
 
         stack.pushPose();
         stack.translate(position.x, position.y, position.z);
         stack.scale(5, 5, 5);
 
-        int packedLight = RenderUtils.FULL_BRIGHT;
+        int packedLight = RenderUtils.getPackedLightAt(position);
 
         try {
             model.renderAnimated(stack, OBJ_MODEL.withTexture(RenderUtils.CONCRETE_RES_LOC), packedLight);
@@ -297,46 +295,30 @@ public class LensRendering {
     }
 
     static void renderObjModel(PoseStack stack, ObjModel model, Vec3 position) {
-        Minecraft mc = Minecraft.getInstance();
-        Camera camera = mc.gameRenderer.getMainCamera();
-        Vec3 cameraPos = camera.getPosition();
 
-        // Model position in world
         stack.translate(position.x, position.y, position.z);
         stack.scale(10f, 10f, 10f);
 
-        // Get proper lighting at the model's position
-        int packedLight = RenderUtils.FULL_BRIGHT;
+        int packedLight = RenderUtils.getPackedLightAt(position);
 
         model.renderModel(stack, OBJ_MODEL, packedLight);
     }
 
     static void renderObjModel(PoseStack stack, ObjModel model, Vec3 position, Material material) {
-        Minecraft mc = Minecraft.getInstance();
-        Camera camera = mc.gameRenderer.getMainCamera();
-        Vec3 cameraPos = camera.getPosition();
-
-        // Model position in world
         stack.translate(position.x, position.y, position.z);
         stack.scale(10f, 10f, 10f);
 
-        // Get proper lighting at the model's position
-        int packedLight = RenderUtils.FULL_BRIGHT;
+        int packedLight = RenderUtils.getPackedLightAt(position);
 
         model.renderModel(stack, material, packedLight);
     }
 
     static void renderObjModelAnimated(PoseStack stack, ObjModel model, Vec3 position, Material material) {
-        Minecraft mc = Minecraft.getInstance();
-        Camera camera = mc.gameRenderer.getMainCamera();
-        Vec3 cameraPos = camera.getPosition();
 
-        // Model position in world
         stack.translate(position.x, position.y, position.z);
         stack.scale(10f, 10f, 10f);
 
-        // Get proper lighting at the model's position
-        int packedLight = RenderUtils.FULL_BRIGHT;
+        int packedLight = RenderUtils.getPackedLightAt(position);
 
         model.renderModelAnimated(stack, material, packedLight);
     }
