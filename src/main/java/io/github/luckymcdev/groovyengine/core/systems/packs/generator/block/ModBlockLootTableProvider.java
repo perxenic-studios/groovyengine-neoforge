@@ -8,14 +8,14 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModBlockLootTableProvider extends AcidBlockLootTableProvider {
-    public ModBlockLootTableProvider(HolderLookup.Provider registries) {
-        super(registries);
-    }
-
-
     //TODO: Fix, this is just temp for not crashing
     public static final DeferredRegister<Block> TEMPORAROY =
             DeferredRegister.create(Registries.BLOCK, "temp");
+
+
+    public ModBlockLootTableProvider(HolderLookup.Provider registries) {
+        super(registries);
+    }
 
     @Override
     protected DeferredRegister<Block> getBlockRegistry() {

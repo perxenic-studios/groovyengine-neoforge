@@ -8,6 +8,14 @@ public class TransformBuilder {
     private Vector3f rotation = new Vector3f(0, 0, 0);
     private Vector3f scale = new Vector3f(1, 1, 1);
 
+    public static TransformBuilder create() {
+        return new TransformBuilder();
+    }
+
+    public static Transform identity() {
+        return Transform.identity();
+    }
+
     public TransformBuilder position(float x, float y, float z) {
         this.position = new Vector3f(x, y, z);
         return this;
@@ -45,13 +53,5 @@ public class TransformBuilder {
 
     public Transform build() {
         return new Transform(position, rotation, scale);
-    }
-
-    public static TransformBuilder create() {
-        return new TransformBuilder();
-    }
-
-    public static Transform identity() {
-        return Transform.identity();
     }
 }

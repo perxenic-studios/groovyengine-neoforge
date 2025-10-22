@@ -1,19 +1,11 @@
 package io.github.luckymcdev.groovyengine.core.systems.structure;
 
 import io.github.luckymcdev.groovyengine.GE;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.neoforged.fml.loading.FMLLoader;
 
-import net.minecraft.client.Minecraft;
-
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.Map;
-import java.util.Optional;
 
 public class FileTreeGenerator {
 
@@ -56,133 +48,133 @@ public class FileTreeGenerator {
 
     private static void createGradleFiles() {
         createGradleFile(FileConstants.BUILD_GRADLE, """
-            plugins {
-                 id 'maven-publish'
-                 id 'net.neoforged.moddev' version '2.0.107'
-                 id 'idea'
-                 id 'groovy'
-                 id 'java'
-             }
-            
-            
-            
-           
-             // Apply internal build logic
-             apply from: 'internal.gradle'
-            """);
+                plugins {
+                     id 'maven-publish'
+                     id 'net.neoforged.moddev' version '2.0.107'
+                     id 'idea'
+                     id 'groovy'
+                     id 'java'
+                 }
+                
+                
+                
+                
+                 // Apply internal build logic
+                 apply from: 'internal.gradle'
+                """);
 
         createGradleFile(FileConstants.INTERNAL_GRADLE, """
-            sourceSets {
-                main {
-                    groovy {
-                        srcDirs = ['src/main/groovy']
+                sourceSets {
+                    main {
+                        groovy {
+                            srcDirs = ['src/main/groovy']
+                        }
+                        resources {
+                            srcDirs = ['src/main/resources']
+                        }
+                        compileClasspath += fileTree('../mods') { include '*.jar' }
+                        runtimeClasspath += fileTree('../mods') { include '*.jar' }
                     }
-                    resources {
-                        srcDirs = ['src/main/resources']
+                }
+                
+                neoForge {
+                    version = project.hasProperty('neoforge_version') ? project.neoforge_version : '20.4.0-beta'
+                
+                    parchment {
+                        mappingsVersion = project.hasProperty('mappings_version') ? project.mappings_version : '23.0.0'
+                        minecraftVersion = project.hasProperty('minecraft_version') ? project.minecraft_version : '1.21.1'
                     }
-                    compileClasspath += fileTree('../mods') { include '*.jar' }
-                    runtimeClasspath += fileTree('../mods') { include '*.jar' }
                 }
-            }
-            
-            neoForge {
-                version = project.hasProperty('neoforge_version') ? project.neoforge_version : '20.4.0-beta'
-            
-                parchment {
-                    mappingsVersion = project.hasProperty('mappings_version') ? project.mappings_version : '23.0.0'
-                    minecraftVersion = project.hasProperty('minecraft_version') ? project.minecraft_version : '1.21.1'
+                
+                repositories {
+                    mavenCentral()
+                    maven { name = 'NeoForged'; url = 'https://maven.neoforged.net/releases' }
+                    maven { name = 'ParchmentMC'; url = 'https://maven.parchmentmc.org' }
+                    maven { name = 'LWJGL'; url = 'https://repo.lwjgl.org/releases' }
                 }
-            }
-            
-            repositories {
-                mavenCentral()
-                maven { name = 'NeoForged'; url = 'https://maven.neoforged.net/releases' }
-                maven { name = 'ParchmentMC'; url = 'https://maven.parchmentmc.org' }
-                maven { name = 'LWJGL'; url = 'https://repo.lwjgl.org/releases' }
-            }
-            
-            dependencies {
-                implementation 'org.apache.groovy:groovy:4.0.14'
-                implementation 'org.apache.groovy:groovy-json:4.0.14'
-            
-                implementation "io.github.spair:imgui-java-binding:1.87.7"
-                implementation("io.github.spair:imgui-java-lwjgl3:1.87.7") {
-                    exclude group: 'org.lwjgl'
+                
+                dependencies {
+                    implementation 'org.apache.groovy:groovy:4.0.14'
+                    implementation 'org.apache.groovy:groovy-json:4.0.14'
+                
+                    implementation "io.github.spair:imgui-java-binding:1.87.7"
+                    implementation("io.github.spair:imgui-java-lwjgl3:1.87.7") {
+                        exclude group: 'org.lwjgl'
+                    }
+                    implementation "io.github.spair:imgui-java-natives-windows:1.87.7"
+                    implementation "io.github.spair:imgui-java-natives-linux:1.87.7"
+                    implementation "io.github.spair:imgui-java-natives-macos:1.87.7"
                 }
-                implementation "io.github.spair:imgui-java-natives-windows:1.87.7"
-                implementation "io.github.spair:imgui-java-natives-linux:1.87.7"
-                implementation "io.github.spair:imgui-java-natives-macos:1.87.7"
-            }
-            
-            idea {
-                module {
-                    downloadSources = true
-                    downloadJavadoc = true
+                
+                idea {
+                    module {
+                        downloadSources = true
+                        downloadJavadoc = true
+                    }
                 }
-            }
-            
-            tasks.forEach { task ->
-                task.group = 'Zinternal'
-            }
-            
-            // Optional: Configure specific task groups if needed
-            tasks.named('build') {
-                group = 'build'
-            }
-            
-            tasks.named('test') {
-                group = 'verification'
-            }
-            
-            tasks.named('clean') {
-                group = 'build'
-            }
-            
-            tasks.register('buildModule', Copy) {
-                group = 'build'
-                description = 'Copies the src folder to modules directory'
-            
-                def moduleName = project.hasProperty('module_name') ? project.property('module_name') : project.name
-                println "Module name determined as: $moduleName" // This runs at configuration time
-            
-                from 'src'
-                into "modules/${moduleName}"
-            
-                doFirst {
-                    println "Starting copy from src to ../modules/${moduleName}"
+                
+                tasks.forEach { task ->
+                    task.group = 'Zinternal'
                 }
-            
-                doLast {
-                    println "Copy completed!"
+                
+                // Optional: Configure specific task groups if needed
+                tasks.named('build') {
+                    group = 'build'
                 }
-            }
-
-            """);
+                
+                tasks.named('test') {
+                    group = 'verification'
+                }
+                
+                tasks.named('clean') {
+                    group = 'build'
+                }
+                
+                tasks.register('buildModule', Copy) {
+                    group = 'build'
+                    description = 'Copies the src folder to modules directory'
+                
+                    def moduleName = project.hasProperty('module_name') ? project.property('module_name') : project.name
+                    println "Module name determined as: $moduleName" // This runs at configuration time
+                
+                    from 'src'
+                    into "modules/${moduleName}"
+                
+                    doFirst {
+                        println "Starting copy from src to ../modules/${moduleName}"
+                    }
+                
+                    doLast {
+                        println "Copy completed!"
+                    }
+                }
+                
+                """);
 
         createGradleFile(FileConstants.SETTINGS_GRADLE, """
-            pluginManagement {
-                repositories {
-                    gradlePluginPortal()
-                    maven {
-                        name = 'NeoForged'
-                        url = 'https://maven.neoforged.net/releases'
+                pluginManagement {
+                    repositories {
+                        gradlePluginPortal()
+                        maven {
+                            name = 'NeoForged'
+                            url = 'https://maven.neoforged.net/releases'
+                        }
                     }
                 }
-            }
-            """);
+                """);
 
         createGradleFile(FileConstants.GRADLE_PROPERTIES, """
-            org.gradle.jvmargs=-Xmx2G
-            minecraft_version=%s
-            neoforge_version=%s
-            mappings_channel=parchment
-            mappings_version=%s
-            
-           
-            ## Here is your Modules Definition
-            
-            module_name=myModule
-            """.formatted(MINECRAFT_VERSION, NEOFORGE_VERSION, MAPPINGS_VERSION));
+                org.gradle.jvmargs=-Xmx2G
+                minecraft_version=%s
+                neoforge_version=%s
+                mappings_channel=parchment
+                mappings_version=%s
+                
+                
+                ## Here is your Modules Definition
+                
+                module_name=myModule
+                """.formatted(MINECRAFT_VERSION, NEOFORGE_VERSION, MAPPINGS_VERSION));
     }
 
     private static void createGradleFile(Path filePath, String content) {

@@ -11,6 +11,11 @@ public record PipelineState(boolean depthTest, boolean depthWrite, boolean cullF
         this(depthTest, depthWrite, cullFaces, blendMode, true, false, TransparencyMode.NONE, WriteMask.COLOR_DEPTH);
     }
 
+    // Builder for easier creation
+    public static PipelineStateBuilder builder() {
+        return new PipelineStateBuilder();
+    }
+
     public RenderStateShard.TransparencyStateShard toTransparencyState() {
         return switch (transparency) {
             case NONE -> RenderStateShard.NO_TRANSPARENCY;
@@ -40,10 +45,5 @@ public record PipelineState(boolean depthTest, boolean depthWrite, boolean cullF
             case DEPTH_ONLY -> RenderStateShard.DEPTH_WRITE;
             case NONE -> new RenderStateShard.WriteMaskStateShard(false, false);
         };
-    }
-
-    // Builder for easier creation
-    public static PipelineStateBuilder builder() {
-        return new PipelineStateBuilder();
     }
 }

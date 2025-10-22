@@ -7,7 +7,24 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class Materials {
-    private Materials() {}
+    // Common predefined materials (updated)
+    public static final Material SOLID = createSolid(TextureAtlas.LOCATION_BLOCKS)
+            .withName("solid_blocks");
+    public static final Material CUTOUT = createCutout(TextureAtlas.LOCATION_BLOCKS)
+            .withName("cutout_blocks");
+    public static final Material TRANSLUCENT = createTranslucent(TextureAtlas.LOCATION_BLOCKS)
+            .withName("translucent_blocks");
+    public static final Material ENTITY_SOLID = builder()
+            .name("entity_solid")
+            .entityShader()
+            .opaque()
+            .noCull()
+            .lightmap(true)
+            .overlay(true)
+            .build();
+
+    private Materials() {
+    }
 
     // Factory methods
     public static MaterialBuilder builder(String name) {
@@ -53,23 +70,4 @@ public class Materials {
                 .overlay(true)
                 .build();
     }
-
-    // Common predefined materials (updated)
-    public static final Material SOLID = createSolid(TextureAtlas.LOCATION_BLOCKS)
-            .withName("solid_blocks");
-
-    public static final Material CUTOUT = createCutout(TextureAtlas.LOCATION_BLOCKS)
-            .withName("cutout_blocks");
-
-    public static final Material TRANSLUCENT = createTranslucent(TextureAtlas.LOCATION_BLOCKS)
-            .withName("translucent_blocks");
-
-    public static final Material ENTITY_SOLID = builder()
-            .name("entity_solid")
-            .entityShader()
-            .opaque()
-            .noCull()
-            .lightmap(true)
-            .overlay(true)
-            .build();
 }

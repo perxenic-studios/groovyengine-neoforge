@@ -4,5 +4,6 @@ import imgui.ImGuiStyle;
 
 public interface ImTheme {
     String getName();
+
     void applyTheme(ImGuiStyle style);
 }

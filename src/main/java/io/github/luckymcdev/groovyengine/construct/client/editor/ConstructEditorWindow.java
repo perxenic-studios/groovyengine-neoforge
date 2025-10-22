@@ -4,10 +4,10 @@ import imgui.ImGuiIO;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import io.github.luckymcdev.groovyengine.construct.client.rendering.SelectionRenderer;
+import io.github.luckymcdev.groovyengine.construct.core.history.HistoryManager;
 import io.github.luckymcdev.groovyengine.construct.core.pattern.BlockPattern;
 import io.github.luckymcdev.groovyengine.construct.core.placement.AsyncBlockPlacer;
 import io.github.luckymcdev.groovyengine.construct.core.selection.Selection;
-import io.github.luckymcdev.groovyengine.construct.core.history.HistoryManager;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
@@ -25,36 +25,31 @@ import net.neoforged.neoforge.common.NeoForge;
 public class ConstructEditorWindow extends EditorWindow {
 
     private static final Minecraft mc = Minecraft.getInstance();
+    private static final String[] PATTERN_TYPES = {
+            "Single Block", "Random Mix", "Checkerboard", "Layers", "Weighted Random", "Gradient"
+    };
+    private static final String[] SHAPE_TYPES = {
+            "Fill", "Hollow", "Walls", "Outline", "Sphere", "Cylinder"
+    };
     private final Selection selectionManager = new Selection();
     private final AsyncBlockPlacer blockPlacer = AsyncBlockPlacer.getInstance();
     private final HistoryManager historyManager = new HistoryManager();
-
     // UI State
     private final ImString blockIdInput = new ImString("minecraft:stone", 256);
     private final ImInt blocksPerTick = new ImInt(blockPlacer.getBlocksPerTick());
     private final ImInt updatesPerTick = new ImInt(blockPlacer.getUpdatesPerTick());
     private final ImString pos1Display = new ImString("Not set", 50);
     private final ImString pos2Display = new ImString("Not set", 50);
-
     // Pattern controls
     private final ImInt patternType = new ImInt(0);
     private final ImString secondaryBlockInput = new ImString("minecraft:oak_planks", 256);
     private final ImInt checkerboardScale = new ImInt(2);
     private final ImInt layerThickness = new ImInt(1);
     private final ImString weightedBlocks = new ImString("minecraft:stone,50,minecraft:cobblestone,30,minecraft:andesite,20", 512);
-
     // Shape controls
     private final ImInt shapeType = new ImInt(0);
     private final ImInt hollowThickness = new ImInt(1);
     private final ImInt sphereRadius = new ImInt(5);
-
-    private static final String[] PATTERN_TYPES = {
-            "Single Block", "Random Mix", "Checkerboard", "Layers", "Weighted Random", "Gradient"
-    };
-
-    private static final String[] SHAPE_TYPES = {
-            "Fill", "Hollow", "Walls", "Outline", "Sphere", "Cylinder"
-    };
 
     public ConstructEditorWindow() {
         super(ImIcons.WRENCH.get() + " Construct Editor");

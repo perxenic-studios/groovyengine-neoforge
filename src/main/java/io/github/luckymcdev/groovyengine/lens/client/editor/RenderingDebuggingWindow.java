@@ -6,9 +6,9 @@ import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWi
 import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.fbo.LensRenderTargets;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.fbo.LensRenderTargets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -38,6 +38,63 @@ public class RenderingDebuggingWindow extends EditorWindow {
 
     public RenderingDebuggingWindow() {
         super(ImIcons.CAMERA.get() + " Rendering Debug", "rendering_debug");
+    }
+
+    // Getters for the shader states
+    public static boolean isChromaticAberrationEnabled() {
+        return chromaticAberrationEnabled;
+    }
+
+    public static float getChromaticAmount() {
+        return chromaticAmount;
+    }
+
+    public static float getVignetteStrength() {
+        return vignetteStrength;
+    }
+
+    public static boolean isWaveEffectEnabled() {
+        return waveEffectEnabled;
+    }
+
+    public static float getWaveStrength() {
+        return waveStrength;
+    }
+
+    public static float getWaveFrequency() {
+        return waveFrequency;
+    }
+
+    public static boolean isGlitchEffectEnabled() {
+        return glitchEffectEnabled;
+    }
+
+    public static float getGlitchIntensity() {
+        return glitchIntensity;
+    }
+
+    public static boolean isDepthVisualizationEnabled() {
+        return depthVisualizationEnabled;
+    }
+
+    public static int getDepthVisualizationMode() {
+        return depthVisualizationMode;
+    }
+
+    public static int getCurrentDepthTexture() {
+        // Map the combo box selection to actual texture IDs
+        switch (currentDepthTexture) {
+            case 0:
+                return Minecraft.getInstance().getMainRenderTarget().getDepthTextureId();
+            case 1:
+                return LensRenderTargets.getAfterSkyDepthTextureId();
+            case 2:
+                return LensRenderTargets.getAfterSolidBlocksDepthTextureId();
+            case 3:
+                return LensRenderTargets.getAfterTranslucentBlocksDepthTextureId();
+            default:
+                return Minecraft.getInstance().getMainRenderTarget().getDepthTextureId();
+        }
     }
 
     @Override
@@ -240,7 +297,7 @@ public class RenderingDebuggingWindow extends EditorWindow {
             if (ImGe.isItemHovered()) {
                 ImGe.beginTooltip();
                 ImGe.text("Texture ID: " + textureId);
-                ImGe.text("Size: " + (int)displayWidth + "x" + (int)displayHeight);
+                ImGe.text("Size: " + (int) displayWidth + "x" + (int) displayHeight);
                 ImGe.text(label);
                 ImGe.endTooltip();
             }
@@ -264,65 +321,13 @@ public class RenderingDebuggingWindow extends EditorWindow {
             if (ImGe.isItemHovered()) {
                 ImGe.beginTooltip();
                 ImGe.text("Texture ID: " + textureId);
-                ImGe.text("Size: " + (int)displayWidth + "x" + (int)displayHeight);
+                ImGe.text("Size: " + (int) displayWidth + "x" + (int) displayHeight);
                 ImGe.text(label);
                 ImGe.endTooltip();
             }
         } else {
             ImGe.text("[ No texture captured ]");
             ImGe.dummy(displayWidth, displayHeight);
-        }
-    }
-
-    // Getters for the shader states
-    public static boolean isChromaticAberrationEnabled() {
-        return chromaticAberrationEnabled;
-    }
-
-    public static float getChromaticAmount() {
-        return chromaticAmount;
-    }
-
-    public static float getVignetteStrength() {
-        return vignetteStrength;
-    }
-
-    public static boolean isWaveEffectEnabled() {
-        return waveEffectEnabled;
-    }
-
-    public static float getWaveStrength() {
-        return waveStrength;
-    }
-
-    public static float getWaveFrequency() {
-        return waveFrequency;
-    }
-
-    public static boolean isGlitchEffectEnabled() {
-        return glitchEffectEnabled;
-    }
-
-    public static float getGlitchIntensity() {
-        return glitchIntensity;
-    }
-
-    public static boolean isDepthVisualizationEnabled() {
-        return depthVisualizationEnabled;
-    }
-
-    public static int getDepthVisualizationMode() {
-        return depthVisualizationMode;
-    }
-
-    public static int getCurrentDepthTexture() {
-        // Map the combo box selection to actual texture IDs
-        switch (currentDepthTexture) {
-            case 0: return Minecraft.getInstance().getMainRenderTarget().getDepthTextureId();
-            case 1: return LensRenderTargets.getAfterSkyDepthTextureId();
-            case 2: return LensRenderTargets.getAfterSolidBlocksDepthTextureId();
-            case 3: return LensRenderTargets.getAfterTranslucentBlocksDepthTextureId();
-            default: return Minecraft.getInstance().getMainRenderTarget().getDepthTextureId();
         }
     }
 }

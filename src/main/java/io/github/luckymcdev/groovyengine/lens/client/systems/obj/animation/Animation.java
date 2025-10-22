@@ -25,8 +25,8 @@ public class Animation {
         track.addKeyframe(keyframe);
 
         // Update duration
-        if (keyframe.getTime() > duration) {
-            duration = keyframe.getTime();
+        if (keyframe.time() > duration) {
+            duration = keyframe.time();
         }
     }
 
@@ -38,12 +38,12 @@ public class Animation {
         return duration;
     }
 
-    public void setLooping(boolean looping) {
-        this.looping = looping;
-    }
-
     public boolean isLooping() {
         return looping;
+    }
+
+    public void setLooping(boolean looping) {
+        this.looping = looping;
     }
 
     public Map<String, AnimationTrack> getTracks() {

@@ -3,7 +3,6 @@ package io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.Face;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.Vertex;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

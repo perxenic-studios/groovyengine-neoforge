@@ -84,7 +84,7 @@ public class Face {
     public Vector3f getCentroid() {
         Vector3f centroid = new Vector3f();
         for (Vertex vertex : vertices) centroid.add(vertex.position());
-        centroid.mul(1f/vertices.size());
+        centroid.mul(1f / vertices.size());
         return centroid;
     }
 }

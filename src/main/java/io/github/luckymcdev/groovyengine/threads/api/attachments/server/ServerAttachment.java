@@ -17,15 +17,26 @@ public abstract class ServerAttachment implements BaseAttachment {
     }
 
     // Server Lifecycle Events
-    public void onServerStart() {}
-    public void onServerStop() {}
-    public void onServerTick() {}
+    public void onServerStart() {
+    }
+
+    public void onServerStop() {
+    }
+
+    public void onServerTick() {
+    }
 
     // World Events
-    public void onWorldLoad(String worldName) {}
-    public void onWorldUnload(String worldName) {}
+    public void onWorldLoad(String worldName) {
+    }
+
+    public void onWorldUnload(String worldName) {
+    }
 
     // Player Management Events
-    public void onPlayerJoin(String playerName) {}
-    public void onPlayerLeave(String playerName) {}
+    public void onPlayerJoin(String playerName) {
+    }
+
+    public void onPlayerLeave(String playerName) {
+    }
 }

@@ -1,6 +1,5 @@
 package io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo;
 
-import io.github.luckymcdev.groovyengine.GE;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -135,6 +134,9 @@ public class Animation {
         return duration;
     }
 
-    private record PositionKeyframe(float timestamp, Vector3f position) {}
-    private record RotationKeyframe(float timestamp, Quaternionf rotation) {}
+    private record PositionKeyframe(float timestamp, Vector3f position) {
+    }
+
+    private record RotationKeyframe(float timestamp, Quaternionf rotation) {
+    }
 }

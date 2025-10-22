@@ -4,7 +4,6 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -46,11 +45,11 @@ public class VecHelper {
      * Returns a list of positions on the perimeter of a circle rotated around a given Vec3 position
      * These positions constantly rotate around the center of the circle based on gameTime
      *
-     * @param pos      - Defines the center of the circle
-     * @param distance - Defines the radius of your circle
-     * @param totalPoints    - Defines the total amount of points in the circle
-     * @param gameTime - Defines the current game time value
-     * @param timePerRotation     - Defines the total time for one position to complete a full rotation cycle
+     * @param pos             - Defines the center of the circle
+     * @param distance        - Defines the radius of your circle
+     * @param totalPoints     - Defines the total amount of points in the circle
+     * @param gameTime        - Defines the current game time value
+     * @param timePerRotation - Defines the total time for one position to complete a full rotation cycle
      */
     public static ArrayList<Vec3> rotatingRadialOffsets(Vec3 pos, float distance, float totalPoints, float gameTime, float timePerRotation) {
         return rotatingRadialOffsets(pos, distance, distance, totalPoints, gameTime, timePerRotation);

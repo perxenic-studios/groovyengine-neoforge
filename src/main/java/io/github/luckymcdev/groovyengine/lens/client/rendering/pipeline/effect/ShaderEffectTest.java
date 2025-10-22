@@ -5,195 +5,192 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.PostProc
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.ShaderProgram;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.ShaderUtils;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.FragmentShader;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.Shader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.shader.VertexShader;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.Vertex;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 
 public class ShaderEffectTest {
 
     // Simple fullscreen vertex shader - just passes through position and UV
     private static final String FULLSCREEN_VERTEX = """
-        #version 330 core
-        
-        layout (location = 0) in vec2 aPos;
-        layout (location = 1) in vec2 aTexCoord;
-        
-        out vec2 texCoord;
-        
-        void main() {
-            gl_Position = vec4(aPos, 0.0, 1.0);
-            texCoord = aTexCoord;
-        }
-        """;
+            #version 330 core
+            
+            layout (location = 0) in vec2 aPos;
+            layout (location = 1) in vec2 aTexCoord;
+            
+            out vec2 texCoord;
+            
+            void main() {
+                gl_Position = vec4(aPos, 0.0, 1.0);
+                texCoord = aTexCoord;
+            }
+            """;
 
     // Cool chromatic aberration + vignette effect
     private static final String CHROMATIC_FRAGMENT = """
-        #version 330 core
-        
-        in vec2 texCoord;
-        out vec4 fragColor;
-        
-        uniform sampler2D screenTexture;
-        uniform float time;
-        uniform float aberrationAmount;
-        uniform float vignetteStrength;
-        
-        void main() {
-            vec2 uv = texCoord;
+            #version 330 core
             
-            // Chromatic aberration - offset RGB channels
-            vec2 offset = (uv - 0.5) * aberrationAmount;
+            in vec2 texCoord;
+            out vec4 fragColor;
             
-            float r = texture(screenTexture, uv - offset).r;
-            float g = texture(screenTexture, uv).g;
-            float b = texture(screenTexture, uv + offset).b;
+            uniform sampler2D screenTexture;
+            uniform float time;
+            uniform float aberrationAmount;
+            uniform float vignetteStrength;
             
-            vec3 color = vec3(r, g, b);
+            void main() {
+                vec2 uv = texCoord;
             
-            // Vignette effect
-            vec2 vignetteUV = uv * (1.0 - uv.yx);
-            float vignette = vignetteUV.x * vignetteUV.y * 15.0;
-            vignette = pow(vignette, vignetteStrength);
+                // Chromatic aberration - offset RGB channels
+                vec2 offset = (uv - 0.5) * aberrationAmount;
             
-            color *= vignette;
+                float r = texture(screenTexture, uv - offset).r;
+                float g = texture(screenTexture, uv).g;
+                float b = texture(screenTexture, uv + offset).b;
             
-            fragColor = vec4(color, 1.0);
-        }
-        """;
+                vec3 color = vec3(r, g, b);
+            
+                // Vignette effect
+                vec2 vignetteUV = uv * (1.0 - uv.yx);
+                float vignette = vignetteUV.x * vignetteUV.y * 15.0;
+                vignette = pow(vignette, vignetteStrength);
+            
+                color *= vignette;
+            
+                fragColor = vec4(color, 1.0);
+            }
+            """;
 
     // Wavy distortion effect
     private static final String WAVE_FRAGMENT = """
-        #version 330 core
-        
-        in vec2 texCoord;
-        out vec4 fragColor;
-        
-        uniform sampler2D screenTexture;
-        uniform float time;
-        uniform float waveStrength;
-        uniform float waveFrequency;
-        
-        void main() {
-            vec2 uv = texCoord;
+            #version 330 core
             
-            // Create wave distortion
-            float wave = sin(uv.y * waveFrequency + time) * waveStrength;
-            uv.x += wave;
+            in vec2 texCoord;
+            out vec4 fragColor;
             
-            // Add vertical wave too for more interesting effect
-            wave = cos(uv.x * waveFrequency * 0.8 + time * 0.7) * waveStrength * 0.5;
-            uv.y += wave;
+            uniform sampler2D screenTexture;
+            uniform float time;
+            uniform float waveStrength;
+            uniform float waveFrequency;
             
-            vec3 color = texture(screenTexture, uv).rgb;
+            void main() {
+                vec2 uv = texCoord;
             
-            fragColor = vec4(color, 1.0);
-        }
-        """;
+                // Create wave distortion
+                float wave = sin(uv.y * waveFrequency + time) * waveStrength;
+                uv.x += wave;
+            
+                // Add vertical wave too for more interesting effect
+                wave = cos(uv.x * waveFrequency * 0.8 + time * 0.7) * waveStrength * 0.5;
+                uv.y += wave;
+            
+                vec3 color = texture(screenTexture, uv).rgb;
+            
+                fragColor = vec4(color, 1.0);
+            }
+            """;
 
     // RGB split effect with scanlines
     private static final String GLITCH_FRAGMENT = """
-        #version 330 core
-        
-        in vec2 texCoord;
-        out vec4 fragColor;
-        
-        uniform sampler2D screenTexture;
-        uniform float time;
-        uniform float glitchAmount;
-        
-        float random(vec2 co) {
-            return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
-        }
-        
-        void main() {
-            vec2 uv = texCoord;
+            #version 330 core
             
-            // Random glitch lines
-            float glitchLine = step(0.98, random(vec2(floor(uv.y * 100.0), floor(time * 10.0))));
-            float glitchOffset = (random(vec2(floor(time * 5.0))) - 0.5) * glitchAmount * glitchLine;
+            in vec2 texCoord;
+            out vec4 fragColor;
             
-            // RGB split
-            float r = texture(screenTexture, uv + vec2(glitchOffset, 0.0)).r;
-            float g = texture(screenTexture, uv).g;
-            float b = texture(screenTexture, uv - vec2(glitchOffset, 0.0)).b;
+            uniform sampler2D screenTexture;
+            uniform float time;
+            uniform float glitchAmount;
             
-            vec3 color = vec3(r, g, b);
+            float random(vec2 co) {
+                return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
+            }
             
-            // Scanlines
-            float scanline = sin(uv.y * 800.0) * 0.1;
-            color -= scanline;
+            void main() {
+                vec2 uv = texCoord;
             
-            fragColor = vec4(color, 1.0);
-        }
-        """;
+                // Random glitch lines
+                float glitchLine = step(0.98, random(vec2(floor(uv.y * 100.0), floor(time * 10.0))));
+                float glitchOffset = (random(vec2(floor(time * 5.0))) - 0.5) * glitchAmount * glitchLine;
+            
+                // RGB split
+                float r = texture(screenTexture, uv + vec2(glitchOffset, 0.0)).r;
+                float g = texture(screenTexture, uv).g;
+                float b = texture(screenTexture, uv - vec2(glitchOffset, 0.0)).b;
+            
+                vec3 color = vec3(r, g, b);
+            
+                // Scanlines
+                float scanline = sin(uv.y * 800.0) * 0.1;
+                color -= scanline;
+            
+                fragColor = vec4(color, 1.0);
+            }
+            """;
 
     private static final String DEPTH_VISUALIZATION_FRAGMENT = """
-    #version 330 core
-    
-    in vec2 texCoord;
-    out vec4 fragColor;
-    
-    uniform sampler2D screenTexture;
-    uniform sampler2D depthTexture;
-    uniform float nearPlane;
-    uniform float farPlane;
-    uniform int visualizationMode; // 0: Linear, 1: Non-linear, 2: Heat map
-    
-    float linearizeDepth(float depth) {
-        float z = depth * 2.0 - 1.0; // Back to NDC
-        return (2.0 * nearPlane * farPlane) / (farPlane + nearPlane - z * (farPlane - nearPlane));
-    }
-    
-    vec3 heatMap(float value) {
-        vec3 color = vec3(0.0);
-        
-        // Red to yellow
-        if (value < 0.5) {
-            color.r = 1.0;
-            color.g = value * 2.0;
-        }
-        // Yellow to green
-        else if (value < 0.75) {
-            color.r = 2.0 - value * 2.0;
-            color.g = 1.0;
-        }
-        // Green to blue
-        else {
-            color.g = 4.0 - value * 4.0;
-            color.b = value * 4.0 - 3.0;
-        }
-        
-        return color;
-    }
-    
-    void main() {
-        float depth = texture(depthTexture, texCoord).r;
-        vec3 color = texture(screenTexture, texCoord).rgb;
-        
-        if (visualizationMode == 0) {
-            // Linear depth visualization
-            float linearDepth = linearizeDepth(depth) / farPlane;
-            fragColor = vec4(vec3(linearDepth), 1.0);
-        }
-        else if (visualizationMode == 1) {
-            // Non-linear depth (raw depth buffer)
-            fragColor = vec4(vec3(depth), 1.0);
-        }
-        else if (visualizationMode == 2) {
-            // Heat map visualization
-            float linearDepth = linearizeDepth(depth) / farPlane;
-            fragColor = vec4(heatMap(linearDepth), 1.0);
-        }
-        else {
-            // Overlay depth on original scene
-            float linearDepth = linearizeDepth(depth) / farPlane;
-            vec3 depthColor = heatMap(linearDepth);
-            fragColor = vec4(mix(color, depthColor, 0.7), 1.0);
-        }
-    }
-    """;
+            #version 330 core
+            
+            in vec2 texCoord;
+            out vec4 fragColor;
+            
+            uniform sampler2D screenTexture;
+            uniform sampler2D depthTexture;
+            uniform float nearPlane;
+            uniform float farPlane;
+            uniform int visualizationMode; // 0: Linear, 1: Non-linear, 2: Heat map
+            
+            float linearizeDepth(float depth) {
+                float z = depth * 2.0 - 1.0; // Back to NDC
+                return (2.0 * nearPlane * farPlane) / (farPlane + nearPlane - z * (farPlane - nearPlane));
+            }
+            
+            vec3 heatMap(float value) {
+                vec3 color = vec3(0.0);
+            
+                // Red to yellow
+                if (value < 0.5) {
+                    color.r = 1.0;
+                    color.g = value * 2.0;
+                }
+                // Yellow to green
+                else if (value < 0.75) {
+                    color.r = 2.0 - value * 2.0;
+                    color.g = 1.0;
+                }
+                // Green to blue
+                else {
+                    color.g = 4.0 - value * 4.0;
+                    color.b = value * 4.0 - 3.0;
+                }
+            
+                return color;
+            }
+            
+            void main() {
+                float depth = texture(depthTexture, texCoord).r;
+                vec3 color = texture(screenTexture, texCoord).rgb;
+            
+                if (visualizationMode == 0) {
+                    // Linear depth visualization
+                    float linearDepth = linearizeDepth(depth) / farPlane;
+                    fragColor = vec4(vec3(linearDepth), 1.0);
+                }
+                else if (visualizationMode == 1) {
+                    // Non-linear depth (raw depth buffer)
+                    fragColor = vec4(vec3(depth), 1.0);
+                }
+                else if (visualizationMode == 2) {
+                    // Heat map visualization
+                    float linearDepth = linearizeDepth(depth) / farPlane;
+                    fragColor = vec4(heatMap(linearDepth), 1.0);
+                }
+                else {
+                    // Overlay depth on original scene
+                    float linearDepth = linearizeDepth(depth) / farPlane;
+                    vec3 depthColor = heatMap(linearDepth);
+                    fragColor = vec4(mix(color, depthColor, 0.7), 1.0);
+                }
+            }
+            """;
 
     private static ShaderProgram chromaticShader;
     private static ShaderProgram waveShader;
@@ -323,7 +320,7 @@ public class ShaderEffectTest {
             shader.setUniform("visualizationMode", visualizationMode);
 
             shader.setUniform("nearPlane", 0.05f);
-            shader.setUniform("farPlane", (float)Minecraft.getInstance().options.getEffectiveRenderDistance() * 16.0f);
+            shader.setUniform("farPlane", (float) Minecraft.getInstance().options.getEffectiveRenderDistance() * 16.0f);
         });
     }
 
@@ -349,7 +346,7 @@ public class ShaderEffectTest {
             depthVisualizationShader.setUniform("visualizationMode", visualizationMode);
 
             depthVisualizationShader.setUniform("nearPlane", 0.05f);
-            depthVisualizationShader.setUniform("farPlane", (float)Minecraft.getInstance().options.getEffectiveRenderDistance() * 16.0f);
+            depthVisualizationShader.setUniform("farPlane", (float) Minecraft.getInstance().options.getEffectiveRenderDistance() * 16.0f);
 
             depthVisualizationShader.drawFullscreenQuad();
         };

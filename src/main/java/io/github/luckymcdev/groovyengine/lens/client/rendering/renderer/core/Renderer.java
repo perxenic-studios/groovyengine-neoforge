@@ -1,16 +1,16 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.core;
 
-import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.*;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.EntityRenderer;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.GuiRenderer;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.PlayerRenderer;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.WorldRenderer;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Renderer {
     private static final Renderer INSTANCE = new Renderer();
-
-    public static Renderer getInstance() {
-        return INSTANCE;
-    }
-
     private final Map<Class<? extends BaseRenderer>, BaseRenderer> renderers = new HashMap<>();
 
     private Renderer() {
@@ -19,6 +19,10 @@ public class Renderer {
         registerRenderer(GuiRenderer.class, new GuiRenderer());
         registerRenderer(PlayerRenderer.class, new PlayerRenderer());
         registerRenderer(WorldRenderer.class, new WorldRenderer());
+    }
+
+    public static Renderer getInstance() {
+        return INSTANCE;
     }
 
     private <T extends BaseRenderer> void registerRenderer(Class<T> rendererClass, T renderer) {

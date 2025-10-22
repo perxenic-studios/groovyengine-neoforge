@@ -1,6 +1,5 @@
 package io.github.luckymcdev.groovyengine.threads.core.scripting.attachment;
 
-import dev.perxenic.acidapi.api.datagen.*;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.BaseAttachment;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.block.BlockAttachment;

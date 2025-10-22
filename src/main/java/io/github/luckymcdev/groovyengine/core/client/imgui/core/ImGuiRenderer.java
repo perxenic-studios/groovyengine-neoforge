@@ -1,26 +1,21 @@
 package io.github.luckymcdev.groovyengine.core.client.imgui.core;
 
 import com.mojang.blaze3d.platform.Window;
-import io.github.luckymcdev.groovyengine.construct.client.editor.ConstructEditorWindow;
+import imgui.ImGui;
+import imgui.flag.ImGuiDockNodeFlags;
+import imgui.flag.ImGuiWindowFlags;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.EditorScreen;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.EditorState;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.GroovyEngineEditor;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.KeybindManager;
-import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.WindowManager;
-import io.github.luckymcdev.groovyengine.core.client.editor.windows.*;
-import imgui.ImGui;
-import imgui.flag.ImGuiDockNodeFlags;
-import imgui.flag.ImGuiWindowFlags;
+import io.github.luckymcdev.groovyengine.core.client.editor.windows.DemoWindows;
+import io.github.luckymcdev.groovyengine.core.client.editor.windows.EditorControlWindow;
+import io.github.luckymcdev.groovyengine.core.client.editor.windows.MetricsWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
-import io.github.luckymcdev.groovyengine.lens.client.editor.RenderingDebuggingWindow;
-import io.github.luckymcdev.groovyengine.threads.client.editor.ThreadsWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.Particle;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -85,10 +80,10 @@ public class ImGuiRenderer {
             // Define the exact order you want
             List<String> desiredOrder = Arrays.asList(
                     ImIcons.STACKS.get() + " ImGui",        // Leftmost
-                    ImIcons.WRENCH.get()+" Construct",    //
+                    ImIcons.WRENCH.get() + " Construct",    //
                     ImIcons.CAMERA.get() + " Lens",         //
-                    ImIcons.CODE.get()+" Threads",      //
-                    ImIcons.EDIT.get()+" Scribe",       //
+                    ImIcons.CODE.get() + " Threads",      //
+                    ImIcons.EDIT.get() + " Scribe",       //
                     ImIcons.SETTINGS.get() + " Debug"         // Rightmost before View/Help
             );
 
@@ -123,8 +118,8 @@ public class ImGuiRenderer {
             // Help menu with keybind info
             if (ImGui.beginMenu(ImIcons.QUESTION.get() + " Help")) {
                 ImGui.text("Keybinds:");
-                ImGui.text(KeybindManager.TOGGLE_IMGUI.getTranslatedKeyMessage().getString()+" - Toggle ImGui");
-                ImGui.text(KeybindManager.OPEN_EDITOR_SCREEN.getTranslatedKeyMessage().getString()+" - Open Editor Screen");
+                ImGui.text(KeybindManager.TOGGLE_IMGUI.getTranslatedKeyMessage().getString() + " - Toggle ImGui");
+                ImGui.text(KeybindManager.OPEN_EDITOR_SCREEN.getTranslatedKeyMessage().getString() + " - Open Editor Screen");
                 ImGui.separator();
                 ImGui.text("Change keybinds in Options > Controls");
                 ImGui.endMenu();
@@ -147,8 +142,7 @@ public class ImGuiRenderer {
             // If only one is in the desired order, that one comes first
             else if (indexA != -1) {
                 return -1;
-            }
-            else if (indexB != -1) {
+            } else if (indexB != -1) {
                 return 1;
             }
             // If neither are in the desired order, sort alphabetically

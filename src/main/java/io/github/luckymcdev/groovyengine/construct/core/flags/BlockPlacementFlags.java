@@ -6,10 +6,6 @@ package io.github.luckymcdev.groovyengine.construct.core.flags;
  */
 public class BlockPlacementFlags {
 
-    private BlockPlacementFlags() {
-        throw new AssertionError("Cannot instantiate utility class");
-    }
-
     public static final int UPDATE_NEIGHBORS = 1;
     public static final int UPDATE_CLIENTS = 2;
     public static final int UPDATE_INVISIBLE = 4;
@@ -20,9 +16,13 @@ public class BlockPlacementFlags {
     public static final int UPDATE_NONE = 0;
     public static final int UPDATE_ALL = 3;
     public static final int UPDATE_ALL_IMMEDIATE = 11;
+    private BlockPlacementFlags() {
+        throw new AssertionError("Cannot instantiate utility class");
+    }
 
     /**
      * Combines multiple flags into a single integer value.
+     *
      * @param flags The flags to combine
      * @return Combined flag value
      */
@@ -34,8 +34,9 @@ public class BlockPlacementFlags {
 
     /**
      * Checks if a combined flag value contains a specific flag.
+     *
      * @param combined The combined flag value
-     * @param flag The flag to check for
+     * @param flag     The flag to check for
      * @return true if the flag is present
      */
     public static boolean hasFlag(int combined, int flag) {

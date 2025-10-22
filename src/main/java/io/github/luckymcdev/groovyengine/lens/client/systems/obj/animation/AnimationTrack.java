@@ -22,7 +22,7 @@ public class AnimationTrack {
     public void addKeyframe(Keyframe keyframe) {
         keyframes.add(keyframe);
         // Keep keyframes sorted by time
-        keyframes.sort(Comparator.comparing(Keyframe::getTime));
+        keyframes.sort(Comparator.comparing(Keyframe::time));
     }
 
     public String getObjectName() {
@@ -51,10 +51,10 @@ public class AnimationTrack {
 
         for (int i = 0; i < keyframes.size(); i++) {
             Keyframe kf = keyframes.get(i);
-            if (kf.getTime() <= time) {
+            if (kf.time() <= time) {
                 before = kf;
             }
-            if (kf.getTime() >= time && after == null) {
+            if (kf.time() >= time && after == null) {
                 after = kf;
                 break;
             }
@@ -63,46 +63,46 @@ public class AnimationTrack {
         // If time is before first keyframe
         if (before == null) {
             return new KeyframeTransform(
-                    keyframes.get(0).getPosition(),
-                    keyframes.get(0).getRotation(),
-                    keyframes.get(0).getScale()
+                    keyframes.get(0).position(),
+                    keyframes.get(0).rotation(),
+                    keyframes.get(0).scale()
             );
         }
 
         // If time is after last keyframe
         if (after == null) {
             return new KeyframeTransform(
-                    before.getPosition(),
-                    before.getRotation(),
-                    before.getScale()
+                    before.position(),
+                    before.rotation(),
+                    before.scale()
             );
         }
 
         // If exactly on a keyframe
         if (before == after) {
             return new KeyframeTransform(
-                    before.getPosition(),
-                    before.getRotation(),
-                    before.getScale()
+                    before.position(),
+                    before.rotation(),
+                    before.scale()
             );
         }
 
         // Calculate linear interpolation factor
-        float linearT = (time - before.getTime()) / (after.getTime() - before.getTime());
+        float linearT = (time - before.time()) / (after.time() - before.time());
 
         // Apply easing function from the 'after' keyframe
         // The easing is applied TO the target keyframe, so we use after.getEasing()
-        float easedT = after.getEasing().ease(linearT, 0f, 1f, 1f);
+        float easedT = after.easing().ease(linearT, 0f, 1f, 1f);
 
         // Interpolate between keyframes using the eased factor
         Vector3f position = new Vector3f();
-        before.getPosition().lerp(after.getPosition(), easedT, position);
+        before.position().lerp(after.position(), easedT, position);
 
         Vector3f rotation = new Vector3f();
-        before.getRotation().lerp(after.getRotation(), easedT, rotation);
+        before.rotation().lerp(after.rotation(), easedT, rotation);
 
         Vector3f scale = new Vector3f();
-        before.getScale().lerp(after.getScale(), easedT, scale);
+        before.scale().lerp(after.scale(), easedT, scale);
 
         return new KeyframeTransform(position, rotation, scale);
     }

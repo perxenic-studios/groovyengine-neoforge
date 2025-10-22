@@ -2,7 +2,6 @@ package io.github.luckymcdev.groovyengine.construct.core.history;
 
 import io.github.luckymcdev.groovyengine.construct.core.placement.AsyncBlockPlacer;
 import io.github.luckymcdev.groovyengine.construct.core.selection.Selection;
-import io.github.luckymcdev.groovyengine.construct.core.pattern.BlockPattern;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -26,6 +25,7 @@ public class HistoryManager {
 
     /**
      * Saves the current state of blocks in a selection before an operation.
+     *
      * @param selection The selection area to save
      */
     public void saveState(Selection selection) {
@@ -63,6 +63,7 @@ public class HistoryManager {
 
     /**
      * Undoes the last operation.
+     *
      * @param blockPlacer The block placer to use for restoration
      */
     public void undo(AsyncBlockPlacer blockPlacer) {
@@ -82,6 +83,7 @@ public class HistoryManager {
 
     /**
      * Redoes the last undone operation.
+     *
      * @param blockPlacer The block placer to use for restoration
      */
     public void redo(AsyncBlockPlacer blockPlacer) {

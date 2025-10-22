@@ -1,8 +1,6 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.Camera;
 
 public class PoseScope {
     private final PoseStack stack;

@@ -7,9 +7,9 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class EditorWindow {
-    protected boolean enabled = false;
     protected final String title;
     protected final String id;
+    protected boolean enabled = false;
 
     public EditorWindow(String title, String id) {
         this.title = title;
@@ -28,12 +28,14 @@ public abstract class EditorWindow {
     /**
      * Called when the window is first opened
      */
-    public void onOpen() {}
+    public void onOpen() {
+    }
 
     /**
      * Called when the window is closed
      */
-    public void onClose() {}
+    public void onClose() {
+    }
 
     public boolean isEnabled() {
         return enabled;

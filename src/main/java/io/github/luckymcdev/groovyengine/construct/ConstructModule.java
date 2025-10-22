@@ -20,7 +20,7 @@ public class ConstructModule implements Module {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void registerWindows() {
-        WindowManager.registerWindow(new ConstructChanges(), ImIcons.WRENCH.get()+" Construct");
-        WindowManager.registerWindow(new ConstructEditorWindow(), ImIcons.WRENCH.get()+" Construct");
+        WindowManager.registerWindow(new ConstructChanges(), ImIcons.WRENCH.get() + " Construct");
+        WindowManager.registerWindow(new ConstructEditorWindow(), ImIcons.WRENCH.get() + " Construct");
     }
 }

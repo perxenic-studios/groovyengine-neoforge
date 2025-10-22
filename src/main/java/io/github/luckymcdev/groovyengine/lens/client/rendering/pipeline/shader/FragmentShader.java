@@ -14,14 +14,14 @@ public class FragmentShader extends Shader {
      */
     public static FragmentShader createPassthrough() {
         String source = """
-            #version 330 core
-            in vec2 texCoord;
-            out vec4 fragColor;
-            uniform sampler2D screenTexture;
-            void main() {
-                fragColor = texture(screenTexture, texCoord);
-            }
-            """;
+                #version 330 core
+                in vec2 texCoord;
+                out vec4 fragColor;
+                uniform sampler2D screenTexture;
+                void main() {
+                    fragColor = texture(screenTexture, texCoord);
+                }
+                """;
         return new FragmentShader(source);
     }
 }

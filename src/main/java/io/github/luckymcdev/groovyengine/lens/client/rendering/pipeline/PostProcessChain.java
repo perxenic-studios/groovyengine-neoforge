@@ -17,54 +17,38 @@ import java.util.List;
  */
 public class PostProcessChain {
 
+    private static final String BLIT_VERTEX = """
+            #version 330 core
+            
+            layout (location = 0) in vec2 aPos;
+            layout (location = 1) in vec2 aTexCoord;
+            
+            out vec2 texCoord;
+            
+            void main() {
+                gl_Position = vec4(aPos, 0.0, 1.0);
+                texCoord = aTexCoord;
+            }
+            """;
+    private static final String BLIT_FRAGMENT = """
+            #version 330 core
+            
+            in vec2 texCoord;
+            out vec4 fragColor;
+            
+            uniform sampler2D screenTexture;
+            
+            void main() {
+                fragColor = texture(screenTexture, texCoord);
+            }
+            """;
+    private final List<PostProcessEffect> effects = new ArrayList<>();
     private ExtendedFBO pingBuffer;
     private ExtendedFBO pongBuffer;
     private boolean initialized = false;
     private int currentWidth = -1;
     private int currentHeight = -1;
-
     private ShaderProgram blitShader;
-
-    private final List<PostProcessEffect> effects = new ArrayList<>();
-
-    private static final String BLIT_VERTEX = """
-        #version 330 core
-        
-        layout (location = 0) in vec2 aPos;
-        layout (location = 1) in vec2 aTexCoord;
-        
-        out vec2 texCoord;
-        
-        void main() {
-            gl_Position = vec4(aPos, 0.0, 1.0);
-            texCoord = aTexCoord;
-        }
-        """;
-
-    private static final String BLIT_FRAGMENT = """
-        #version 330 core
-        
-        in vec2 texCoord;
-        out vec4 fragColor;
-        
-        uniform sampler2D screenTexture;
-        
-        void main() {
-            fragColor = texture(screenTexture, texCoord);
-        }
-        """;
-
-    /**
-     * Functional interface for a post-processing effect
-     */
-    @FunctionalInterface
-    public interface PostProcessEffect {
-        /**
-         * Apply the effect. The input texture is already bound to texture unit 0.
-         * Just bind your shader, set uniforms, and draw the fullscreen quad.
-         */
-        void apply();
-    }
 
     /**
      * Initialize or resize the ping-pong buffers
@@ -247,5 +231,17 @@ public class PostProcessChain {
      */
     public boolean hasEffects() {
         return !effects.isEmpty();
+    }
+
+    /**
+     * Functional interface for a post-processing effect
+     */
+    @FunctionalInterface
+    public interface PostProcessEffect {
+        /**
+         * Apply the effect. The input texture is already bound to texture unit 0.
+         * Just bind your shader, set uniforms, and draw the fullscreen quad.
+         */
+        void apply();
     }
 }

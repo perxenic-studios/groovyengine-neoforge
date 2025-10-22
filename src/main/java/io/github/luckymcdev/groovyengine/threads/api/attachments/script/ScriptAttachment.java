@@ -10,6 +10,7 @@ public abstract class ScriptAttachment implements BaseAttachment {
 
     /**
      * Constructor for script attachment
+     *
      * @param scriptId The identifier for the script this attachment belongs to
      */
     public ScriptAttachment(String scriptId) {
@@ -34,7 +35,12 @@ public abstract class ScriptAttachment implements BaseAttachment {
     }
 
     // Script Lifecycle Events
-    public void onScriptLoad() {}
-    public void onScriptReload() {}
-    public void onScriptError(Exception error) {}
+    public void onScriptLoad() {
+    }
+
+    public void onScriptReload() {
+    }
+
+    public void onScriptError(Exception error) {
+    }
 }

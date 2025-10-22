@@ -30,43 +30,22 @@ import static org.lwjgl.opengl.GL43C.*;
  */
 @OnlyIn(Dist.CLIENT)
 public class ComputeShader extends Shader implements AutoCloseable {
-    private int ssbo;
-    private int program;
-    private int elementCount;
-    private int dataSizeBytes;
-
     // Default memory barrier flags for common use cases
     private static final int DEFAULT_MEMORY_BARRIER =
             GL_SHADER_STORAGE_BARRIER_BIT |
                     GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT |
                     GL_TEXTURE_FETCH_BARRIER_BIT;
-
     private static final Gson GSON = new Gson();
-
-    /**
-     * Checks if compute shaders are supported on this device
-     */
-    public static boolean isSupported() {
-        return LensRenderingCapabilities.COMPUTE_SUPPORTED.getAsBoolean();
-    }
-
-    /**
-     * Throws an UnsupportedOperationException if compute shaders are not supported
-     */
-    private static void checkSupport() {
-        if (!isSupported()) {
-            throw new UnsupportedOperationException(
-                    "Compute shaders are not supported on this device. " +
-                            "Required OpenGL 4.3 or ARB_compute_shader extension."
-            );
-        }
-    }
+    private int ssbo;
+    private int program;
+    private int elementCount;
+    private int dataSizeBytes;
 
     /**
      * Constructs a compute shader with initial data
      *
-     * @param initialData The initial data to load into the SSBO
-     * @param elementSize The size of each element in bytes
+     * @param initialData      The initial data to load into the SSBO
+     * @param elementSize      The size of each element in bytes
      * @param shaderConfigPath The resource location of the compute shader config JSON
      */
     public ComputeShader(ByteBuffer initialData, int elementSize, ResourceLocation shaderConfigPath) {
@@ -97,6 +76,25 @@ public class ComputeShader extends Shader implements AutoCloseable {
      */
     public ComputeShader() {
         super(ShaderType.COMPUTE);
+    }
+
+    /**
+     * Checks if compute shaders are supported on this device
+     */
+    public static boolean isSupported() {
+        return LensRenderingCapabilities.COMPUTE_SUPPORTED.getAsBoolean();
+    }
+
+    /**
+     * Throws an UnsupportedOperationException if compute shaders are not supported
+     */
+    private static void checkSupport() {
+        if (!isSupported()) {
+            throw new UnsupportedOperationException(
+                    "Compute shaders are not supported on this device. " +
+                            "Required OpenGL 4.3 or ARB_compute_shader extension."
+            );
+        }
     }
 
     /**

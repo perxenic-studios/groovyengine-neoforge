@@ -34,6 +34,33 @@ public enum PackFileType {
     }
 
     /**
+     * Determines the type of the given pack candidate file.
+     *
+     * @param candidate The file candidate to load.
+     * @return The pack type of the file.
+     */
+    public static PackFileType from(File candidate) {
+        if (candidate.isFile() && (endsWithIgnoreCase(candidate.getName(), ".zip") || endsWithIgnoreCase(candidate.getName(), ".jar"))) {
+            return ARCHIVE;
+        } else if (candidate.isDirectory() && new File(candidate, "pack.mcmeta").isFile()) {
+            return FOLDER;
+        }
+        return INVALID;
+    }
+
+    /**
+     * Checks if a string ends with another case-insensitive string.
+     *
+     * @param str    The source string.
+     * @param suffix The case-insensitive suffix string.
+     * @return If the source string ends with the case-insensitive string.
+     */
+    private static boolean endsWithIgnoreCase(String str, String suffix) {
+        final int suffixLength = suffix.length();
+        return str.regionMatches(true, str.length() - suffixLength, suffix, 0, suffixLength);
+    }
+
+    /**
      * Determines if packs of this type should be loaded by openloader.
      *
      * @return If OpenLoader can load this type of pack file.
@@ -60,33 +87,5 @@ public enum PackFileType {
      */
     public Pack.ResourcesSupplier createPackSupplier(File packFile) {
         return this.packSupplier.apply(packFile);
-    }
-
-    /**
-     * Determines the type of the given pack candidate file.
-     *
-     * @param candidate The file candidate to load.
-     * @return The pack type of the file.
-     */
-    public static PackFileType from(File candidate) {
-        if (candidate.isFile() && (endsWithIgnoreCase(candidate.getName(), ".zip") || endsWithIgnoreCase(candidate.getName(), ".jar"))) {
-            return ARCHIVE;
-        }
-        else if (candidate.isDirectory() && new File(candidate, "pack.mcmeta").isFile()) {
-            return FOLDER;
-        }
-        return INVALID;
-    }
-
-    /**
-     * Checks if a string ends with another case-insensitive string.
-     *
-     * @param str    The source string.
-     * @param suffix The case-insensitive suffix string.
-     * @return If the source string ends with the case-insensitive string.
-     */
-    private static boolean endsWithIgnoreCase(String str, String suffix) {
-        final int suffixLength = suffix.length();
-        return str.regionMatches(true, str.length() - suffixLength, suffix, 0, suffixLength);
     }
 }

@@ -1,6 +1,5 @@
 package io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo;
 
-import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.Vertex;
 import net.minecraft.world.phys.Vec2;
 import org.joml.Vector3f;

@@ -7,7 +7,10 @@ import net.neoforged.neoforge.client.event.RenderItemInFrameEvent;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.client.event.RenderNameTagEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class EntityRenderer extends BaseRenderer {
@@ -17,20 +20,28 @@ public class EntityRenderer extends BaseRenderer {
             RenderNameTagEvent.class,
             RenderItemInFrameEvent.class
     );
-
-    public enum RenderEntityEvent {
-        RENDER_LIVING_PRE,
-        RENDER_LIVING_POST,
-        RENDER_NAME_TAG,
-        RENDER_ITEM_IN_FRAME
-    }
-
     private final Map<RenderEntityEvent, List<Consumer<?>>> eventCallbacks = new EnumMap<>(RenderEntityEvent.class);
 
     public EntityRenderer() {
         for (RenderEntityEvent event : RenderEntityEvent.values()) {
             eventCallbacks.put(event, new ArrayList<>());
         }
+    }
+
+    public static RenderEntityEvent getEventType(RenderLivingEvent.Pre event) {
+        return RenderEntityEvent.RENDER_LIVING_PRE;
+    }
+
+    public static RenderEntityEvent getEventType(RenderLivingEvent.Post event) {
+        return RenderEntityEvent.RENDER_LIVING_POST;
+    }
+
+    public static RenderEntityEvent getEventType(RenderNameTagEvent event) {
+        return RenderEntityEvent.RENDER_NAME_TAG;
+    }
+
+    public static RenderEntityEvent getEventType(RenderItemInFrameEvent event) {
+        return RenderEntityEvent.RENDER_ITEM_IN_FRAME;
     }
 
     @Override
@@ -74,19 +85,10 @@ public class EntityRenderer extends BaseRenderer {
         registerCallback(RenderEntityEvent.RENDER_ITEM_IN_FRAME, callback);
     }
 
-    public static RenderEntityEvent getEventType(RenderLivingEvent.Pre event) {
-        return RenderEntityEvent.RENDER_LIVING_PRE;
-    }
-
-    public static RenderEntityEvent getEventType(RenderLivingEvent.Post event) {
-        return RenderEntityEvent.RENDER_LIVING_POST;
-    }
-
-    public static RenderEntityEvent getEventType(RenderNameTagEvent event) {
-        return RenderEntityEvent.RENDER_NAME_TAG;
-    }
-
-    public static RenderEntityEvent getEventType(RenderItemInFrameEvent event) {
-        return RenderEntityEvent.RENDER_ITEM_IN_FRAME;
+    public enum RenderEntityEvent {
+        RENDER_LIVING_PRE,
+        RENDER_LIVING_POST,
+        RENDER_NAME_TAG,
+        RENDER_ITEM_IN_FRAME
     }
 }

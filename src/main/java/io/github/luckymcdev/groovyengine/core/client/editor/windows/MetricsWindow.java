@@ -1,7 +1,5 @@
 package io.github.luckymcdev.groovyengine.core.client.editor.windows;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.extension.implot.ImPlot;
 import imgui.extension.implot.flag.*;
@@ -34,9 +32,9 @@ public class MetricsWindow extends EditorWindow {
     private int sampleCount = 0;
 
     // Graph settings
-    private boolean autoScaleFPS = false;
-    private boolean autoScaleMemory = false;
-    private boolean showCombinedGraph = true;
+    private final boolean autoScaleFPS = false;
+    private final boolean autoScaleMemory = false;
+    private final boolean showCombinedGraph = true;
 
     // Frame time tracking
     private long lastFrameTime = System.nanoTime();
@@ -148,7 +146,7 @@ public class MetricsWindow extends EditorWindow {
         long totalMem = runtime.totalMemory() / (1024 * 1024);
         long freeMem = runtime.freeMemory() / (1024 * 1024);
         long usedMem = totalMem - freeMem;
-        float memPercent = (float)usedMem / maxMem;
+        float memPercent = (float) usedMem / maxMem;
 
         ImGe.pushStyleColor(ImGuiCol.Text, 0xFF00AAFF);
         ImGe.text(ImIcons.MEMORY.get() + " Memory");
@@ -299,7 +297,7 @@ public class MetricsWindow extends EditorWindow {
 
         long gameTime = level.getGameTime();
         long dayTime = level.getDayTime() % 24000;
-        int day = (int)(level.getDayTime() / 24000);
+        int day = (int) (level.getDayTime() / 24000);
 
         ImGe.text(String.format("Game Time: %d ticks", gameTime));
         ImGe.text(String.format("Day: %d", day));

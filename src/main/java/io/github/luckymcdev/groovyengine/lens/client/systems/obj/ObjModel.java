@@ -49,9 +49,10 @@ public class ObjModel {
 
     /**
      * Renders the entire model as one piece.
-     * @param poseStack     The pose stack.
-     * @param renderType    The render type.
-     * @param packedLight   The packed light.
+     *
+     * @param poseStack   The pose stack.
+     * @param renderType  The render type.
+     * @param packedLight The packed light.
      */
     public void renderModel(PoseStack poseStack, RenderType renderType, int packedLight) {
         faces.forEach(face -> face.renderFace(poseStack, renderType, packedLight));
@@ -59,9 +60,10 @@ public class ObjModel {
 
     /**
      * Renders the entire model as one piece.
-     * @param poseStack     The pose stack.
-     * @param material      The material.
-     * @param packedLight   The packed light.
+     *
+     * @param poseStack   The pose stack.
+     * @param material    The material.
+     * @param packedLight The packed light.
      */
     public void renderModel(PoseStack poseStack, Material material, int packedLight) {
         faces.forEach(face -> face.renderFace(poseStack, material.renderType(), packedLight));
@@ -69,9 +71,10 @@ public class ObjModel {
 
     /**
      * Renders model with object transformations applied (for animation).
-     * @param poseStack     The pose stack.
-     * @param renderType    The render type.
-     * @param packedLight   The packed light.
+     *
+     * @param poseStack   The pose stack.
+     * @param renderType  The render type.
+     * @param packedLight The packed light.
      */
     @Deprecated
     public void renderModelAnimated(PoseStack poseStack, RenderType renderType, int packedLight) {
@@ -80,9 +83,10 @@ public class ObjModel {
 
     /**
      * Renders model with object transformations applied (for animation).
-     * @param poseStack     The pose stack.
-     * @param material      The material.
-     * @param packedLight   The packed light.
+     *
+     * @param poseStack   The pose stack.
+     * @param material    The material.
+     * @param packedLight The packed light.
      */
     @Deprecated
     public void renderModelAnimated(PoseStack poseStack, Material material, int packedLight) {
@@ -91,6 +95,7 @@ public class ObjModel {
 
     /**
      * Gets an object by name for animation control.
+     *
      * @param name The object name from the OBJ file.
      * @return The ObjObject, or null if not found.
      */
@@ -100,6 +105,7 @@ public class ObjModel {
 
     /**
      * Gets all objects in the model.
+     *
      * @return Map of object names to ObjObject instances.
      */
     public Map<String, ObjObject> getObjects() {

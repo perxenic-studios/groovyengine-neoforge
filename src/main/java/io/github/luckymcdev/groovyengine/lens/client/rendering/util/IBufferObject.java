@@ -12,5 +12,6 @@ public interface IBufferObject {
     default void registerBufferObject() {
         LensRenderSystem.registerBufferObject(this);
     }
+
     void destroy();
 }

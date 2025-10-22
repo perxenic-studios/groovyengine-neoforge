@@ -7,7 +7,10 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class GuiRenderer extends BaseRenderer {
@@ -20,23 +23,40 @@ public class GuiRenderer extends BaseRenderer {
             RenderTooltipEvent.Color.class,
             RenderTooltipEvent.GatherComponents.class
     );
-
-    public enum RenderGuiEventType {
-        RENDER_GUI_PRE,
-        RENDER_GUI_POST,
-        RENDER_GUI_LAYER_PRE,
-        RENDER_GUI_LAYER_POST,
-        RENDER_TOOLTIP_PRE,
-        RENDER_TOOLTIP_COLOR,
-        RENDER_TOOLTIP_GATHER_COMPONENTS
-    }
-
     private final Map<RenderGuiEventType, List<Consumer<?>>> eventCallbacks = new EnumMap<>(RenderGuiEventType.class);
 
     public GuiRenderer() {
         for (RenderGuiEventType event : RenderGuiEventType.values()) {
             eventCallbacks.put(event, new ArrayList<>());
         }
+    }
+
+    public static RenderGuiEventType getEventType(RenderGuiEvent.Pre event) {
+        return RenderGuiEventType.RENDER_GUI_PRE;
+    }
+
+    public static RenderGuiEventType getEventType(RenderGuiEvent.Post event) {
+        return RenderGuiEventType.RENDER_GUI_POST;
+    }
+
+    public static RenderGuiEventType getEventType(RenderGuiLayerEvent.Pre event) {
+        return RenderGuiEventType.RENDER_GUI_LAYER_PRE;
+    }
+
+    public static RenderGuiEventType getEventType(RenderGuiLayerEvent.Post event) {
+        return RenderGuiEventType.RENDER_GUI_LAYER_POST;
+    }
+
+    public static RenderGuiEventType getEventType(RenderTooltipEvent.Pre event) {
+        return RenderGuiEventType.RENDER_TOOLTIP_PRE;
+    }
+
+    public static RenderGuiEventType getEventType(RenderTooltipEvent.Color event) {
+        return RenderGuiEventType.RENDER_TOOLTIP_COLOR;
+    }
+
+    public static RenderGuiEventType getEventType(RenderTooltipEvent.GatherComponents event) {
+        return RenderGuiEventType.RENDER_TOOLTIP_GATHER_COMPONENTS;
     }
 
     @Override
@@ -92,31 +112,13 @@ public class GuiRenderer extends BaseRenderer {
         registerCallback(RenderGuiEventType.RENDER_TOOLTIP_GATHER_COMPONENTS, callback);
     }
 
-    public static RenderGuiEventType getEventType(RenderGuiEvent.Pre event) {
-        return RenderGuiEventType.RENDER_GUI_PRE;
-    }
-
-    public static RenderGuiEventType getEventType(RenderGuiEvent.Post event) {
-        return RenderGuiEventType.RENDER_GUI_POST;
-    }
-
-    public static RenderGuiEventType getEventType(RenderGuiLayerEvent.Pre event) {
-        return RenderGuiEventType.RENDER_GUI_LAYER_PRE;
-    }
-
-    public static RenderGuiEventType getEventType(RenderGuiLayerEvent.Post event) {
-        return RenderGuiEventType.RENDER_GUI_LAYER_POST;
-    }
-
-    public static RenderGuiEventType getEventType(RenderTooltipEvent.Pre event) {
-        return RenderGuiEventType.RENDER_TOOLTIP_PRE;
-    }
-
-    public static RenderGuiEventType getEventType(RenderTooltipEvent.Color event) {
-        return RenderGuiEventType.RENDER_TOOLTIP_COLOR;
-    }
-
-    public static RenderGuiEventType getEventType(RenderTooltipEvent.GatherComponents event) {
-        return RenderGuiEventType.RENDER_TOOLTIP_GATHER_COMPONENTS;
+    public enum RenderGuiEventType {
+        RENDER_GUI_PRE,
+        RENDER_GUI_POST,
+        RENDER_GUI_LAYER_PRE,
+        RENDER_GUI_LAYER_POST,
+        RENDER_TOOLTIP_PRE,
+        RENDER_TOOLTIP_COLOR,
+        RENDER_TOOLTIP_GATHER_COMPONENTS
     }
 }

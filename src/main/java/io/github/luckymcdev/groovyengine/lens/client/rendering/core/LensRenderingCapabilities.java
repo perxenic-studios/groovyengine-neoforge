@@ -1,6 +1,5 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.core;
 
-import com.mojang.datafixers.optics.Lens;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL;

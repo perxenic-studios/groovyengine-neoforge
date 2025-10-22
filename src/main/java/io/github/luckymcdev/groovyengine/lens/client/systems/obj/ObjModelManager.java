@@ -1,12 +1,10 @@
 package io.github.luckymcdev.groovyengine.lens.client.systems.obj;
 
-import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-
 
 import java.util.ArrayList;
 import java.util.List;

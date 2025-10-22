@@ -7,7 +7,10 @@ import net.neoforged.neoforge.client.event.RenderArmEvent;
 import net.neoforged.neoforge.client.event.RenderHandEvent;
 import net.neoforged.neoforge.client.event.RenderPlayerEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class PlayerRenderer extends BaseRenderer {
@@ -17,20 +20,28 @@ public class PlayerRenderer extends BaseRenderer {
             RenderArmEvent.class,
             RenderHandEvent.class
     );
-
-    public enum RenderPlayerEventType {
-        RENDER_PLAYER_PRE,
-        RENDER_PLAYER_POST,
-        RENDER_ARM,
-        RENDER_HAND
-    }
-
     private final Map<RenderPlayerEventType, List<Consumer<?>>> eventCallbacks = new EnumMap<>(RenderPlayerEventType.class);
 
     public PlayerRenderer() {
         for (RenderPlayerEventType event : RenderPlayerEventType.values()) {
             eventCallbacks.put(event, new ArrayList<>());
         }
+    }
+
+    public static RenderPlayerEventType getEventType(RenderPlayerEvent.Pre event) {
+        return RenderPlayerEventType.RENDER_PLAYER_PRE;
+    }
+
+    public static RenderPlayerEventType getEventType(RenderPlayerEvent.Post event) {
+        return RenderPlayerEventType.RENDER_PLAYER_POST;
+    }
+
+    public static RenderPlayerEventType getEventType(RenderArmEvent event) {
+        return RenderPlayerEventType.RENDER_ARM;
+    }
+
+    public static RenderPlayerEventType getEventType(RenderHandEvent event) {
+        return RenderPlayerEventType.RENDER_HAND;
     }
 
     @Override
@@ -74,19 +85,10 @@ public class PlayerRenderer extends BaseRenderer {
         registerCallback(RenderPlayerEventType.RENDER_HAND, callback);
     }
 
-    public static RenderPlayerEventType getEventType(RenderPlayerEvent.Pre event) {
-        return RenderPlayerEventType.RENDER_PLAYER_PRE;
-    }
-
-    public static RenderPlayerEventType getEventType(RenderPlayerEvent.Post event) {
-        return RenderPlayerEventType.RENDER_PLAYER_POST;
-    }
-
-    public static RenderPlayerEventType getEventType(RenderArmEvent event) {
-        return RenderPlayerEventType.RENDER_ARM;
-    }
-
-    public static RenderPlayerEventType getEventType(RenderHandEvent event) {
-        return RenderPlayerEventType.RENDER_HAND;
+    public enum RenderPlayerEventType {
+        RENDER_PLAYER_PRE,
+        RENDER_PLAYER_POST,
+        RENDER_ARM,
+        RENDER_HAND
     }
 }

@@ -17,7 +17,8 @@ public class ScriptMetadata {
                 }
                 if (!line.isEmpty()) break;
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return 0;
     }
 
@@ -30,7 +31,8 @@ public class ScriptMetadata {
                 if (line.equalsIgnoreCase("//disabled")) return true;
                 break;
             }
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
         return false;
     }
 }

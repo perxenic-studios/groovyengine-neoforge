@@ -1,8 +1,6 @@
 package io.github.luckymcdev.groovyengine.lens.client.editor;
 
-import imgui.ImGui;
 import imgui.ImGuiIO;
-import io.github.luckymcdev.groovyengine.GroovyEngineClient;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;

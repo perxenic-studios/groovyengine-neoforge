@@ -6,7 +6,6 @@ import net.minecraft.util.Mth;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public record CubeVertexData(Vector3f[] bottomVertices, Vector3f[] topVertices, List<Vector3f[]> offsetMap) {
@@ -26,10 +25,22 @@ public record CubeVertexData(Vector3f[] bottomVertices, Vector3f[] topVertices, 
         Vector3f[] topVertices = new Vector3f[]{new Vector3f(xStart, yEnd, xStart), new Vector3f(xStart, yEnd, xEnd), new Vector3f(xEnd, yEnd, xEnd), new Vector3f(xEnd, yEnd, xStart)};
         List<Vector3f[]> offsetMap = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            int index = (i*3+3) % 4; //this weird and specific numbering is to tie the vertices to horizontal directions
-            offsetMap.add(new Vector3f[]{bottomVertices[(index) % 4], bottomVertices[(index+1) % 4], topVertices[(index+1) % 4], topVertices[(index) % 4]});
+            int index = (i * 3 + 3) % 4; //this weird and specific numbering is to tie the vertices to horizontal directions
+            offsetMap.add(new Vector3f[]{bottomVertices[(index) % 4], bottomVertices[(index + 1) % 4], topVertices[(index + 1) % 4], topVertices[(index) % 4]});
         }
         return new CubeVertexData(bottomVertices, topVertices, offsetMap);
+    }
+
+    public static void applyVertexWobble(Vector3f[] offsets, float sineOffset, float strength) {
+        float offset = sineOffset;
+        for (Vector3f vector3f : offsets) {
+            double time = ((Minecraft.getInstance().level.getGameTime() / 40.0F) % Math.PI * 2);
+            float angle = (float) (time + (offset * Math.PI * 2));
+            float sin = Mth.sin(angle) * strength;
+            float cos = Mth.cos(angle) * strength;
+            vector3f.add(sin, cos, 0);
+            offset += 0.25f;
+        }
     }
 
     public Vector3f[] getVerticesByDirection(Direction direction) {
@@ -57,18 +68,6 @@ public record CubeVertexData(Vector3f[] bottomVertices, Vector3f[] topVertices, 
     public CubeVertexData applyWobble(Vector3f[] offsets, float sineOffset, float strength) {
         applyVertexWobble(offsets, sineOffset, strength);
         return this;
-    }
-
-    public static void applyVertexWobble(Vector3f[] offsets, float sineOffset, float strength) {
-        float offset = sineOffset;
-        for (Vector3f vector3f : offsets) {
-            double time = ((Minecraft.getInstance().level.getGameTime() / 40.0F) % Math.PI * 2);
-            float angle = (float) (time + (offset * Math.PI * 2));
-            float sin = Mth.sin(angle) * strength;
-            float cos = Mth.cos(angle) * strength;
-            vector3f.add(sin, cos, 0);
-            offset += 0.25f;
-        }
     }
 
     public CubeVertexData scale(float scale) {

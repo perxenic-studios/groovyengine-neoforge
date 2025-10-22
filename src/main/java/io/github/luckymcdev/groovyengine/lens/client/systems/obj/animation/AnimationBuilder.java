@@ -18,6 +18,13 @@ public class AnimationBuilder {
     }
 
     /**
+     * Static factory method for cleaner syntax.
+     */
+    public static AnimationBuilder create(String name) {
+        return new AnimationBuilder(name);
+    }
+
+    /**
      * Set whether animation loops.
      */
     public AnimationBuilder looping(boolean loop) {
@@ -40,7 +47,7 @@ public class AnimationBuilder {
         if (currentObject == null) {
             throw new IllegalStateException("Must call forObject() before adding keyframes");
         }
-        animation.addKeyframe(currentObject, new Keyframe(time, transform.position, transform.rotation, transform.scale, easing));
+        animation.addKeyframe(currentObject, new Keyframe(time, transform.position(), transform.rotation(), transform.scale(), easing));
         return this;
     }
 
@@ -141,12 +148,5 @@ public class AnimationBuilder {
      */
     public Animation build() {
         return animation;
-    }
-
-    /**
-     * Static factory method for cleaner syntax.
-     */
-    public static AnimationBuilder create(String name) {
-        return new AnimationBuilder(name);
     }
 }

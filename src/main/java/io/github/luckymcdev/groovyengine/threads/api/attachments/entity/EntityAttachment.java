@@ -50,14 +50,24 @@ public abstract class EntityAttachment implements BaseAttachment {
     }
 
     // Lifecycle Events
-    public void onSpawn(Entity entity, LevelAccessor level) {}
-    public void onRemove(Entity entity, Entity.RemovalReason reason) {}
-    public void onTick(Entity entity) {}
+    public void onSpawn(Entity entity, LevelAccessor level) {
+    }
+
+    public void onRemove(Entity entity, Entity.RemovalReason reason) {
+    }
+
+    public void onTick(Entity entity) {
+    }
 
     // Interaction Events
-    public InteractionResult onInteract(Entity entity, Player player, InteractionHand hand) { return InteractionResult.PASS; }
+    public InteractionResult onInteract(Entity entity, Player player, InteractionHand hand) {
+        return InteractionResult.PASS;
+    }
 
     // Combat Events (for LivingEntity)
-    public void onHurt(LivingEntity entity, DamageSource source, float ammount) {}
-    public void onDeath(LivingEntity entity, DamageSource source) {}
+    public void onHurt(LivingEntity entity, DamageSource source, float ammount) {
+    }
+
+    public void onDeath(LivingEntity entity, DamageSource source) {
+    }
 }

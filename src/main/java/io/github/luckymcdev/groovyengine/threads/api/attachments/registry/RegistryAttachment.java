@@ -18,5 +18,6 @@ public abstract class RegistryAttachment implements BaseAttachment {
     }
 
     // Global Registry Events
-    public void onRegister(IEventBus modEventBus) {}
+    public void onRegister(IEventBus modEventBus) {
+    }
 }

@@ -17,27 +17,27 @@ public class ImThemes {
 
     public static void applyBessDark() {
         BESS_DARK_IM_THEME.applyTheme(STYLE);
-        GE.CORE_LOG.debug("Applied ImGui theme: "+BESS_DARK_IM_THEME.getName());
+        GE.CORE_LOG.debug("Applied ImGui theme: " + BESS_DARK_IM_THEME.getName());
     }
 
     public static void applyCherry() {
         CHERRY_IM_THEME.applyTheme(STYLE);
-        GE.CORE_LOG.debug("Applied ImGui theme: "+CHERRY_IM_THEME.getName());
+        GE.CORE_LOG.debug("Applied ImGui theme: " + CHERRY_IM_THEME.getName());
     }
 
     public static void applyCatpuccinMocha() {
         CATPUCCIN_MOCHA_IM_THEME.applyTheme(STYLE);
-        GE.CORE_LOG.debug("Applied ImGui theme: "+CATPUCCIN_MOCHA_IM_THEME.getName());
+        GE.CORE_LOG.debug("Applied ImGui theme: " + CATPUCCIN_MOCHA_IM_THEME.getName());
     }
 
     public static void applyModernDark() {
         MODERN_DARK_IM_THEME.applyTheme(STYLE);
-        GE.CORE_LOG.debug("Applied ImGui theme: "+MODERN_DARK_IM_THEME.getName());
+        GE.CORE_LOG.debug("Applied ImGui theme: " + MODERN_DARK_IM_THEME.getName());
     }
 
     public static void applyDark() {
         DARK_IM_THEME.applyTheme(STYLE);
-        GE.CORE_LOG.debug("Applied ImGui theme: "+DARK_IM_THEME.getName());
+        GE.CORE_LOG.debug("Applied ImGui theme: " + DARK_IM_THEME.getName());
     }
 
 }

@@ -3,16 +3,7 @@ package io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.tran
 import org.joml.Vector3f;
 
 @Deprecated
-public class Transform {
-    public final Vector3f position;
-    public final Vector3f rotation;
-    public final Vector3f scale;
-
-    public Transform(Vector3f position, Vector3f rotation, Vector3f scale) {
-        this.position = position;
-        this.rotation = rotation;
-        this.scale = scale;
-    }
+public record Transform(Vector3f position, Vector3f rotation, Vector3f scale) {
 
     public static TransformBuilder builder() {
         return new TransformBuilder();

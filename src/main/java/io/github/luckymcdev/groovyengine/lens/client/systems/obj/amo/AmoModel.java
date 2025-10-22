@@ -2,9 +2,8 @@ package io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.luckymcdev.groovyengine.GE;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.material.Material;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjObject;
+import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -19,12 +18,12 @@ import java.util.Optional;
  * Model class for Animated OBJ files with skeletal animation support.
  */
 public class AmoModel extends ObjModel {
+    private static final Minecraft mc = Minecraft.getInstance();
     private Joint[] joints;
     private Map<String, Animation> animations;
     private Animation currentAnimation;
     private float animationTime;
     private boolean isPlaying;
-    private static final Minecraft mc = Minecraft.getInstance();
 
     public AmoModel(ResourceLocation modelLocation) {
         super(modelLocation);
@@ -68,10 +67,11 @@ public class AmoModel extends ObjModel {
 
     /**
      * Update animation time (call this in your tick/update method).
+     *
      * @param deltaTime Time since last frame in seconds.
      */
     public void updateAnimation(float deltaTime) {
-        if (isPlaying && currentAnimation != null && !mc.isPaused() ) {
+        if (isPlaying && currentAnimation != null && !mc.isPaused()) {
             animationTime += deltaTime;
             currentAnimation.applyAtTime(animationTime, joints);
         }
@@ -79,6 +79,7 @@ public class AmoModel extends ObjModel {
 
     /**
      * Play a specific animation by name.
+     *
      * @param animationName The name of the animation to play.
      */
     public void playAnimation(String animationName) {
@@ -115,20 +116,11 @@ public class AmoModel extends ObjModel {
     }
 
     /**
-     * Set animation time manually.
-     */
-    public void setAnimationTime(float time) {
-        this.animationTime = time;
-        if (currentAnimation != null) {
-            currentAnimation.applyAtTime(time, joints);
-        }
-    }
-
-    /**
      * Render model with skeletal animation.
-     * @param poseStack     The pose stack.
-     * @param renderType    The render type.
-     * @param packedLight   The packed light.
+     *
+     * @param poseStack   The pose stack.
+     * @param renderType  The render type.
+     * @param packedLight The packed light.
      */
     public void renderAnimated(PoseStack poseStack, RenderType renderType, int packedLight) {
         if (objects == null) {
@@ -152,13 +144,15 @@ public class AmoModel extends ObjModel {
 
     /**
      * Render model with skeletal animation using material.
-     * @param poseStack     The pose stack.
-     * @param material      The material.
-     * @param packedLight   The packed light.
+     *
+     * @param poseStack   The pose stack.
+     * @param material    The material.
+     * @param packedLight The packed light.
      */
     public void renderAnimated(PoseStack poseStack, Material material, int packedLight) {
         renderAnimated(poseStack, material.renderType(), packedLight);
     }
+
     /**
      * Get all available animation names.
      */
@@ -179,6 +173,16 @@ public class AmoModel extends ObjModel {
      */
     public float getAnimationTime() {
         return animationTime;
+    }
+
+    /**
+     * Set animation time manually.
+     */
+    public void setAnimationTime(float time) {
+        this.animationTime = time;
+        if (currentAnimation != null) {
+            currentAnimation.applyAtTime(time, joints);
+        }
     }
 
     /**

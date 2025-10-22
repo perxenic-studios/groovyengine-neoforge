@@ -1,6 +1,5 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.core;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.material.Material;
@@ -11,7 +10,6 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.state.Pi
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.state.TransparencyMode;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.state.WriteMask;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;

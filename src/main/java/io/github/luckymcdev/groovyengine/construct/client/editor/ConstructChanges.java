@@ -42,7 +42,7 @@ public class ConstructChanges extends EditorWindow {
      * Stores the current fly speed as a percentage (0-100).
      * Synchronized with {@link ModAttachmentTypes#FLY_SPEED} attachment data.
      */
-    private final int[] flySpeedInt = new int[]{(int)(player.getData(ModAttachmentTypes.FLY_SPEED) * 100)};
+    private final int[] flySpeedInt = new int[]{(int) (player.getData(ModAttachmentTypes.FLY_SPEED) * 100)};
 
     // ===== CONFIGURATION TOGGLES =====
 
@@ -84,7 +84,6 @@ public class ConstructChanges extends EditorWindow {
      * This method is called every frame to update the UI and handle user interactions.
      *
      * @param io the ImGui IO context for handling input/output operations
-     *
      * @see ImGuiIO
      */
     @Override

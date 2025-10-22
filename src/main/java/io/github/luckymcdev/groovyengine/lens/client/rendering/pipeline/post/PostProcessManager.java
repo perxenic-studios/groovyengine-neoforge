@@ -45,7 +45,7 @@ public class PostProcessManager {
     }
 
     public static void addInstances(List<PostProcessShader> instances) {
-        for(PostProcessShader shader : instances) {
+        for (PostProcessShader shader : instances) {
             addInstance(shader);
         }
     }

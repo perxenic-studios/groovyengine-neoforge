@@ -22,6 +22,10 @@ public class ModuleManager {
         modules.addAll(moduleList);
     }
 
+    public static ModuleManager getInstance() {
+        return instance;
+    }
+
     public void runInit(IEventBus eventBus) {
         modules.forEach(module -> module.init(eventBus));
     }
@@ -40,10 +44,6 @@ public class ModuleManager {
 
     public void runRegisterWindows() {
         modules.forEach(Module::registerWindows);
-    }
-
-    public static ModuleManager getInstance() {
-        return instance;
     }
 
 }

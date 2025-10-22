@@ -1,8 +1,8 @@
 package io.github.luckymcdev.groovyengine.core.systems.packs.generator.item;
 
 
-import io.github.luckymcdev.groovyengine.GE;
 import dev.perxenic.acidapi.api.datagen.AcidItemTagProvider;
+import io.github.luckymcdev.groovyengine.GE;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;

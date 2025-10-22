@@ -1,7 +1,6 @@
 package io.github.luckymcdev.groovyengine.construct.core.selection;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -14,9 +13,13 @@ import java.util.Set;
  */
 @OnlyIn(Dist.CLIENT)
 public class Selection {
+    private final Set<BlockPos> selectedBlocks = new HashSet<>();
     private BlockPos pos1 = null;
     private BlockPos pos2 = null;
-    private final Set<BlockPos> selectedBlocks = new HashSet<>();
+
+    public BlockPos getPos1() {
+        return pos1;
+    }
 
     /**
      * Sets the first corner position of the selection.
@@ -26,6 +29,10 @@ public class Selection {
         recalculateSelection();
     }
 
+    public BlockPos getPos2() {
+        return pos2;
+    }
+
     /**
      * Sets the second corner position of the selection.
      */
@@ -33,9 +40,6 @@ public class Selection {
         this.pos2 = pos;
         recalculateSelection();
     }
-
-    public BlockPos getPos1() { return pos1; }
-    public BlockPos getPos2() { return pos2; }
 
     /**
      * Gets a copy of all selected block positions.
@@ -69,6 +73,7 @@ public class Selection {
 
     /**
      * Gets the dimensions of the selection as a formatted string.
+     *
      * @return String in format "XxYxZ"
      */
     public String getDimensions() {
@@ -109,6 +114,7 @@ public class Selection {
 
     /**
      * Expands the selection by a specified amount in all directions.
+     *
      * @param amount The number of blocks to expand by
      */
     public void expand(int amount) {
@@ -134,6 +140,7 @@ public class Selection {
 
     /**
      * Contracts the selection by a specified amount in all directions.
+     *
      * @param amount The number of blocks to contract by
      */
     public void contract(int amount) {
@@ -163,6 +170,7 @@ public class Selection {
 
     /**
      * Shifts the entire selection by a specified offset.
+     *
      * @param offset The offset to shift by
      */
     public void shift(BlockPos offset) {

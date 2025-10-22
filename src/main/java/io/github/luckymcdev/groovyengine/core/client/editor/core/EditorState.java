@@ -6,7 +6,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public enum EditorState {
     /**
-     *  Enables ImGui rendering.
+     * Enables ImGui rendering.
      */
     ENABLED,
     /**

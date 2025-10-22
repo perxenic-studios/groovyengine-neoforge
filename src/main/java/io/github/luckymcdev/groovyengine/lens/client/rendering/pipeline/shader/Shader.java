@@ -14,21 +14,6 @@ public abstract class Shader {
     protected final ShaderType type;
     protected boolean compiled = false;
 
-    public enum ShaderType {
-        VERTEX(GL20.GL_VERTEX_SHADER),
-        FRAGMENT(GL20.GL_FRAGMENT_SHADER),
-        GEOMETRY(org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER),
-        TESS_CONTROL(org.lwjgl.opengl.GL40.GL_TESS_CONTROL_SHADER),
-        TESS_EVALUATION(org.lwjgl.opengl.GL40.GL_TESS_EVALUATION_SHADER),
-        COMPUTE(org.lwjgl.opengl.GL43.GL_COMPUTE_SHADER);
-
-        public final int glType;
-
-        ShaderType(int glType) {
-            this.glType = glType;
-        }
-    }
-
     protected Shader(ShaderType type, String source) {
         this.type = type;
         this.shaderId = GlStateManager.glCreateShader(type.glType);
@@ -114,6 +99,21 @@ public abstract class Shader {
     public void dispose() {
         if (shaderId != 0) {
             GlStateManager.glDeleteShader(shaderId);
+        }
+    }
+
+    public enum ShaderType {
+        VERTEX(GL20.GL_VERTEX_SHADER),
+        FRAGMENT(GL20.GL_FRAGMENT_SHADER),
+        GEOMETRY(org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER),
+        TESS_CONTROL(org.lwjgl.opengl.GL40.GL_TESS_CONTROL_SHADER),
+        TESS_EVALUATION(org.lwjgl.opengl.GL40.GL_TESS_EVALUATION_SHADER),
+        COMPUTE(org.lwjgl.opengl.GL43.GL_COMPUTE_SHADER);
+
+        public final int glType;
+
+        ShaderType(int glType) {
+            this.glType = glType;
         }
     }
 }

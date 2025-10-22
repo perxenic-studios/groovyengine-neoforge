@@ -191,8 +191,7 @@ public class DemoWindows {
                     Field field = ImIcons.class.getField(iconName);
                     Object iconObj = field.get(null);
 
-                    if (iconObj instanceof ImIcon) {
-                        ImIcon icon = (ImIcon) iconObj;
+                    if (iconObj instanceof ImIcon icon) {
 
                         if (iconCount % columns != 0) {
                             ImGe.sameLine();

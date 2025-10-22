@@ -1,10 +1,10 @@
 package io.github.luckymcdev.groovyengine.threads.core.scripting.core;
 
-import io.github.luckymcdev.groovyengine.GE;
-import io.github.luckymcdev.groovyengine.threads.core.scripting.event.ScriptEvent;
 import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
+import io.github.luckymcdev.groovyengine.GE;
+import io.github.luckymcdev.groovyengine.threads.core.scripting.event.ScriptEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;

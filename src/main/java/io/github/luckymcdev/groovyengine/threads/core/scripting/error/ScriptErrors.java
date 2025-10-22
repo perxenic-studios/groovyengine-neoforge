@@ -3,7 +3,6 @@ package io.github.luckymcdev.groovyengine.threads.core.scripting.error;
 import io.github.luckymcdev.groovyengine.threads.client.screen.ThreadsErrorScreen;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -13,18 +12,6 @@ import java.util.List;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ScriptErrors {
-
-    public static class ErrorEntry {
-        public final String scriptName;
-        public final String message;
-        public final String description;
-
-        public ErrorEntry(String scriptName, String message, String description) {
-            this.scriptName = scriptName;
-            this.message = message;
-            this.description = description;
-        }
-    }
 
     private static final List<ErrorEntry> errors = new ArrayList<>();
 
@@ -47,7 +34,7 @@ public class ScriptErrors {
     @SubscribeEvent
     private static void handleErrors(ClientTickEvent.Pre event) {
         Minecraft mc = Minecraft.getInstance();
-        if(hasErrors()) {
+        if (hasErrors()) {
             mc.setScreen(new ThreadsErrorScreen());
         }
     }
@@ -66,5 +53,8 @@ public class ScriptErrors {
         }
 
         return "See logs for details.";
+    }
+
+    public record ErrorEntry(String scriptName, String message, String description) {
     }
 }

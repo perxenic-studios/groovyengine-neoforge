@@ -22,6 +22,7 @@ public class ShaderUtils {
 
     /**
      * Binds the main render target's color texture to a specific texture unit
+     *
      * @param textureUnit The texture unit (0-31)
      */
     public static void bindMainFramebuffer(int textureUnit) {
@@ -62,19 +63,20 @@ public class ShaderUtils {
 
     /**
      * Sets common uniforms that most post-processing shaders need
+     *
      * @param shader The shader program to set uniforms on
      */
     public static void setCommonUniforms(ShaderProgram shader) {
         shader.setUniform("screenTexture", 0);
         shader.setUniform("time", getTime());
-        shader.setUniform("resolution", (float)getScreenWidth(), (float)getScreenHeight());
+        shader.setUniform("resolution", (float) getScreenWidth(), (float) getScreenHeight());
     }
 
     /**
      * Gets the current game time in seconds (loops every ~27 hours)
      */
     public static float getTime() {
-        return (float)(System.currentTimeMillis() % 100000) / 1000.0f;
+        return (float) (System.currentTimeMillis() % 100000) / 1000.0f;
     }
 
     /**
@@ -86,7 +88,8 @@ public class ShaderUtils {
 
     /**
      * Creates a simple render target for post-processing
-     * @param width Width of the render target
+     *
+     * @param width  Width of the render target
      * @param height Height of the render target
      * @return The OpenGL framebuffer ID
      */
@@ -118,6 +121,14 @@ public class ShaderUtils {
         GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 
         return framebufferId;
+    }
+
+    /**
+     * Functional interface for setting custom uniforms
+     */
+    @FunctionalInterface
+    public interface UniformSetter {
+        void setUniforms(ShaderProgram shader);
     }
 
     /**
@@ -154,8 +165,8 @@ public class ShaderUtils {
          */
         public static void setScreenUniforms(ShaderProgram shader) {
             shader.setUniform(SCREEN_TEXTURE, 0);
-            shader.setUniform(RESOLUTION, (float)getScreenWidth(), (float)getScreenHeight());
-            shader.setUniform(ASPECT_RATIO, (float)getScreenWidth() / (float)getScreenHeight());
+            shader.setUniform(RESOLUTION, (float) getScreenWidth(), (float) getScreenHeight());
+            shader.setUniform(ASPECT_RATIO, (float) getScreenWidth() / (float) getScreenHeight());
         }
 
         /**
@@ -167,17 +178,17 @@ public class ShaderUtils {
             var pos = camera.getPosition();
 
             // Position
-            shader.setUniform(CAMERA_POS, (float)pos.x, (float)pos.y, (float)pos.z);
+            shader.setUniform(CAMERA_POS, (float) pos.x, (float) pos.y, (float) pos.z);
 
             // Direction vectors
             var lookVec = camera.getLookVector();
-            shader.setUniform(LOOK_VECTOR, (float)lookVec.x, (float)lookVec.y, (float)lookVec.z);
+            shader.setUniform(LOOK_VECTOR, lookVec.x, lookVec.y, lookVec.z);
 
             var upVec = camera.getUpVector();
-            shader.setUniform(UP_VECTOR, (float)upVec.x, (float)upVec.y, (float)upVec.z);
+            shader.setUniform(UP_VECTOR, upVec.x, upVec.y, upVec.z);
 
             var leftVec = camera.getLeftVector();
-            shader.setUniform(LEFT_VECTOR, (float)leftVec.x, (float)leftVec.y, (float)leftVec.z);
+            shader.setUniform(LEFT_VECTOR, leftVec.x, leftVec.y, leftVec.z);
         }
 
         /**
@@ -192,11 +203,11 @@ public class ShaderUtils {
 
             // FOV in radians
             float partialTick = mc.getTimer().getGameTimeDeltaPartialTick(false);
-            float fov = (float)Math.toRadians(mc.gameRenderer.getFov(mc.gameRenderer.getMainCamera(), partialTick, true));
+            float fov = (float) Math.toRadians(mc.gameRenderer.getFov(mc.gameRenderer.getMainCamera(), partialTick, true));
             shader.setUniform(FOV, fov);
 
             // Aspect ratio
-            shader.setUniform(ASPECT_RATIO, (float)mc.getWindow().getWidth() / (float)mc.getWindow().getHeight());
+            shader.setUniform(ASPECT_RATIO, (float) mc.getWindow().getWidth() / (float) mc.getWindow().getHeight());
         }
 
         /**
@@ -241,7 +252,7 @@ public class ShaderUtils {
             Minecraft mc = Minecraft.getInstance();
             double mouseX = mc.mouseHandler.xpos() / mc.getWindow().getScreenWidth();
             double mouseY = mc.mouseHandler.ypos() / mc.getWindow().getScreenHeight();
-            shader.setUniform(MOUSE, (float)mouseX, (float)mouseY);
+            shader.setUniform(MOUSE, (float) mouseX, (float) mouseY);
         }
 
         /**
@@ -260,7 +271,7 @@ public class ShaderUtils {
      * Helper class for managing post-processing passes
      */
     public static class PostProcessHelper {
-        private ShaderProgram shader;
+        private final ShaderProgram shader;
 
         public PostProcessHelper(ShaderProgram shader) {
             this.shader = shader;
@@ -275,6 +286,7 @@ public class ShaderUtils {
 
         /**
          * Execute a post-processing pass
+         *
          * @param bindMainFramebuffer Whether to automatically bind the main framebuffer texture
          */
         public void execute(boolean bindMainFramebuffer) {
@@ -301,14 +313,6 @@ public class ShaderUtils {
             shader.drawFullscreenQuad();
             ShaderProgram.unbind();
         }
-    }
-
-    /**
-     * Functional interface for setting custom uniforms
-     */
-    @FunctionalInterface
-    public interface UniformSetter {
-        void setUniforms(ShaderProgram shader);
     }
 
     /**

@@ -49,12 +49,21 @@ public abstract class BlockAttachment implements BaseAttachment {
     }
 
 
-    public void onPlace(LevelAccessor level, BlockPos pos, BlockState state, Player player) {}
-    public void onBreak(LevelAccessor level, BlockPos pos, BlockState state, Player player) {}
-    public InteractionResult onUse(BlockState state, LevelAccessor level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {return InteractionResult.PASS; }
+    public void onPlace(LevelAccessor level, BlockPos pos, BlockState state, Player player) {
+    }
 
-    public void onAttack(BlockState state, LevelAccessor level, BlockPos pos, Player player) {}
-    public void onNeighborChanged(BlockState state, LevelAccessor level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean isMoving) {}
+    public void onBreak(LevelAccessor level, BlockPos pos, BlockState state, Player player) {
+    }
+
+    public InteractionResult onUse(BlockState state, LevelAccessor level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        return InteractionResult.PASS;
+    }
+
+    public void onAttack(BlockState state, LevelAccessor level, BlockPos pos, Player player) {
+    }
+
+    public void onNeighborChanged(BlockState state, LevelAccessor level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean isMoving) {
+    }
 
 
 }

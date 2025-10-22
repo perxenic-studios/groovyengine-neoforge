@@ -100,11 +100,11 @@ public class ObjObject {
         this.scale = scale;
     }
 
-    public void setScale(float x, float y, float z) {
-        this.scale.set(x, y, z);
-    }
-
     public void setScale(float uniform) {
         this.scale.set(uniform, uniform, uniform);
+    }
+
+    public void setScale(float x, float y, float z) {
+        this.scale.set(x, y, z);
     }
 }

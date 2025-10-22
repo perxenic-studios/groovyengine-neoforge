@@ -4,7 +4,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Defines a pattern for block placement within a selection.
@@ -13,7 +16,8 @@ public interface BlockPattern {
 
     /**
      * Gets the block state for a specific position within the pattern.
-     * @param pos The target position
+     *
+     * @param pos    The target position
      * @param origin The origin point of the pattern
      * @param random Random instance for probabilistic patterns
      * @return The block state to place at the given position
@@ -157,7 +161,7 @@ public interface BlockPattern {
 
             if (range == 0) return bottomBlock;
 
-            float normalizedY = (float)(pos.getY() - minY) / range;
+            float normalizedY = (float) (pos.getY() - minY) / range;
 
             // Use random threshold to create gradient effect
             return random.nextFloat() < normalizedY ? topBlock : bottomBlock;
@@ -188,14 +192,13 @@ public interface BlockPattern {
             float sum = 0;
 
             for (int i = 0; i < blocks.length; i += 2) {
-                if (!(blocks[i] instanceof BlockState)) {
+                if (!(blocks[i] instanceof BlockState state)) {
                     throw new IllegalArgumentException("Even arguments must be BlockState instances");
                 }
                 if (!(blocks[i + 1] instanceof Number)) {
                     throw new IllegalArgumentException("Odd arguments must be numeric weights");
                 }
 
-                BlockState state = (BlockState) blocks[i];
                 float weight = ((Number) blocks[i + 1]).floatValue();
 
                 if (weight < 0) {
@@ -204,6 +207,25 @@ public interface BlockPattern {
 
                 weightedBlocks.add(new WeightedBlock(state, weight));
                 sum += weight;
+            }
+
+            this.totalWeight = sum;
+
+            if (Math.abs(totalWeight - 100.0f) > 0.001f) {
+                System.out.println("Weights sum to " + totalWeight + ", normalizing to 100%");
+            }
+        }
+
+        public WeightedPattern(Map<BlockState, Float> blockWeights) {
+            this.weightedBlocks = new ArrayList<>();
+            float sum = 0;
+
+            for (Map.Entry<BlockState, Float> entry : blockWeights.entrySet()) {
+                if (entry.getValue() < 0) {
+                    throw new IllegalArgumentException("Weights cannot be negative");
+                }
+                weightedBlocks.add(new WeightedBlock(entry.getKey(), entry.getValue()));
+                sum += entry.getValue();
             }
 
             this.totalWeight = sum;
@@ -228,25 +250,6 @@ public interface BlockPattern {
             }
 
             return new WeightedPattern(blockStates);
-        }
-
-        public WeightedPattern(Map<BlockState, Float> blockWeights) {
-            this.weightedBlocks = new ArrayList<>();
-            float sum = 0;
-
-            for (Map.Entry<BlockState, Float> entry : blockWeights.entrySet()) {
-                if (entry.getValue() < 0) {
-                    throw new IllegalArgumentException("Weights cannot be negative");
-                }
-                weightedBlocks.add(new WeightedBlock(entry.getKey(), entry.getValue()));
-                sum += entry.getValue();
-            }
-
-            this.totalWeight = sum;
-
-            if (Math.abs(totalWeight - 100.0f) > 0.001f) {
-                System.out.println("Weights sum to " + totalWeight + ", normalizing to 100%");
-            }
         }
 
         @Override
@@ -340,8 +343,6 @@ public interface BlockPattern {
         private final int stripeWidth;
         private final Axis axis;
 
-        public enum Axis { X, Y, Z }
-
         public StripePattern(BlockState primary, BlockState secondary, int stripeWidth, Axis axis) {
             this.primary = primary;
             this.secondary = secondary;
@@ -359,5 +360,7 @@ public interface BlockPattern {
 
             return (coord / stripeWidth) % 2 == 0 ? primary : secondary;
         }
+
+        public enum Axis {X, Y, Z}
     }
 }

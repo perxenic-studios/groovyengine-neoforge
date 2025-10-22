@@ -19,23 +19,20 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 public class SelectionRenderer {
 
     private static final Minecraft mc = Minecraft.getInstance();
-    private Selection selection;
-
     // Colors for the selection box (RGBA, 0-1 range)
     private static final float POS1_RED = 1.0f;
     private static final float POS1_GREEN = 0.3f;
     private static final float POS1_BLUE = 0.3f;
     private static final float POS1_ALPHA = 0.4f;
-
     private static final float POS2_RED = 0.3f;
     private static final float POS2_GREEN = 0.3f;
     private static final float POS2_BLUE = 1.0f;
     private static final float POS2_ALPHA = 0.4f;
-
     private static final float SELECTION_RED = 0.3f;
     private static final float SELECTION_GREEN = 1.0f;
     private static final float SELECTION_BLUE = 0.3f;
     private static final float SELECTION_ALPHA = 0.4f;
+    private Selection selection;
 
     public SelectionRenderer(Selection selection) {
         this.selection = selection;

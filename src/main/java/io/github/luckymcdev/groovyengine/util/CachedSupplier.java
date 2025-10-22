@@ -16,6 +16,10 @@ public class CachedSupplier<T> implements Supplier<T> {
         this.delegate = delegate;
     }
 
+    public static <T> CachedSupplier<T> cache(Supplier<T> delegate) {
+        return new CachedSupplier<>(delegate);
+    }
+
     @Override
     public T get() {
         if (!this.isCached()) {
@@ -27,9 +31,5 @@ public class CachedSupplier<T> implements Supplier<T> {
 
     public boolean isCached() {
         return this.cached;
-    }
-
-    public static <T> CachedSupplier<T> cache(Supplier<T> delegate) {
-        return new CachedSupplier<>(delegate);
     }
 }

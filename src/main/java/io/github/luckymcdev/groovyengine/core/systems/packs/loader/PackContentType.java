@@ -12,10 +12,6 @@ public record PackContentType(boolean data, boolean resources) {
 
     private static final PackContentType INVALID = new PackContentType(false, false);
 
-    public boolean isFor(PackType type) {
-        return (type == PackType.SERVER_DATA && this.data) || (type == PackType.CLIENT_RESOURCES && this.resources);
-    }
-
     public static PackContentType from(Path filePath) {
         // Archive
         if (Files.isRegularFile(filePath)) {
@@ -23,8 +19,7 @@ public record PackContentType(boolean data, boolean resources) {
                 if (Files.isRegularFile(fs.getPath("pack.mcmeta"))) {
                     return new PackContentType(Files.isDirectory(fs.getPath("data/")), Files.isDirectory(fs.getPath("assets/")));
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 // no-op
             }
         }
@@ -48,5 +43,9 @@ public record PackContentType(boolean data, boolean resources) {
             }
         }
         return INVALID;
+    }
+
+    public boolean isFor(PackType type) {
+        return (type == PackType.SERVER_DATA && this.data) || (type == PackType.CLIENT_RESOURCES && this.resources);
     }
 }

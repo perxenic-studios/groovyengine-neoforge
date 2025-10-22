@@ -10,8 +10,6 @@ import java.util.List;
 @Deprecated
 public class ChupacabraAnimations {
 
-    private static AnimationController controller;
-
     // Animation names
     public static final String IDLE_BREATHING = "idle_breathing";
     public static final String IDLE_LOOK_AROUND = "idle_look_around";
@@ -23,6 +21,7 @@ public class ChupacabraAnimations {
     public static final String SNIFF = "sniff";
     public static final String CROUCH = "crouch";
     public static final String JUMP = "jump";
+    private static AnimationController controller;
 
     public static void initialize(ObjModel chupacabraModel) {
         controller = new AnimationController(chupacabraModel);
@@ -535,9 +534,9 @@ public class ChupacabraAnimations {
 
         // Register all animations
         controller.addAnimations(List.of(
-                idleBreathing, idleLookAround,
-                walk, run, attackBite, howl,
-                tailWag, sniff, crouch, jump
+                        idleBreathing, idleLookAround,
+                        walk, run, attackBite, howl,
+                        tailWag, sniff, crouch, jump
                 )
         );
 
@@ -548,6 +547,7 @@ public class ChupacabraAnimations {
 
     /**
      * Update the animation. Call this every frame/tick.
+     *
      * @param deltaTime Time since last update (in seconds or ticks)
      */
     public static void update(float deltaTime) {

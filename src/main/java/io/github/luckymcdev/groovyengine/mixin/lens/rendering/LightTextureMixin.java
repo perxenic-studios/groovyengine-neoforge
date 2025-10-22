@@ -25,45 +25,6 @@ import java.util.Map;
 @OnlyIn(Dist.CLIENT)
 public abstract class LightTextureMixin {
 
-    @Shadow
-    private boolean updateLightTexture;
-
-    @Shadow
-    @Final
-    private Minecraft minecraft;
-
-    @Shadow
-    protected abstract float getDarknessGamma(float partialTick);
-
-    @Shadow
-    protected abstract float calculateDarknessScale(LivingEntity entity, float gamma, float partialTick);
-
-    @Shadow
-    public static float getBrightness(DimensionType dimensionType, int lightLevel) {
-        return 0;
-    }
-    @Shadow
-    @Final
-    private DynamicTexture lightTexture;
-
-    @Shadow
-    private float blockLightRedFlicker;
-
-    @Shadow
-    private static void clampColor(Vector3f color) {
-    }
-
-    @Shadow
-    @Final
-    private GameRenderer renderer;
-
-    @Shadow
-    protected abstract float notGamma(float value);
-
-    @Shadow
-    @Final
-    private NativeImage lightPixels;
-
     // Block color mapping - RGB values from 0.0 to 1.0
     private static final Map<Block, Vector3f> BLOCK_COLORS = new HashMap<>();
 
@@ -103,6 +64,43 @@ public abstract class LightTextureMixin {
 
         BLOCK_COLORS.put(Blocks.COPPER_BULB, new Vector3f(1.0f, 0.6f, 0.3f));
     }
+
+    @Shadow
+    private boolean updateLightTexture;
+    @Shadow
+    @Final
+    private Minecraft minecraft;
+    @Shadow
+    @Final
+    private DynamicTexture lightTexture;
+    @Shadow
+    private float blockLightRedFlicker;
+    @Shadow
+    @Final
+    private GameRenderer renderer;
+    @Shadow
+    @Final
+    private NativeImage lightPixels;
+    // Cache the last calculated color to reduce flickering
+    private Vector3f lastCalculatedColor = null;
+
+    @Shadow
+    public static float getBrightness(DimensionType dimensionType, int lightLevel) {
+        return 0;
+    }
+
+    @Shadow
+    private static void clampColor(Vector3f color) {
+    }
+
+    @Shadow
+    protected abstract float getDarknessGamma(float partialTick);
+
+    @Shadow
+    protected abstract float calculateDarknessScale(LivingEntity entity, float gamma, float partialTick);
+
+    @Shadow
+    protected abstract float notGamma(float value);
 
     /**
      * Get the color tint for a light source block
@@ -148,7 +146,7 @@ public abstract class LightTextureMixin {
 
                     if (BLOCK_COLORS.containsKey(block)) {
                         Vector3f color = BLOCK_COLORS.get(block);
-                        float distance = (float) Math.sqrt(x*x + y*y + z*z);
+                        float distance = (float) Math.sqrt(x * x + y * y + z * z);
                         float weight = Math.max(0.1f, 1.0f / (1.0f + distance * 0.5f)); // Distance-based weighting
 
                         colorWeights.put(color, colorWeights.getOrDefault(color, 0.0f) + weight);
@@ -180,9 +178,6 @@ public abstract class LightTextureMixin {
         return targetColor;
     }
 
-    // Cache the last calculated color to reduce flickering
-    private Vector3f lastCalculatedColor = null;
-
     /**
      * @author
      * @reason Custom block light coloring
@@ -190,7 +185,7 @@ public abstract class LightTextureMixin {
     @Overwrite
     public void updateLightTexture(float partialTicks) {
 
-        if(!RenderingDebuggingWindow.lightingChangesEnabled) {
+        if (!RenderingDebuggingWindow.lightingChangesEnabled) {
             _UpdateLightTexture(partialTicks);
             return; // This is crucial - exit early to prevent custom lighting code from running
         }
@@ -208,7 +203,7 @@ public abstract class LightTextureMixin {
                     skyBrightness = skyDarken * 0.95F + 0.05F;
                 }
 
-                float darknessEffectScale = ((Double)this.minecraft.options.darknessEffectScale().get()).floatValue();
+                float darknessEffectScale = this.minecraft.options.darknessEffectScale().get().floatValue();
                 float darknessGamma = this.getDarknessGamma(partialTicks) * darknessEffectScale;
                 float darknessScale = this.calculateDarknessScale(this.minecraft.player, darknessGamma, partialTicks) * darknessEffectScale;
                 float waterVision = this.minecraft.player.getWaterVision();
@@ -228,8 +223,8 @@ public abstract class LightTextureMixin {
                 // Get localized light color (cached and smoothed)
                 Vector3f dominantLightColor = groovyengine$getLocalizedLightColor(clientLevel, 0);
 
-                for(int skyLightIndex = 0; skyLightIndex < 16; ++skyLightIndex) {
-                    for(int blockLightIndex = 0; blockLightIndex < 16; ++blockLightIndex) {
+                for (int skyLightIndex = 0; skyLightIndex < 16; ++skyLightIndex) {
+                    for (int blockLightIndex = 0; blockLightIndex < 16; ++blockLightIndex) {
                         float skyLightValue = getBrightness(clientLevel.dimensionType(), skyLightIndex) * skyBrightness;
                         float blockLightValue = getBrightness(clientLevel.dimensionType(), blockLightIndex) * blockLightFactor;
 
@@ -328,7 +323,7 @@ public abstract class LightTextureMixin {
                     f1 = f * 0.95F + 0.05F;
                 }
 
-                float f2 = ((Double)this.minecraft.options.darknessEffectScale().get()).floatValue();
+                float f2 = this.minecraft.options.darknessEffectScale().get().floatValue();
                 float f3 = this.getDarknessGamma(partialTicks) * f2;
                 float f4 = this.calculateDarknessScale(this.minecraft.player, f3, partialTicks) * f2;
                 float f6 = this.minecraft.player.getWaterVision();
@@ -345,8 +340,8 @@ public abstract class LightTextureMixin {
                 float f7 = this.blockLightRedFlicker + 1.5F;
                 Vector3f vector3f1 = new Vector3f();
 
-                for(int i = 0; i < 16; ++i) {
-                    for(int j = 0; j < 16; ++j) {
+                for (int i = 0; i < 16; ++i) {
+                    for (int j = 0; j < 16; ++j) {
                         float f8 = getBrightness(clientlevel.dimensionType(), i) * f1;
                         float f9 = getBrightness(clientlevel.dimensionType(), j) * f7;
                         float f10 = f9 * ((f9 * 0.6F + 0.4F) * 0.6F + 0.4F);
@@ -385,16 +380,16 @@ public abstract class LightTextureMixin {
                             clampColor(vector3f1);
                         }
 
-                        float f14 = ((Double)this.minecraft.options.gamma().get()).floatValue();
+                        float f14 = this.minecraft.options.gamma().get().floatValue();
                         Vector3f vector3f4 = new Vector3f(this.notGamma(vector3f1.x), this.notGamma(vector3f1.y), this.notGamma(vector3f1.z));
                         vector3f1.lerp(vector3f4, Math.max(0.0F, f14 - f3));
                         vector3f1.lerp(new Vector3f(0.75F, 0.75F, 0.75F), 0.04F);
                         clampColor(vector3f1);
                         vector3f1.mul(255.0F);
                         int j1 = 255;
-                        int k = (int)vector3f1.x();
-                        int l = (int)vector3f1.y();
-                        int i1 = (int)vector3f1.z();
+                        int k = (int) vector3f1.x();
+                        int l = (int) vector3f1.y();
+                        int i1 = (int) vector3f1.z();
                         this.lightPixels.setPixelRGBA(j, i, -16777216 | i1 << 16 | l << 8 | k);
                     }
                 }

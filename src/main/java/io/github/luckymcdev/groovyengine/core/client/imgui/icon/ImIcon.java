@@ -1,7 +1,5 @@
 package io.github.luckymcdev.groovyengine.core.client.imgui.icon;
 
-import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
-
 public class ImIcon {
     private final char unicode;
     private final String name;

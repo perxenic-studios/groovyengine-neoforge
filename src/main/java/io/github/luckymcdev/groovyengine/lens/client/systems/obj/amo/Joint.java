@@ -10,10 +10,10 @@ import org.joml.Vector3f;
 public class Joint {
     private final String name;
     private final int parentIndex;
-    private Vector3f position;
-    private Quaternionf rotation;
-    private Matrix4f localTransform;
-    private Matrix4f worldTransform;
+    private final Vector3f position;
+    private final Quaternionf rotation;
+    private final Matrix4f localTransform;
+    private final Matrix4f worldTransform;
 
     public Joint(String name, int parentIndex) {
         this.name = name;

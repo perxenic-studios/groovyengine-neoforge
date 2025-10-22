@@ -18,16 +18,75 @@ import java.util.List;
 import java.util.Map;
 
 public class ShaderProgram {
-    private int programId;
-    private final List<Shader> attachedShaders;
-    private final Map<String, Integer> uniformLocations;
     private static int quadVAO = -1;
     private static int quadVBO = -1;
+    private final List<Shader> attachedShaders;
+    private final Map<String, Integer> uniformLocations;
+    private int programId;
 
     public ShaderProgram() {
         this.programId = GlStateManager.glCreateProgram();
         this.attachedShaders = new ArrayList<>();
         this.uniformLocations = new HashMap<>();
+    }
+
+    /**
+     * Unbind the current shader program
+     */
+    public static void unbind() {
+        RenderSystem.assertOnRenderThread();
+        GlStateManager._glUseProgram(0);
+    }
+
+    /**
+     * Initialize the fullscreen quad (only done once)
+     */
+    private static void initFullscreenQuad() {
+        // Vertices for a fullscreen quad using triangle strip
+        // Position (x, y) and UV (u, v)
+        float[] quadVertices = {
+                -1.0f, 1.0f, 0.0f, 1.0f,  // Top-left
+                -1.0f, -1.0f, 0.0f, 0.0f,  // Bottom-left
+                1.0f, 1.0f, 1.0f, 1.0f,  // Top-right
+                1.0f, -1.0f, 1.0f, 0.0f   // Bottom-right
+        };
+
+        quadVAO = GlStateManager._glGenVertexArrays();
+        quadVBO = GlStateManager._glGenBuffers();
+
+        GlStateManager._glBindVertexArray(quadVAO);
+        GlStateManager._glBindBuffer(GL20.GL_ARRAY_BUFFER, quadVBO);
+
+        // Convert float array to ByteBuffer
+        java.nio.ByteBuffer buffer = org.lwjgl.BufferUtils.createByteBuffer(quadVertices.length * 4);
+        buffer.asFloatBuffer().put(quadVertices);
+        buffer.rewind();
+
+        GlStateManager._glBufferData(GL20.GL_ARRAY_BUFFER, buffer, GL20.GL_STATIC_DRAW);
+
+        // Position attribute
+        GlStateManager._enableVertexAttribArray(0);
+        GlStateManager._vertexAttribPointer(0, 2, GL11.GL_FLOAT, false, 4 * 4, 0);
+
+        // UV attribute
+        GlStateManager._enableVertexAttribArray(1);
+        GlStateManager._vertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 4 * 4, 2 * 4);
+
+        GlStateManager._glBindVertexArray(0);
+    }
+
+    /**
+     * Clean up the fullscreen quad resources (call on shutdown)
+     */
+    public static void disposeQuad() {
+        if (quadVAO != -1) {
+            GlStateManager._glDeleteVertexArrays(quadVAO);
+            quadVAO = -1;
+        }
+        if (quadVBO != -1) {
+            GlStateManager._glDeleteBuffers(quadVBO);
+            quadVBO = -1;
+        }
     }
 
     /**
@@ -94,14 +153,6 @@ public class ShaderProgram {
     public void bind() {
         RenderSystem.assertOnRenderThread();
         GlStateManager._glUseProgram(programId);
-    }
-
-    /**
-     * Unbind the current shader program
-     */
-    public static void unbind() {
-        RenderSystem.assertOnRenderThread();
-        GlStateManager._glUseProgram(0);
     }
 
     /**
@@ -191,43 +242,6 @@ public class ShaderProgram {
     }
 
     /**
-     * Initialize the fullscreen quad (only done once)
-     */
-    private static void initFullscreenQuad() {
-        // Vertices for a fullscreen quad using triangle strip
-        // Position (x, y) and UV (u, v)
-        float[] quadVertices = {
-                -1.0f,  1.0f,  0.0f, 1.0f,  // Top-left
-                -1.0f, -1.0f,  0.0f, 0.0f,  // Bottom-left
-                1.0f,  1.0f,  1.0f, 1.0f,  // Top-right
-                1.0f, -1.0f,  1.0f, 0.0f   // Bottom-right
-        };
-
-        quadVAO = GlStateManager._glGenVertexArrays();
-        quadVBO = GlStateManager._glGenBuffers();
-
-        GlStateManager._glBindVertexArray(quadVAO);
-        GlStateManager._glBindBuffer(GL20.GL_ARRAY_BUFFER, quadVBO);
-
-        // Convert float array to ByteBuffer
-        java.nio.ByteBuffer buffer = org.lwjgl.BufferUtils.createByteBuffer(quadVertices.length * 4);
-        buffer.asFloatBuffer().put(quadVertices);
-        buffer.rewind();
-
-        GlStateManager._glBufferData(GL20.GL_ARRAY_BUFFER, buffer, GL20.GL_STATIC_DRAW);
-
-        // Position attribute
-        GlStateManager._enableVertexAttribArray(0);
-        GlStateManager._vertexAttribPointer(0, 2, GL11.GL_FLOAT, false, 4 * 4, 0);
-
-        // UV attribute
-        GlStateManager._enableVertexAttribArray(1);
-        GlStateManager._vertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 4 * 4, 2 * 4);
-
-        GlStateManager._glBindVertexArray(0);
-    }
-
-    /**
      * Clean up shader program and attached shaders
      */
     public void dispose() {
@@ -240,20 +254,6 @@ public class ShaderProgram {
 
             GlStateManager.glDeleteProgram(programId);
             programId = 0;
-        }
-    }
-
-    /**
-     * Clean up the fullscreen quad resources (call on shutdown)
-     */
-    public static void disposeQuad() {
-        if (quadVAO != -1) {
-            GlStateManager._glDeleteVertexArrays(quadVAO);
-            quadVAO = -1;
-        }
-        if (quadVBO != -1) {
-            GlStateManager._glDeleteBuffers(quadVBO);
-            quadVBO = -1;
         }
     }
 

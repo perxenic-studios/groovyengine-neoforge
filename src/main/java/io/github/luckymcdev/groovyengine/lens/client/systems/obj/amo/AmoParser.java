@@ -2,10 +2,10 @@ package io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo;
 
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjParser;
 import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.world.phys.Vec2;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.joml.Vector4i;
-import net.minecraft.world.phys.Vec2;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 public class AmoParser extends ObjParser {
-    private List<Vector4i> vertexJoints = new ArrayList<>();
-    private List<Vector4f> vertexWeights = new ArrayList<>();
-    private List<Joint> joints = new ArrayList<>();
-    private Map<String, Animation> animations = new HashMap<>();
+    private final List<Vector4i> vertexJoints = new ArrayList<>();
+    private final List<Vector4f> vertexWeights = new ArrayList<>();
+    private final List<Joint> joints = new ArrayList<>();
+    private final Map<String, Animation> animations = new HashMap<>();
     private Animation currentAnimation;
 
     @Override

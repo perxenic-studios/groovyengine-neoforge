@@ -20,6 +20,7 @@ public abstract class CoreShader {
 
     // Force subclasses to expose a static INSTANCE
     public abstract ResourceLocation getShaderLocation();
+
     public abstract VertexFormat getVertexFormat();
 
     // Called after shader is created and assigned

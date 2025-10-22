@@ -17,13 +17,20 @@ public abstract class ClientAttachment implements BaseAttachment {
     }
 
     // Client-side Events
-    public void onClientTick() {}
+    public void onClientTick() {
+    }
 
     // Input Events
-    public void onKeyPress(int key, int action, int modifiers) {}
-    public void onMouseClick(int button, int action, int modifiers) {}
-    public void onMouseScroll(double horizontal, double vertical) {}
+    public void onKeyPress(int key, int action, int modifiers) {
+    }
+
+    public void onMouseClick(int button, int action, int modifiers) {
+    }
+
+    public void onMouseScroll(double horizontal, double vertical) {
+    }
 
     // Client-only lifecycle
-    public void onClientStart() {}
+    public void onClientStart() {
+    }
 }

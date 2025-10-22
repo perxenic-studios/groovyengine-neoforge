@@ -103,6 +103,7 @@ public class AnimationController {
     public void resetTransforms() {
         resetObjectTransforms();
     }
+
     /**
      * Set playback speed (1.0 = normal speed).
      */
@@ -112,6 +113,7 @@ public class AnimationController {
 
     /**
      * Update animation (call this every frame/tick).
+     *
      * @param deltaTime Time since last update in seconds or ticks
      */
     public void update(float deltaTime) {
@@ -149,9 +151,9 @@ public class AnimationController {
             ObjObject obj = model.getObject(entry.getKey());
             if (obj != null) {
                 KeyframeTransform transform = entry.getValue();
-                obj.setPosition(transform.position);
-                obj.setRotation(transform.rotation);
-                obj.setScale(transform.scale);
+                obj.setPosition(transform.position());
+                obj.setRotation(transform.rotation());
+                obj.setScale(transform.scale());
             }
         }
     }

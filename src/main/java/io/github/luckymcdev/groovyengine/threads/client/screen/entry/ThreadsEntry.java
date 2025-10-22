@@ -25,14 +25,14 @@ public class ThreadsEntry extends ObjectSelectionList.Entry<ThreadsEntry> {
         int lineHeight = 12;
         int currentY = y;
 
-        String scriptText = "Script: " + error.scriptName;
+        String scriptText = "Script: " + error.scriptName();
         if (font.width(scriptText) > textWidth) {
             scriptText = font.plainSubstrByWidth(scriptText, textWidth - font.width("...")) + "...";
         }
         guiGraphics.drawString(font, scriptText, x + 5, currentY, 0xFFFF5555, false);
         currentY += lineHeight;
 
-        String messageText = "Message: " + error.message;
+        String messageText = "Message: " + error.message();
         var messageLines = font.split(Component.literal(messageText), textWidth);
         for (var line : messageLines) {
             if (currentY + lineHeight > y + height) break; // Don't go beyond entry bounds
@@ -40,7 +40,7 @@ public class ThreadsEntry extends ObjectSelectionList.Entry<ThreadsEntry> {
             currentY += lineHeight;
         }
 
-        String descText = "Fix: " + error.description;
+        String descText = "Fix: " + error.description();
         var descLines = font.split(Component.literal(descText), textWidth);
         for (var line : descLines) {
             if (currentY + lineHeight > y + height) break; // Don't go beyond entry bounds
@@ -51,6 +51,6 @@ public class ThreadsEntry extends ObjectSelectionList.Entry<ThreadsEntry> {
 
     @Override
     public Component getNarration() {
-        return Component.literal("Error in script " + error.scriptName);
+        return Component.literal("Error in script " + error.scriptName());
     }
 }

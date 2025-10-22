@@ -23,17 +23,6 @@ public class InMemoryLogAppender extends AbstractAppender {
         super(name, filter, layout, ignoreExceptions);
     }
 
-    @Override
-    public void append(LogEvent event) {
-        synchronized (logLines) {
-            String message = event.getLevel() + " | " + event.getLoggerName() + " | " + event.getMessage().getFormattedMessage();
-            logLines.add(message);
-            if (logLines.size() > MAX_LINES) {
-                logLines.remove(0);
-            }
-        }
-    }
-
     public static List<String> getLogLines() {
         synchronized (logLines) {
             return new LinkedList<>(logLines);
@@ -45,5 +34,16 @@ public class InMemoryLogAppender extends AbstractAppender {
             @PluginAttribute("name") String name
     ) {
         return new InMemoryLogAppender(name, null, null, true);
+    }
+
+    @Override
+    public void append(LogEvent event) {
+        synchronized (logLines) {
+            String message = event.getLevel() + " | " + event.getLoggerName() + " | " + event.getMessage().getFormattedMessage();
+            logLines.add(message);
+            if (logLines.size() > MAX_LINES) {
+                logLines.remove(0);
+            }
+        }
     }
 }

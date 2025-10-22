@@ -1,18 +1,13 @@
 package io.github.luckymcdev.groovyengine.threads.core.scripting.core;
 
-import dev.perxenic.acidapi.api.dimension.DimensionManager;
+import groovy.lang.GroovyShell;
+import groovy.lang.Script;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManager;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.event.ScriptEvent;
-import groovy.lang.GroovyShell;
-import groovy.lang.Script;
-import net.minecraft.client.gui.screens.ErrorScreen;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.ModLoadingException;
-import net.neoforged.fml.ModLoadingIssue;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.client.gui.LoadingErrorScreen;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
@@ -23,11 +18,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.github.luckymcdev.groovyengine.core.systems.structure.FileConstants.*;
+import static io.github.luckymcdev.groovyengine.core.systems.structure.FileConstants.SCRIPTS_DIR;
 
 public class ScriptManager {
-    private static GroovyShell shell;
     private static final AttachmentEventManager attachmentEventManager = AttachmentEventManager.getInstance();
+    private static GroovyShell shell;
 
     public static void initialize() {
         GE.THREADS_LOG.info("Initializing script manager");

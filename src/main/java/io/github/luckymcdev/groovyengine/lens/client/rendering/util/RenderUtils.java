@@ -1,7 +1,8 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;

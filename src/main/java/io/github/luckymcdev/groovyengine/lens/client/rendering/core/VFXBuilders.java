@@ -1,26 +1,28 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.core;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.systems.*;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.material.Material;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.vertex.CubeVertexData;
-import net.minecraft.client.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.*;
-import net.minecraft.core.*;
-import net.minecraft.resources.*;
-import net.minecraft.util.*;
-import net.minecraft.world.phys.*;
-import org.joml.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix3f;
+import org.joml.Vector3f;
 
-
-import javax.annotation.*;
+import javax.annotation.Nullable;
 import java.awt.*;
-import java.lang.Math;
-import java.util.*;
-import java.util.function.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class VFXBuilders {
 
@@ -49,6 +51,21 @@ public class VFXBuilders {
         CONSUMER_INFO_MAP.put(VertexFormatElement.UV2, (consumer, pose, builder, normal, x, y, z, u, v) -> consumer.setLight(builder.light));
     } //TODO: add more here
 
+    public static Vector3f normal(PoseStack stack) {
+        return normal(stack.last().normal());
+    }
+
+    public static Vector3f normal(Matrix3f transform) {
+        return new Vector3f(0, 1, 0).mul(transform);
+    }
+
+    public static ScreenVFXBuilder createScreen() {
+        return new ScreenVFXBuilder();
+    }
+
+    public static WorldVFXBuilder createWorld() {
+        return new WorldVFXBuilder();
+    }
 
     public interface VertexConsumerActor {
         void placeVertex(VertexConsumer consumer, PoseStack.Pose pose, AbstractVFXBuilder builder, Vector3f normal, float x, float y, float z, float u, float v);
@@ -69,15 +86,6 @@ public class VFXBuilders {
         default void placeVertex(VertexConsumer consumer, AbstractVFXBuilder builder, float x, float y, float z, float u, float v) {
             placeVertex(consumer, builder, null, x, y, z, u, v);
         }
-    }
-
-
-    public static Vector3f normal(PoseStack stack) {
-        return normal(stack.last().normal());
-    }
-
-    public static Vector3f normal(Matrix3f transform) {
-        return new Vector3f(0, 1, 0).mul(transform);
     }
 
     public static abstract class AbstractVFXBuilder {
@@ -111,6 +119,7 @@ public class VFXBuilders {
         public AbstractVFXBuilder setColor(int rgba) {
             return setColor((rgba >> 16) & 0xFF, (rgba >> 8) & 0xFF, rgba & 0xFF, (rgba >> 24) & 0xFF);
         }
+
         public AbstractVFXBuilder setColor(Color color) {
             return setColor(color.getRed(), color.getGreen(), color.getBlue());
         }
@@ -145,6 +154,7 @@ public class VFXBuilders {
         public AbstractVFXBuilder multiplyColor(float scalar) {
             return multiplyColor(scalar, scalar, scalar);
         }
+
         public AbstractVFXBuilder multiplyColor(float r, float g, float b) {
             return setColor(this.r * r, this.g * g, this.b * b);
         }
@@ -194,14 +204,6 @@ public class VFXBuilders {
             this.v1 = v1;
             return this;
         }
-    }
-
-    public static ScreenVFXBuilder createScreen() {
-        return new ScreenVFXBuilder();
-    }
-
-    public static WorldVFXBuilder createWorld() {
-        return new WorldVFXBuilder();
     }
 
     public static class ScreenVFXBuilder extends AbstractVFXBuilder {
@@ -318,6 +320,13 @@ public class VFXBuilders {
             return (ScreenVFXBuilder) super.setFormatRaw(format);
         }
 
+        public Supplier<ShaderInstance> getShader() {
+            if (shader == null) {
+                setShader(GameRenderer::getPositionTexShader);
+            }
+            return shader;
+        }
+
         public ScreenVFXBuilder setShader(Supplier<ShaderInstance> shader) {
             this.shader = shader;
             return updateVertexFormat();
@@ -326,13 +335,6 @@ public class VFXBuilders {
         public ScreenVFXBuilder setShader(ShaderInstance shader) {
             this.shader = () -> shader;
             return updateVertexFormat();
-        }
-
-        public Supplier<ShaderInstance> getShader() {
-            if (shader == null) {
-                setShader(GameRenderer::getPositionTexShader);
-            }
-            return shader;
         }
 
         public ScreenVFXBuilder setShaderTexture(ResourceLocation texture) {
@@ -497,15 +499,6 @@ public class VFXBuilders {
             return (WorldVFXBuilder) super.setVertexSupplier(supplier);
         }
 
-        @Override
-        public WorldVFXBuilder setFormat(VertexFormat format) {
-            return (WorldVFXBuilder) super.setFormat(format);
-        }
-
-        public WorldVFXBuilder setRenderType(RenderType renderType) {
-            return setRenderTypeRaw(renderType).setFormat(renderType.format()).setVertexConsumer(getBufferSource().getBuffer(renderType));
-        }
-
         public WorldVFXBuilder setMaterial(Material material) {
             return setRenderType(material.renderType());
         }
@@ -515,16 +508,16 @@ public class VFXBuilders {
             return this;
         }
 
-        public WorldVFXBuilder setVertexConsumer(VertexConsumer vertexConsumer) {
-            this.vertexConsumer = vertexConsumer;
-            return this;
-        }
-
         public VertexConsumer getVertexConsumer() {
             if (vertexConsumer == null) {
                 setVertexConsumer(getBufferSource().getBuffer(getRenderType()));
             }
             return vertexConsumer;
+        }
+
+        public WorldVFXBuilder setVertexConsumer(VertexConsumer vertexConsumer) {
+            this.vertexConsumer = vertexConsumer;
+            return this;
         }
 
         public WorldVFXBuilder replaceBufferSource(MultiBufferSource bufferSource) {
@@ -557,8 +550,17 @@ public class VFXBuilders {
             return renderType;
         }
 
+        public WorldVFXBuilder setRenderType(RenderType renderType) {
+            return setRenderTypeRaw(renderType).setFormat(renderType.format()).setVertexConsumer(getBufferSource().getBuffer(renderType));
+        }
+
         protected VertexFormat getFormat() {
             return format;
+        }
+
+        @Override
+        public WorldVFXBuilder setFormat(VertexFormat format) {
+            return (WorldVFXBuilder) super.setFormat(format);
         }
 
         public VertexConsumerActor getSupplier() {

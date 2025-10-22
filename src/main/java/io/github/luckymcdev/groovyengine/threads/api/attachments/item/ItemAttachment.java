@@ -50,13 +50,23 @@ public abstract class ItemAttachment implements BaseAttachment {
     }
 
     // Item Usage Events
-    public InteractionResultHolder<ItemStack> onUse(LevelAccessor level, Player player, InteractionHand hand, ItemStack stack) { return InteractionResultHolder.pass(stack); }
-    public InteractionResult onUseOn(UseOnContext context, ItemStack stack) { return InteractionResult.PASS; }
+    public InteractionResultHolder<ItemStack> onUse(LevelAccessor level, Player player, InteractionHand hand, ItemStack stack) {
+        return InteractionResultHolder.pass(stack);
+    }
+
+    public InteractionResult onUseOn(UseOnContext context, ItemStack stack) {
+        return InteractionResult.PASS;
+    }
 
     // Item State Events
-    public void onInventoryTick(ItemStack stack, LevelAccessor level, Entity entity, int slotId, boolean isSelected) {}
-    public void onCraftedBy(ItemStack stack, LevelAccessor level, Player player) {}
+    public void onInventoryTick(ItemStack stack, LevelAccessor level, Entity entity, int slotId, boolean isSelected) {
+    }
+
+    public void onCraftedBy(ItemStack stack, LevelAccessor level, Player player) {
+    }
 
     // Combat Events
-    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) { return false; }
+    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
+        return false;
+    }
 }

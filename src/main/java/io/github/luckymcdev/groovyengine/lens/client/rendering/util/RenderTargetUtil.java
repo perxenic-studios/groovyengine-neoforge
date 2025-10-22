@@ -22,7 +22,7 @@ public class RenderTargetUtil {
 
         // Copy the framebuffer content using OpenGL directly
         int currentReadFB = GL11.glGetInteger(GL30.GL_READ_FRAMEBUFFER_BINDING);
-        int currentDrawFB =GL11.glGetInteger(GL30.GL_DRAW_FRAMEBUFFER_BINDING);
+        int currentDrawFB = GL11.glGetInteger(GL30.GL_DRAW_FRAMEBUFFER_BINDING);
 
         // Bind source as read framebuffer and destination as draw framebuffer
         GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, source.frameBufferId);

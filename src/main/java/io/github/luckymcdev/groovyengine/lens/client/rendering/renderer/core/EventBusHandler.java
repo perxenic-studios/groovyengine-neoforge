@@ -1,7 +1,10 @@
 // EventBusHandler.java - New file
 package io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.core;
 
-import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.*;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.EntityRenderer;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.GuiRenderer;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.PlayerRenderer;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.WorldRenderer;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;

@@ -24,27 +24,69 @@ import java.util.Arrays;
 @OnlyIn(Dist.CLIENT)
 public class ImGraphics {
     public static ImGraphics INSTANCE = new ImGraphics(Minecraft.getInstance());
-
-    private static class VarStackStack {
-        private VarStackStack parent;
-        private int pushedStyle = 0;
-        private int pushedColors = 0;
-        private int pushedItemFlags = 0;
-        private int pushedNodesStyle = 0;
-        private int pushedNodesColors = 0;
-        private float currentFontScale = 1F;
-        private float[] pushedFontScales = null;
-        private ImNumberType numberType = null;
-        private NumberRange numberRange = null;
-    }
-
     public final Minecraft mc;
     public final boolean inGame;
     private VarStackStack stack;
-
     public ImGraphics(Minecraft mc) {
         this.mc = mc;
         this.inGame = mc.player != null && mc.level != null;
+    }
+
+    public static void setFullDefaultStyle(ImGuiStyle style) {
+        setDefaultStyle(style);
+        style.setWindowPadding(8F, 8F);
+        style.setFramePadding(4F, 3F);
+        style.setPopupBorderSize(0F);
+        style.setItemSpacing(8F, 8F);
+        style.setItemInnerSpacing(8F, 6F);
+    }
+
+    public static void setDefaultStyle(ImGuiStyle style) {
+        style.setWindowRounding(4F);
+        style.setFrameRounding(3F);
+        style.setChildRounding(3F);
+        style.setPopupRounding(3F);
+        style.setScrollbarRounding(9F);
+        style.setGrabRounding(3F);
+
+        style.setIndentSpacing(25F);
+        style.setScrollbarSize(15F);
+        style.setGrabMinSize(5F);
+        style.setWindowBorderSize(0F);
+        style.setSelectableTextAlign(0F, 0.5F);
+        style.setAlpha(1F);
+
+        setColor(style, ImGuiCol.WindowBg, 0xFF222228);
+        setColor(style, ImGuiCol.PopupBg, 0xE30D0D11);
+        setColor(style, ImGuiCol.FrameBg, 0xFF15151C);
+        setColor(style, ImGuiCol.TitleBg, 0xFF010101);
+        setColor(style, ImGuiCol.TitleBgActive, 0xFF010101);
+        setColor(style, ImGuiCol.MenuBarBg, 0xFF17171C);
+        setColor(style, ImGuiCol.TitleBgCollapsed, 0xFF010101);
+
+        setColor(style, ImGuiCol.Button, ImColorVariant.DEFAULT.color.argb());
+        setColor(style, ImGuiCol.ButtonHovered, ImColorVariant.DEFAULT.hoverColor.argb());
+        setColor(style, ImGuiCol.ButtonActive, ImColorVariant.DEFAULT.activeColor.argb());
+    }
+
+    public static void setColor(ImGuiStyle style, int key, int color) {
+        style.setColor(key, ARGB.toABGR(color));
+    }
+
+    public static int getTextureId(ResourceLocation identifier) {
+        return Minecraft.getInstance().getTextureManager().getTexture(identifier).getId();
+    }
+
+    public static void texture(ResourceLocation id, float width, float height) {
+        ImGui.image(getTextureId(id), width, height);
+    }
+
+    public static void texture(ResourceLocation id, float width, float height, float u0, float v0) {
+        ImGui.image(getTextureId(id), width, height, u0, v0);
+    }
+
+    public static void texture(ResourceLocation id, float width, float height, float u0, float v0, float u1, float v1) {
+        ImGui.image(getTextureId(id), width, height, u0, v0, u1, v1);
     }
 
     public void pushStack() {
@@ -179,16 +221,12 @@ public class ImGraphics {
         stack.currentFontScale = scale;
     }
 
-    public void setNumberType(ImNumberType type) {
-        stack.numberType = type;
-    }
-
     public ImNumberType getNumberType() {
         return stack.numberType;
     }
 
-    public void setNumberRange(@Nullable NumberRange range) {
-        stack.numberRange = range;
+    public void setNumberType(ImNumberType type) {
+        stack.numberType = type;
     }
 
     @Nullable
@@ -196,45 +234,8 @@ public class ImGraphics {
         return stack.numberRange;
     }
 
-    public static void setFullDefaultStyle(ImGuiStyle style) {
-        setDefaultStyle(style);
-        style.setWindowPadding(8F, 8F);
-        style.setFramePadding(4F, 3F);
-        style.setPopupBorderSize(0F);
-        style.setItemSpacing(8F, 8F);
-        style.setItemInnerSpacing(8F, 6F);
-    }
-
-    public static void setDefaultStyle(ImGuiStyle style) {
-        style.setWindowRounding(4F);
-        style.setFrameRounding(3F);
-        style.setChildRounding(3F);
-        style.setPopupRounding(3F);
-        style.setScrollbarRounding(9F);
-        style.setGrabRounding(3F);
-
-        style.setIndentSpacing(25F);
-        style.setScrollbarSize(15F);
-        style.setGrabMinSize(5F);
-        style.setWindowBorderSize(0F);
-        style.setSelectableTextAlign(0F, 0.5F);
-        style.setAlpha(1F);
-
-        setColor(style, ImGuiCol.WindowBg, 0xFF222228);
-        setColor(style, ImGuiCol.PopupBg, 0xE30D0D11);
-        setColor(style, ImGuiCol.FrameBg, 0xFF15151C);
-        setColor(style, ImGuiCol.TitleBg, 0xFF010101);
-        setColor(style, ImGuiCol.TitleBgActive, 0xFF010101);
-        setColor(style, ImGuiCol.MenuBarBg, 0xFF17171C);
-        setColor(style, ImGuiCol.TitleBgCollapsed, 0xFF010101);
-
-        setColor(style, ImGuiCol.Button, ImColorVariant.DEFAULT.color.argb());
-        setColor(style, ImGuiCol.ButtonHovered, ImColorVariant.DEFAULT.hoverColor.argb());
-        setColor(style, ImGuiCol.ButtonActive, ImColorVariant.DEFAULT.activeColor.argb());
-    }
-
-    public static void setColor(ImGuiStyle style, int key, int color) {
-        style.setColor(key, ARGB.toABGR(color));
+    public void setNumberRange(@Nullable NumberRange range) {
+        stack.numberRange = range;
     }
 
     public void setText(ImColorVariant variant) {
@@ -263,19 +264,16 @@ public class ImGraphics {
         }
     }
 
-    public static int getTextureId(ResourceLocation identifier) {
-        return Minecraft.getInstance().getTextureManager().getTexture(identifier).getId();
-    }
-
-    public static void texture(ResourceLocation id, float width, float height) {
-        ImGui.image(getTextureId(id), width, height);
-    }
-
-    public static void texture(ResourceLocation id, float width, float height, float u0, float v0) {
-        ImGui.image(getTextureId(id), width, height, u0, v0);
-    }
-
-    public static void texture(ResourceLocation id, float width, float height, float u0, float v0, float u1, float v1) {
-        ImGui.image(getTextureId(id), width, height, u0, v0, u1, v1);
+    private static class VarStackStack {
+        private VarStackStack parent;
+        private int pushedStyle = 0;
+        private int pushedColors = 0;
+        private int pushedItemFlags = 0;
+        private int pushedNodesStyle = 0;
+        private int pushedNodesColors = 0;
+        private float currentFontScale = 1F;
+        private float[] pushedFontScales = null;
+        private ImNumberType numberType = null;
+        private NumberRange numberRange = null;
     }
 }

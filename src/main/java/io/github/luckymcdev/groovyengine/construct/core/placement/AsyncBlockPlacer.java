@@ -15,40 +15,68 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Enhanced asynchronous block placer with shape operations and advanced features.
+ * Asynchronous block placement thingiemajig
  */
 @EventBusSubscriber(value = Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
 public class AsyncBlockPlacer {
     private static final AsyncBlockPlacer INSTANCE = new AsyncBlockPlacer();
+    private final Queue<PlacementTask> immediatePlacementQueue = new ConcurrentLinkedQueue<>();
+    private final Queue<PlacementTask> delayedUpdateQueue = new ConcurrentLinkedQueue<>();
+    private final Random random = new Random();
+    private final int maxBlocksPerTick = 100000;
+    private final int fpsThreshold = 45;
+    private final int adjustmentInterval = 5;
+    private final int blocksPerTickIncrement = 250;
+    private int blocksPerTick = 1000;
+    private int updatesPerTick = blocksPerTick / 2;
+    private int tickCounter = 0;
+    private AsyncBlockPlacer() {
+    }
 
     public static AsyncBlockPlacer getInstance() {
         return INSTANCE;
     }
 
-    private final Queue<PlacementTask> immediatePlacementQueue = new ConcurrentLinkedQueue<>();
-    private final Queue<PlacementTask> delayedUpdateQueue = new ConcurrentLinkedQueue<>();
-    private final Random random = new Random();
+    /**
+     * Handles server tick events to process queued block operations.
+     */
+    @SubscribeEvent
+    public static void onServerTick(ServerTickEvent.Pre event) {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
 
-    private int blocksPerTick = 1000;
-    private int updatesPerTick = blocksPerTick / 2;
-    private int tickCounter = 0;
-    private final int maxBlocksPerTick = 100000;
-    private final int fpsThreshold = 45;
-    private final int adjustmentInterval = 5;
-    private final int blocksPerTickIncrement = 250;
+        Level playerLevel = player.level();
+        Level level = event.getServer().getLevel(playerLevel.dimension());
+        if (level == null) return;
 
-    private AsyncBlockPlacer() {}
+        if (INSTANCE.immediatePlacementQueue.isEmpty() && INSTANCE.delayedUpdateQueue.isEmpty()) return;
 
-    public int getBlocksPerTick() { return blocksPerTick; }
-    public int getUpdatesPerTick() { return updatesPerTick; }
+        INSTANCE.tickCounter++;
+        if (INSTANCE.immediatePlacementQueue.size() > 10000 && INSTANCE.tickCounter % INSTANCE.adjustmentInterval == 0) {
+            INSTANCE.adjustPerformanceParameters();
+        }
+
+        INSTANCE.processQueues(level);
+    }
+
+    public int getBlocksPerTick() {
+        return blocksPerTick;
+    }
 
     public void setBlocksPerTick(int blocksPerTick) {
         this.blocksPerTick = Math.max(1, blocksPerTick);
+    }
+
+    public int getUpdatesPerTick() {
+        return updatesPerTick;
     }
 
     public void setUpdatesPerTick(int updatesPerTick) {
@@ -307,28 +335,6 @@ public class AsyncBlockPlacer {
     }
 
     /**
-     * Handles server tick events to process queued block operations.
-     */
-    @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Pre event) {
-        Player player = Minecraft.getInstance().player;
-        if (player == null) return;
-
-        Level playerLevel = player.level();
-        Level level = event.getServer().getLevel(playerLevel.dimension());
-        if (level == null) return;
-
-        if (INSTANCE.immediatePlacementQueue.isEmpty() && INSTANCE.delayedUpdateQueue.isEmpty()) return;
-
-        INSTANCE.tickCounter++;
-        if (INSTANCE.immediatePlacementQueue.size() > 10000 && INSTANCE.tickCounter % INSTANCE.adjustmentInterval == 0) {
-            INSTANCE.adjustPerformanceParameters();
-        }
-
-        INSTANCE.processQueues(level);
-    }
-
-    /**
      * Adjusts performance parameters based on current FPS.
      */
     private void adjustPerformanceParameters() {
@@ -396,8 +402,13 @@ public class AsyncBlockPlacer {
         return true;
     }
 
-    public int getQueuedPlacements() { return immediatePlacementQueue.size(); }
-    public int getQueuedUpdates() { return delayedUpdateQueue.size(); }
+    public int getQueuedPlacements() {
+        return immediatePlacementQueue.size();
+    }
+
+    public int getQueuedUpdates() {
+        return delayedUpdateQueue.size();
+    }
 
     public void clearQueues() {
         immediatePlacementQueue.clear();

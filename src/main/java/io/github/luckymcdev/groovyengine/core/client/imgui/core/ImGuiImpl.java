@@ -176,7 +176,7 @@ public class ImGuiImpl {
     //    }
 
     @FunctionalInterface
-    public static interface RenderInterface {
+    public interface RenderInterface {
         void render(final ImGuiIO io);
     }
 }

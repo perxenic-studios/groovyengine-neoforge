@@ -1,9 +1,9 @@
 package io.github.luckymcdev.groovyengine.lens.client.systems.obj;
 
-import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.phys.Vec2;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -89,7 +89,7 @@ public class ObjParser {
 
             int vertexIndex = Integer.parseInt(parts[0]) - 1;
             int textureIndex = (parts.length > 1 && !parts[1].isEmpty()) ? Integer.parseInt(parts[1]) - 1 : -1;
-            int normalIndex  = (parts.length > 2 && !parts[2].isEmpty()) ? Integer.parseInt(parts[2]) - 1 : -1;
+            int normalIndex = (parts.length > 2 && !parts[2].isEmpty()) ? Integer.parseInt(parts[2]) - 1 : -1;
 
             Vector3f position = safeGetVertex(vertexIndex);
             Vector3f normal = safeGetNormal(normalIndex);

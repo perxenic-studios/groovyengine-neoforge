@@ -3,14 +3,13 @@ package io.github.luckymcdev.groovyengine.threads.core.scripting.attachment;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.BaseAttachment;
-import io.github.luckymcdev.groovyengine.threads.api.attachments.client.ClientAttachment;
-import io.github.luckymcdev.groovyengine.threads.api.attachments.server.ServerAttachment;
-import io.github.luckymcdev.groovyengine.threads.api.attachments.registry.RegistryAttachment;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AttachmentManagerImpl implements AttachmentManager {
@@ -18,6 +17,10 @@ public class AttachmentManagerImpl implements AttachmentManager {
     public static AttachmentManager INSTANCE = new AttachmentManagerImpl();
 
     private final Set<BaseAttachment> attachments = new HashSet<>();
+
+    public static AttachmentManager getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     public void register(BaseAttachment attachment) {
@@ -77,9 +80,5 @@ public class AttachmentManagerImpl implements AttachmentManager {
     @Override
     public List<BaseAttachment> getRegistryAttachments() {
         return getAttachments("registry");
-    }
-
-    public static AttachmentManager getInstance() {
-        return INSTANCE;
     }
 }
