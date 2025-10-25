@@ -10,6 +10,10 @@ public class DarkImTheme implements ImTheme {
         return "Dark";
     }
 
+    /**
+     * Applies the Dark theme to the given ImGuiStyle.
+     * @param style The ImGuiStyle to apply the theme to.
+     */
     @Override
     public void applyTheme(ImGuiStyle style) {
         style.setColor(ImGuiCol.WindowBg, 0.1f, 0.105f, 0.11f, 1.0f);

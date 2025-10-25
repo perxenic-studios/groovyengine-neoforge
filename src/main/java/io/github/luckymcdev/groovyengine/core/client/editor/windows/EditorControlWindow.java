@@ -19,6 +19,14 @@ public class EditorControlWindow extends EditorWindow {
         super(ImIcons.SETTINGS.get() + " Editor Control", "editor_control");
     }
 
+    /**
+     * Renders the window.
+     *
+     * This method renders the window and its contents.
+     * It is called automatically by the ImGui library.
+     *
+     * @param io the ImGuiIO object that provides information about the ImGui library
+     */
     @Override
     public void render(ImGuiIO io) {
         if (ImGui.begin(title)) {

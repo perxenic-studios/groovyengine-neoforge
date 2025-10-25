@@ -11,6 +11,11 @@ public class BessDarkImTheme implements ImTheme {
         return "BessDark";
     }
 
+
+    /**
+     * Applies the BessDark theme to the given ImGuiStyle.
+     * @param style The ImGuiStyle to apply the theme to.
+     */
     @Override
     public void applyTheme(ImGuiStyle style) {
         // Primary background

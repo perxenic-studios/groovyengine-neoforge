@@ -5,7 +5,11 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.*;
-
+/**
+ * Manages the Construct windows and their respective categories.
+ * This class is responsible for registering the Construct windows with the Window Manager.
+ * It provides methods to register a window with the manager and to register a window in a specific category.
+ */
 @OnlyIn(Dist.CLIENT)
 public class WindowManager {
     private static final Map<String, EditorWindow> windows = new LinkedHashMap<>();

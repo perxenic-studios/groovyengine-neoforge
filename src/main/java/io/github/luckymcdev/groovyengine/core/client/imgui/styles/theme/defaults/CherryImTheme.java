@@ -10,6 +10,10 @@ public class CherryImTheme implements ImTheme {
         return "Cherry";
     }
 
+    /**
+     * Applies the Cherry theme to the given ImGuiStyle.
+     * @param style The ImGuiStyle to apply the theme to.
+     */
     @Override
     public void applyTheme(ImGuiStyle style) {
         // Cherry colors, 3 intensities

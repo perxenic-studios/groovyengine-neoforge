@@ -28,6 +28,12 @@ public class ImGuiRenderer {
 
     private static boolean initialized = false;
 
+    /**
+     * Initializes the windows managed by the Window Manager.
+     * This method registers the EditorControlWindow and MetricsWindow with the Window Manager.
+     * It also registers the demo windows with the Window Manager.
+     * It is called once when the ImGui is initialized.
+     */
     private static void initializeWindows() {
         if (initialized) return;
         WindowManager.registerWindow(new EditorControlWindow(), ImIcons.SETTINGS.get() + " Debug");
@@ -42,6 +48,14 @@ public class ImGuiRenderer {
         initialized = true;
     }
 
+    /**
+     * Renders the ImGui UI for the Groovy Engine.
+     * This method is called once per frame and is responsible for rendering the ImGui UI.
+     * It initializes the windows managed by the Window Manager if necessary, and then renders the ImGui UI using the ImGuiImpl.draw method.
+     * The {@link ImGuiImpl#draw} method is passed a render interface, which is called once per frame.
+     * The render interface is responsible for setting up the docking and main window, rendering the main menu bar, and rendering all enabled windows.
+     * @param event The RenderGuiEvent.Post event which triggered this method call.
+     */
     public static void onRender(RenderGuiEvent.Post event) {
         initializeWindows();
 
@@ -57,6 +71,12 @@ public class ImGuiRenderer {
         });
     }
 
+    /**
+     * Sets up docking and creates the main window.
+     * This method is called once per frame and is responsible for setting up the docking and main window for the ImGui UI.
+     * It sets up docking by creating a docking space over the main viewport and setting local flags to disable docking in the central node.
+     * It then creates the main window by calling ImGui.begin with the docking space ID and various flags to disable movement, navigation, resizing, and other features.
+     */
     private static void setupDockingAndMainWindow() {
         Minecraft mc = Minecraft.getInstance();
         Window window = mc.getWindow();
@@ -75,6 +95,16 @@ public class ImGuiRenderer {
         }
     }
 
+    /**
+     * Renders the main menu bar for the Groovy Engine's ImGui UI.
+     * This method is called once per frame and is responsible for rendering the main menu bar.
+     * It begins the main menu bar and then renders all categories in the desired order.
+     * For each category, it renders a menu item for each window in that category.
+     * If the window is enabled, clicking the menu item will toggle the window.
+     * It also renders additional menu items (View, Help) on the right side of the menu bar.
+     * The View menu allows the user to close all windows and open the Editor Screen.
+     * The Help menu displays keybind information for toggling the ImGui UI and opening the Editor Screen.
+     */
     private static void renderMainMenuBar() {
         if (ImGui.beginMainMenuBar()) {
             // Define the exact order you want
@@ -129,6 +159,18 @@ public class ImGuiRenderer {
         }
     }
 
+/* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+    /**
+     * Returns a list of categories sorted according to the given desired order.
+     * If a category is not in the desired order list, it is sorted alphabetically.
+     * If a category is in the desired order list, it is sorted by its position in that list.
+     * If two categories are in the desired order list, the one with the lower index comes first.
+     * If one category is in the desired order list and the other is not, the one in the desired order list comes first.
+     *
+     * @param desiredOrder The list of categories in the desired order
+     * @return A list of categories sorted according to the given desired order
+     */
+/* <<<<<<<<<<  eb41226b-af41-4337-9a38-d89a5cedfae2  >>>>>>>>>>> */
     private static @NotNull List<String> getSortedCategoriesFor(List<String> desiredOrder) {
         List<String> sortedCategories = new ArrayList<>(WindowManager.getCategories());
         sortedCategories.sort((a, b) -> {

@@ -10,6 +10,10 @@ public class CatpuccinMochaImTheme implements ImTheme {
         return "CatpuccinMocha";
     }
 
+    /**
+     * Applies the Catppuccin Mocha theme to the given ImGuiStyle.
+     * @param style The ImGuiStyle to apply the theme to.
+     */
     @Override
     public void applyTheme(ImGuiStyle style) {
         // Base colors inspired by Catppuccin Mocha

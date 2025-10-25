@@ -10,6 +10,10 @@ public class ModernDarkImTheme implements ImTheme {
         return "ModernDark";
     }
 
+    /**
+     * Applies the ModernDark theme to the given ImGuiStyle.
+     * @param style The ImGuiStyle to apply the theme to.
+     */
     @Override
     public void applyTheme(ImGuiStyle style) {
         // Base color scheme

@@ -46,6 +46,14 @@ public class MetricsWindow extends EditorWindow {
         super(ImIcons.GRAPH.get() + " Minecraft Metrics");
     }
 
+    /**
+     * Renders the metrics window with the given ImGuiIO.
+     *
+     * If the player or world is null, it will display a warning message.
+     * Otherwise, it will render the tab bar with the performance, player, world, and graph sections.
+     *
+     * @param io the ImGuiIO to use for rendering
+     */
     @Override
     public void render(ImGuiIO io) {
         if (mc.player == null || mc.level == null) {
@@ -85,6 +93,11 @@ public class MetricsWindow extends EditorWindow {
         });
     }
 
+    /**
+     * Updates the circular buffers with the current metrics.
+     * This includes the FPS, memory usage, frame time, and entity count.
+     * It also calculates the moving averages for the FPS and frame time.
+     */
     private void updateHistory() {
         // Update FPS history
         int currentFps = mc.getFps();
@@ -121,6 +134,10 @@ public class MetricsWindow extends EditorWindow {
         sampleCount = Math.min(sampleCount + 1, HISTORY_SIZE);
     }
 
+    /**
+     * Renders the performance tab, containing information about the current and average FPS,
+     * current and average frame time, used and allocated memory, and other relevant metrics.
+     */
     private void renderPerformanceTab() {
         ImGe.spacing();
 
@@ -271,6 +288,9 @@ public class MetricsWindow extends EditorWindow {
         ImGe.spacing();
     }
 
+    /**
+     * Renders the world tab, containing information about the current dimension, time, and chunks.
+     */
     private void renderWorldTab() {
         ImGe.spacing();
 
@@ -348,6 +368,13 @@ public class MetricsWindow extends EditorWindow {
         ImGe.spacing();
     }
 
+    /**
+     * Renders the graphs tab, containing information about the current and average FPS,
+     * current and average frame time, used and allocated memory, and other relevant metrics.
+     *
+     * If the player or world is null, it will display a warning message.
+     * Otherwise, it will render the tab bar with the performance, player, world, and graph sections.
+     */
     private void renderGraphsTab() {
         ImGe.spacing();
 
@@ -443,6 +470,11 @@ public class MetricsWindow extends EditorWindow {
         ImGe.spacing();
     }
 
+    /**
+     * Called when the window is opened.
+     * Initializes the history arrays with default values,
+     * resets the history index and sample count, and records the current time.
+     */
     @Override
     public void onOpen() {
         // Initialize history arrays

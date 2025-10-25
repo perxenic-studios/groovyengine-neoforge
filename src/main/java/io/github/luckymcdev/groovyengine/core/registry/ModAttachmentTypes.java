@@ -15,7 +15,10 @@ public class ModAttachmentTypes {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
             DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, GE.MODID);
 
-    // Fly speed, default 0.2f (same as vanilla)
+    /**
+     * The attachment type for fly speed.
+     * This attachment type is used to store the fly speed of a player.
+     */
     public static final Supplier<AttachmentType<Float>> FLY_SPEED = ATTACHMENT_TYPES.register(
             "fly_speed",
             () -> AttachmentType.builder(() -> 0.2f)
@@ -26,6 +29,11 @@ public class ModAttachmentTypes {
 
     );
 
+    /**
+     * Registers the attachment types to the given event bus.
+     *
+     * @param bus the event bus to register to
+     */
     public static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);
     }

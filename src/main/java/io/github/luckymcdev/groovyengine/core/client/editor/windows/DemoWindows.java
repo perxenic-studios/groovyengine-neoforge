@@ -18,6 +18,10 @@ public class DemoWindows {
             super(ImIcons.QUESTION.get() + " About", "about");
         }
 
+        /**
+         * Renders the about window for the demo window.
+         * @param io The ImGuiIO object to use for rendering.
+         */
         @Override
         public void render(ImGuiIO io) {
             ImGe.showAboutWindow();
@@ -29,6 +33,13 @@ public class DemoWindows {
             super(ImIcons.DASHBOARD.get() + " Demo", "demo");
         }
 
+        /**
+         * Renders the demo window.
+         * <p>This method is called every frame to update the UI and handle user interactions.
+         * It renders a window with a single section containing information about the demo window.
+         * @param io The ImGuiIO object to use for rendering.
+         * @see ImGuiIO
+         */
         @Override
         public void render(ImGuiIO io) {
             ImGe.showDemoWindow();
@@ -40,18 +51,35 @@ public class DemoWindows {
             super(ImIcons.GRAPH.get() + " Metrics", "metrics");
         }
 
+        /**
+         * Renders the ImGui Metrics window.
+         * <p>This method is called every frame to update the UI and handle user interactions.
+         * It renders a window with a single section containing information about ImGui metrics.
+         * @param io The ImGuiIO object to use for rendering.
+         * @see ImGuiIO
+         */
         @Override
         public void render(ImGuiIO io) {
             ImGe.showMetricsWindow();
         }
     }
 
+    /**
+     * A window that displays various icons.
+     */
     public static class IconsWindow extends EditorWindow {
 
         public IconsWindow() {
             super(ImIcons.CIRCLE.get() + " Icons");
         }
 
+        /**
+         * Renders the Icons window.
+         * <p>This method is called every frame to update the UI and handle user interactions.
+         * It renders a window with multiple sections containing information about various icons.
+         * @param io The ImGuiIO object to use for rendering.
+         * @see ImGuiIO
+         */
         @Override
         public void render(ImGuiIO io) {
             ImGe.window("IconsWindow", () -> {
@@ -182,6 +210,15 @@ public class DemoWindows {
             });
         }
 
+        /**
+         * Renders a section of icons in the Demo Window.
+         *
+         * This method takes an array of icon names and renders them in a grid layout.
+         * Each icon is rendered with its name and Unicode value as a tooltip.
+         * Clicking an icon copies its character to the clipboard.
+         *
+         * @param iconNames an array of icon names to render
+         */
         private void renderIconSection(String[] iconNames) {
             final int columns = 6;
             int iconCount = 0;

@@ -9,14 +9,14 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 
 public class CoreModule implements Module {
+    /**
+     * Initializes the Core module.
+     * This method is called when the module is initialized and is responsible for initializing
+     * all Core-related systems.
+     * @param modEventBus the event bus for the module
+     */
     @Override
     public void init(IEventBus modEventBus) {
         GE.CORE_LOG.info("Core Initialized");
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void registerWindows() {
-        WindowManager.registerWindow(new ConstructEditorWindow(), "test");
     }
 }

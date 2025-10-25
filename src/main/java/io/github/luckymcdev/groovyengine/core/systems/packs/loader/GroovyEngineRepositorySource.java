@@ -27,11 +27,15 @@ public class GroovyEngineRepositorySource implements RepositorySource {
         this.type = type;
         this.packLocation = FileConstants.RESOURCES_DIR.toFile();
 
-        // Change to .minecraft/groovyengine/src/resources
-
         GE.CORE_LOG.info("GroovyEngine pack location for {}: {}", type.name(), packLocation.getAbsolutePath());
     }
 
+    /**
+     * Loads all packs from the pack location directory and calls the given consumer for each valid pack.
+     * The consumer will be called with each pack that is successfully loaded from the pack location directory.
+     *
+     * @param consumer The consumer to call for each valid pack.
+     */
     @Override
     public void loadPacks(@NotNull Consumer<Pack> consumer) {
         GE.CORE_LOG.info("Scan started for {} in directory: {}", type.name(), packLocation.getAbsolutePath());
@@ -43,6 +47,12 @@ public class GroovyEngineRepositorySource implements RepositorySource {
         GE.CORE_LOG.info("Located {} packs. Took {}ms.", validPackCount, GE.DECIMAL_2.format((endTime - startTime) / 1000000d));
     }
 
+    /**
+     * Loads all packs from the pack location directory and calls the given consumer for each valid pack.
+     *
+     * @param consumer The consumer to call for each valid pack.
+     * @return The number of valid packs found in the pack location directory.
+     */
     private int loadFromLocation(@NotNull Consumer<Pack> consumer) {
         if (!packLocation.exists()) {
             GE.CORE_LOG.warn("Resources directory does not exist: {}", packLocation.getAbsolutePath());

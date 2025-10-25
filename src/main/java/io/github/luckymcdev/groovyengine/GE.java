@@ -1,5 +1,6 @@
 package io.github.luckymcdev.groovyengine;
 
+import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.systems.packs.loader.GroovyEngineRepositorySource;
 import io.github.luckymcdev.groovyengine.util.CachedSupplier;
 import net.minecraft.resources.ResourceLocation;
@@ -8,6 +9,7 @@ import net.minecraft.server.packs.repository.RepositorySource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.stream.ImageInputStream;
 import java.text.DecimalFormat;
 
 public class GE {
@@ -31,5 +33,14 @@ public class GE {
 
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    }
+
+    public static class Categories {
+        public static final String IMGUI = ImIcons.STACKS.get() + " ImGui";
+        public static final String CONSTRUCT = ImIcons.WRENCH.get() + " Construct";
+        public static final String LENS = ImIcons.CAMERA.get() + " Lens";
+        public static final String THREADS = ImIcons.CODE.get() + " Threads";
+        public static final String SCRIBE = ImIcons.EDIT.get() + " Scribe";
+        public static final String DEBUG = ImIcons.SETTINGS.get() + " Debug";
     }
 }

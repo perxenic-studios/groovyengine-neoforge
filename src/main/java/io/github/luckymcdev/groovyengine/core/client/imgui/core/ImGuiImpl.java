@@ -20,6 +20,13 @@ public class ImGuiImpl {
 
     private static ImFont defaultFont;
 
+    /**
+    * Initialize ImGui, ImPlot and ImNodes context.
+    * Set configuration flags for docking and viewports.
+    * Initialize ImGuiImplGlfw and ImGuiImplGl3.
+    *
+    * @param handle the window handle
+    */
     public static void create(final long handle) {
         ImGui.createContext();
         ImPlot.createContext();
@@ -37,6 +44,13 @@ public class ImGuiImpl {
         imGuiImplGl3.init();
     }
 
+    /**
+    * Load ImGui fonts.
+    * Set configuration flags for docking and viewports.
+    * Initialize ImGuiImplGlfw and ImGuiImplGl3.
+    *
+    * @param resourceManager the resource manager
+    */
     public static void loadFonts(net.minecraft.server.packs.resources.ResourceManager resourceManager) {
         GE.CORE_LOG.debug("Loading ImGui fonts...");
         final ImGuiIO io = ImGui.getIO();
@@ -109,10 +123,25 @@ public class ImGuiImpl {
     }
 
 
+    /**
+     * Gets the default font for the ImGui context.
+     * <p>This is the font that was loaded from the JetBrains Mono font resource.
+     * If the font could not be loaded, it will be the default ImGui font.
+     *
+     * @return the default font
+     */
     public static ImFont getDefaultFont() {
         return defaultFont;
     }
 
+    /**
+     * Draws the ImGui UI.
+     * <p>This method is the entry point for drawing the ImGui UI.
+     * It takes a render interface as a parameter, which is called once per frame.
+     * The render interface is responsible for rendering the UI of the ImGui context.
+     * It is passed the ImGui IO context, which can be used to access the ImGui state and handle input/output operations.
+     * @param runnable the render interface to call once per frame
+     */
     public static void draw(final RenderInterface runnable) {
         // start frame
         imGuiImplGl3.newFrame();
@@ -135,6 +164,12 @@ public class ImGuiImpl {
         }
     }
 
+    /**
+     * Disposes of the ImGui context.
+     * <p>This method is called when the ImGui context is no longer needed.
+     * It disposes of the ImGui context, ImPlot context, and ImNodes context.
+     * It also disposes of the ImGuiImplGl3 and ImGuiImplGlfw contexts.
+     */
     public static void dispose() {
         imGuiImplGl3.shutdown();
 

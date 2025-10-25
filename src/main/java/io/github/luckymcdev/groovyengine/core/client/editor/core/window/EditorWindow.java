@@ -6,6 +6,10 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 
 @OnlyIn(Dist.CLIENT)
+/**
+ * Base class for all editor windows.
+ * Subclasses should override the {@link #render()} method to render the window content.
+ */
 public abstract class EditorWindow {
     protected final String title;
     protected final String id;
