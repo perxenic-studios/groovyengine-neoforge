@@ -9,9 +9,19 @@ import net.neoforged.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public interface IBufferObject {
+    /**
+     * Registers this buffer object to be destroyed when the game closes.
+     * <p>
+     * This method is a no-op by default, but can be overridden if needed.
+     */
     default void registerBufferObject() {
         LensRenderSystem.registerBufferObject(this);
     }
 
+    /**
+     * Destroys this buffer object.
+     * <p>
+     * This method is called when the game closes, and is responsible for cleaning up any resources allocated by the buffer object.
+     */
     void destroy();
 }

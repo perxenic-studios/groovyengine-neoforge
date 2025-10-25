@@ -23,6 +23,25 @@ public class AmoParser extends ObjParser {
     private final Map<String, Animation> animations = new HashMap<>();
     private Animation currentAnimation;
 
+    /**
+     * Parses an animated OBJ file and loads its contents into this parser's fields.
+     * <p>
+     * The following elements are recognized and parsed:
+     * <ul>
+     * <li>ao: Animated object definition (current object and name)</li>
+     * <li>vj: Vertex joints (four joint indices)</li>
+     * <li>vw: Vertex weights (four weights)</li>
+     * <li>j: Joint definition (name and parent index)</li>
+     * <li>a: Animation group (name)</li>
+     * <li>ap: Animate position (timestamp, joint index, x, y, z)</li>
+     * <li>ar: Animate rotation (timestamp, joint index, x, y, z, w)</li>
+     * <li>f: Face with additional joint/weight indices (like standard OBJ faces)</li>
+     * </ul>
+     * <p>
+     * All other elements are ignored, including standard OBJ elements (v, vn, vt, o).
+     * @param resource The resource to read from.
+     * @throws IOException If an I/O error occurs while reading the file.
+     */
     @Override
     public void parseObjFile(Resource resource) throws IOException {
         // Initialize default object
@@ -121,6 +140,20 @@ public class AmoParser extends ObjParser {
         reader.close();
     }
 
+    /**
+     * Parses a standard OBJ line and updates the parser's fields accordingly.
+     * <p>
+     * The following elements are recognized and parsed:
+     * <ul>
+     * <li>o: Object definition (current object and name)</li>
+     * <li>v: Vertex definition (x, y, z)</li>
+     * <li>vn: Normal definition (x, y, z)</li>
+     * <li>vt: Texture coordinate definition (u, v)</li>
+     * </ul>
+     * <p>
+     * If the line does not start with any of the above prefixes, it is ignored.
+     * @param line The line to parse.
+     */
     private void parseStandardObjLine(String line) {
         if (line.startsWith("o ")) {
             String[] tokens = line.split("\\s+", 2);
@@ -153,6 +186,17 @@ public class AmoParser extends ObjParser {
         }
     }
 
+    /**
+     * Parses an animated face definition line and returns the corresponding face with joint-influenced vertices.
+     * <p>
+     * The line should be in the format of "f v1/vt1/vn1/j1/w1 v2/vt2/vn2/j2/w2 ...".
+     * <p>
+     * Each vertex is specified by its index in the vertices list, texture coordinate index in the uvs list, normal index in the normals list, joint indices in the vertexJoints list, and weights in the vertexWeights list.
+     * <p>
+     * If any index is out of range or if the line does not conform to the specified format, the face is not added to the parser's face list.
+     * @param line The line to parse.
+     * @return The parsed face, or null if the line is invalid.
+     */
     private AmoFace parseAmoFace(String line) {
         String[] tokens = line.trim().split("\\s+");
         List<AmoVertex> faceVertices = new ArrayList<>();
@@ -178,6 +222,12 @@ public class AmoParser extends ObjParser {
         return new AmoFace(faceVertices);
     }
 
+    /**
+     * Safely retrieves a joint index vector from the vertexJoints list at the given index.
+     * If the index is out of range, returns a default vector with all components set to zero.
+     * @param index The index to retrieve the joint index vector from.
+     * @return The retrieved joint index vector, or a default vector if the index is out of range.
+     */
     private Vector4i safeGetJoints(int index) {
         if (index >= 0 && index < vertexJoints.size()) {
             return vertexJoints.get(index);
@@ -185,6 +235,12 @@ public class AmoParser extends ObjParser {
         return new Vector4i(0, 0, 0, 0);
     }
 
+    /**
+     * Safely retrieves a weight vector from the vertexWeights list at the given index.
+     * If the index is out of range, returns a default vector with the first component set to 1 and the rest set to 0.
+     * @param index The index to retrieve the weight vector from.
+     * @return The retrieved weight vector, or a default vector if the index is out of range.
+     */
     private Vector4f safeGetWeights(int index) {
         if (index >= 0 && index < vertexWeights.size()) {
             return vertexWeights.get(index);
@@ -192,14 +248,27 @@ public class AmoParser extends ObjParser {
         return new Vector4f(1, 0, 0, 0);
     }
 
+    /**
+     * Returns a list of all joints in the skeleton.
+     * @return A list of all joints in the skeleton.
+     */
     public List<Joint> getJoints() {
         return joints;
     }
 
+    /**
+     * Returns a map of all animations in the model, where the key is the animation name and the value is the animation object.
+     * @return A map of all animations in the model.
+     */
     public Map<String, Animation> getAnimations() {
         return animations;
     }
 
+    /**
+     * Retrieves an animation by name from the model.
+     * @param name The name of the animation to retrieve.
+     * @return The animation with the given name, or null if no such animation exists.
+     */
     public Animation getAnimation(String name) {
         return animations.get(name);
     }

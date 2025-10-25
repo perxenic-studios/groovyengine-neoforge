@@ -9,12 +9,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import java.util.function.Consumer;
+
 @OnlyIn(Dist.CLIENT)
 public class MaterialBuilder {
+    private final PipelineStateBuilder pipelineBuilder = PipelineState.builder();
     private String name;
     private ResourceLocation texture;
     private ShaderInstance shader = GameRenderer.getRendertypeSolidShader();
-    private final PipelineStateBuilder pipelineBuilder = PipelineState.builder();
     private VertexFormat format = DefaultVertexFormat.BLOCK;
     private VertexFormat.Mode vertexMode = VertexFormat.Mode.QUADS;
     private int bufferSize = 256;
@@ -30,115 +32,107 @@ public class MaterialBuilder {
         this.name = "material_" + texture.getPath();
     }
 
+    /**
+     * Sets the name of this material.
+     *
+     * @param name The name to set.
+     * @return This builder instance.
+     */
     public MaterialBuilder name(String name) {
         this.name = name;
         return this;
     }
 
+    /**
+     * Sets the texture of this material.
+     *
+     * @param texture The texture to set.
+     * @return This builder instance.
+     */
     public MaterialBuilder texture(ResourceLocation texture) {
         this.texture = texture;
         return this;
     }
 
+    /**
+     * Sets the shader of this material.
+     *
+     * @param shader The shader to set.
+     * @return This builder instance.
+     */
     public MaterialBuilder shader(ShaderInstance shader) {
         this.shader = shader;
         return this;
     }
 
+    /**
+     * Sets the vertex format of this material.
+     * The vertex format determines what data is available in each vertex of this material.
+     *
+     * @param format The vertex format to set.
+     * @return This builder instance.
+     */
     public MaterialBuilder format(VertexFormat format) {
         this.format = format;
         return this;
     }
 
+    /**
+     * Sets the vertex mode of this material.
+     * The vertex mode determines how the vertices of this material are rendered.
+     *
+     * @param mode The vertex mode to set.
+     * @return This builder instance.
+     */
     public MaterialBuilder vertexMode(VertexFormat.Mode mode) {
         this.vertexMode = mode;
         return this;
     }
 
+
+    /**
+     * Sets the size of the vertex buffer of this material.
+     * The vertex buffer size is the number of vertices that can be stored in the vertex buffer.
+     * A larger buffer size means that more vertices can be stored in the buffer, but it also means that more memory is used.
+     *
+     * @param size The size of the vertex buffer to set.
+     * @return This builder instance.
+     */
     public MaterialBuilder bufferSize(int size) {
         this.bufferSize = size;
         return this;
     }
 
+    /**
+     * Sets whether this material affects the crumbling shader.
+     * The crumbling shader is a shader that is used to simulate the appearance of crumbling blocks.
+     * If this material affects the crumbling shader, then the shader will be used when rendering it.
+     * If this material does not affect the crumbling shader, then it will not be used when rendering it.
+     *
+     * @param affects Whether this material affects the crumbling shader.
+     * @return This builder instance.
+     */
     public MaterialBuilder affectsCrumbling(boolean affects) {
         this.affectsCrumbling = affects;
         return this;
     }
 
+    /**
+     * Sets whether this material should sort its vertex buffer on upload.
+     * Sorting the vertex buffer on upload can be useful for optimizing rendering performance.
+     * If this material should sort its vertex buffer on upload, then the buffer will be sorted when it is uploaded.
+     * If this material does not sort its vertex buffer on upload, then it will not be sorted when it is uploaded.
+     *
+     * @param sort Whether this material should sort its vertex buffer on upload.
+     * @return This builder instance.
+     */
     public MaterialBuilder sortOnUpload(boolean sort) {
         this.sortOnUpload = sort;
         return this;
     }
 
-    // Pipeline configuration methods
-    public MaterialBuilder depthTest(boolean enabled) {
-        pipelineBuilder.depthTest(enabled);
-        return this;
-    }
-
-    public MaterialBuilder depthWrite(boolean enabled) {
-        pipelineBuilder.depthWrite(enabled);
-        return this;
-    }
-
-    public MaterialBuilder cullFaces(boolean enabled) {
-        pipelineBuilder.cullFaces(enabled);
-        return this;
-    }
-
-    public MaterialBuilder blendMode(BlendMode mode) {
-        pipelineBuilder.blendMode(mode);
-        return this;
-    }
-
-    public MaterialBuilder lightmap(boolean enabled) {
-        pipelineBuilder.lightmap(enabled);
-        return this;
-    }
-
-    public MaterialBuilder overlay(boolean enabled) {
-        pipelineBuilder.overlay(enabled);
-        return this;
-    }
-
-    public MaterialBuilder transparency(TransparencyMode mode) {
-        pipelineBuilder.transparency(mode);
-        return this;
-    }
-
-    public MaterialBuilder writeMask(WriteMask mask) {
-        pipelineBuilder.writeMask(mask);
-        return this;
-    }
-
-    // Convenience methods
-    public MaterialBuilder opaque() {
-        pipelineBuilder.opaque();
-        return this;
-    }
-
-    public MaterialBuilder translucent() {
-        pipelineBuilder.translucent();
-        return this;
-    }
-
-    public MaterialBuilder additive() {
-        pipelineBuilder.additive();
-        return this;
-    }
-
-    public MaterialBuilder noCull() {
-        pipelineBuilder.noCull();
-        return this;
-    }
-
-    public MaterialBuilder noDepthTest() {
-        pipelineBuilder.noDepthTest();
-        return this;
-    }
-
-    public MaterialBuilder noDepthWrite() {
-        pipelineBuilder.noDepthWrite();
+    public MaterialBuilder setupPipeline(Consumer<PipelineStateBuilder> builder) {
+        builder.accept(this.pipelineBuilder);
         return this;
     }
 

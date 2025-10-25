@@ -19,10 +19,21 @@ public class Face {
         this.vertices = vertices;
     }
 
+
     public List<Vertex> vertices() {
         return vertices;
     }
 
+    /**
+     * Render a face with the given pose stack, render type, and packed light.
+     *
+     * This method will render the face as a quad if it has 4 vertices, as a triangle if it has 3 vertices,
+     * and as an ngon if it has more than 4 vertices. If the face has less than 3 vertices, it will be skipped.
+     *
+     * @param poseStack The pose stack to use for rendering
+     * @param renderType The render type to use for rendering
+     * @param packedLight The packed light value to use for rendering
+     */
     public void renderFace(PoseStack poseStack, RenderType renderType, int packedLight) {
         MultiBufferSource.BufferSource mcBufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         VertexConsumer buffer = mcBufferSource.getBuffer(renderType);
@@ -41,15 +52,43 @@ public class Face {
         }
     }
 
+    /**
+     * Render a triangle face with the given pose stack, buffer, and packed light.
+     *
+     * This method will render the face as a triangle by adding all vertices to the buffer, then adding the first vertex again to close the triangle.
+     *
+     * @param poseStack The pose stack to use for rendering
+     * @param buffer The vertex consumer buffer to render to
+     * @param packedLight The packed light value to use for rendering
+     */
     public void renderTriangle(PoseStack poseStack, VertexConsumer buffer, int packedLight) {
         this.vertices.forEach(vertex -> addVertex(buffer, vertex, poseStack, packedLight));
         addVertex(buffer, this.vertices.get(0), poseStack, packedLight);
     }
 
+    /**
+     * Render a quad face with the given pose stack, buffer, and packed light.
+     *
+     * This method will render the face as a quad by adding all vertices to the buffer.
+     *
+     * @param poseStack The pose stack to use for rendering
+     * @param buffer The vertex consumer buffer to render to
+     * @param packedLight The packed light value to use for rendering
+     */
     public void renderQuad(PoseStack poseStack, VertexConsumer buffer, int packedLight) {
         this.vertices.forEach(vertex -> addVertex(buffer, vertex, poseStack, packedLight));
     }
 
+    /**
+     * Renders a face with N vertices (an Ngon) using simple fan triangulation.
+     *
+     * This method will render the face as a series of connected triangles, using the first vertex as the anchor.
+     * For example, if the face has 4 vertices, it will render the triangles (0,1,2), (0,2,3), (0,3,4).
+     *
+     * @param poseStack The pose stack to use for rendering
+     * @param buffer The vertex consumer buffer to render to
+     * @param packedLight The packed light value to use for rendering
+     */
     public void renderNgon(PoseStack poseStack, VertexConsumer buffer, int packedLight) {
         // Simple fan triangulation for Ngons
         // Use vertex 0 as the anchor and create triangles: (0,1,2), (0,2,3), (0,3,4), etc.
@@ -66,6 +105,17 @@ public class Face {
         }
     }
 
+    /**
+     * Adds a vertex to the given buffer, using the given pose stack, vertex, and packed light.
+     *
+     * This method will add the vertex to the buffer, using the position, normal, and UV coordinates from the given vertex.
+     * The light value will be set to the given packed light.
+     *
+     * @param buffer The vertex consumer buffer to add the vertex to
+     * @param vertex The vertex to add to the buffer
+     * @param poseStack The pose stack to use for rendering
+     * @param packedLight The packed light value to use for rendering
+     */
     protected void addVertex(VertexConsumer buffer, Vertex vertex, PoseStack poseStack, int packedLight) {
         PoseStack.Pose pose = poseStack.last();
 
@@ -81,6 +131,13 @@ public class Face {
         buffer.setNormal(pose, normal.x(), normal.y(), normal.z());
     }
 
+    /**
+     * Returns the centroid of all vertices in this face.
+     *
+     * This method will calculate the centroid by summing all vertex positions and dividing by the number of vertices.
+     *
+     * @return The centroid of all vertices in this face
+     */
     public Vector3f getCentroid() {
         Vector3f centroid = new Vector3f();
         for (Vertex vertex : vertices) centroid.add(vertex.position());

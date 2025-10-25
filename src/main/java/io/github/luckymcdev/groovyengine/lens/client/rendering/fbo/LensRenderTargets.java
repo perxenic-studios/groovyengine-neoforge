@@ -12,7 +12,7 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
-public class LensRenderTargets {
+public class LensRenderTargets implements AutoCloseable {
 
     public static RenderTarget afterSkyTarget;
     public static RenderTarget afterSolidBlocksTarget;
@@ -25,6 +25,10 @@ public class LensRenderTargets {
     public static RenderTarget afterWeatherTarget;
     public static RenderTarget afterLevelTarget;
 
+    /**
+     * Get the render targets for the current render stage.
+     * @param event the RenderLevelStageEvent
+     */
     @SubscribeEvent
     private static void getRenderTargets(RenderLevelStageEvent event) {
         Stage currStage = event.getStage();
@@ -108,6 +112,13 @@ public class LensRenderTargets {
         return afterTranslucentBlocksTarget.getDepthTextureId();
     }
 
+    /**
+     * Destroys all render targets created by the LensRenderTargets class.
+     *<p>
+     *This method is called when the LensRenderTargets class is about to be shut down.
+     *It iterates over all render targets and calls their destroyBuffers method.
+     *Afterwards, the render targets are set to null.
+     */
     public static void cleanup() {
         if (afterSkyTarget != null) {
             afterSkyTarget.destroyBuffers();
@@ -149,5 +160,19 @@ public class LensRenderTargets {
             afterLevelTarget.destroyBuffers();
             afterLevelTarget = null;
         }
+    }
+
+    /**
+     * Destroys all render targets created by the LensRenderTargets class.
+     *<p>
+     *This method is called when the LensRenderTargets class is about to be shut down.
+     *It iterates over all render targets and calls their destroyBuffers method.
+     *Afterward, the render targets are set to null.
+     *
+     * @throws Exception if an error occurs when destroying the render targets
+     */
+    @Override
+    public void close() throws Exception {
+        cleanup();
     }
 }

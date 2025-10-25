@@ -47,7 +47,6 @@ public record Material(String name, ShaderInstance shader, ResourceLocation text
                 affectsCrumbling, sortOnUpload, stateBuilder.createCompositeState(true));
     }
 
-    // Fluent modification methods
     public Material withName(String newName) {
         return new Material(newName, shader, texture, pipeline, format, vertexMode, bufferSize, affectsCrumbling, sortOnUpload);
     }

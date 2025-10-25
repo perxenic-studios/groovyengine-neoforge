@@ -45,10 +45,20 @@ public class RenderingDebuggingWindow extends EditorWindow {
         return chromaticAberrationEnabled;
     }
 
+    /**
+     * Returns the current chromatic aberration amount.
+     *
+     * @return The current chromatic aberration amount.
+     */
     public static float getChromaticAmount() {
         return chromaticAmount;
     }
 
+    /**
+     * Returns the current vignette strength.
+     *
+     * @return The current vignette strength.
+     */
     public static float getVignetteStrength() {
         return vignetteStrength;
     }
@@ -57,30 +67,67 @@ public class RenderingDebuggingWindow extends EditorWindow {
         return waveEffectEnabled;
     }
 
+    /**
+     * Returns the current wave distortion strength.
+     *
+     * @return The current wave distortion strength.
+     */
     public static float getWaveStrength() {
         return waveStrength;
     }
 
+
+    /**
+     * Returns the current wave frequency.
+     *
+     * @return The current wave frequency.
+     */
     public static float getWaveFrequency() {
         return waveFrequency;
     }
 
+
+    /**
+     * Returns whether the glitch effect is currently enabled.
+     *
+     * @return Whether the glitch effect is currently enabled.
+     */
     public static boolean isGlitchEffectEnabled() {
         return glitchEffectEnabled;
     }
 
+    /**
+     * Returns the current intensity of the glitch effect.
+     *
+     * @return The current intensity of the glitch effect.
+     */
     public static float getGlitchIntensity() {
         return glitchIntensity;
     }
 
+    /**
+     * Returns whether depth visualization is currently enabled.
+     *
+     * @return Whether depth visualization is currently enabled.
+     */
     public static boolean isDepthVisualizationEnabled() {
         return depthVisualizationEnabled;
     }
 
+    /**
+     * Returns the current depth visualization mode.
+     *
+     * @return The current depth visualization mode.
+     */
     public static int getDepthVisualizationMode() {
         return depthVisualizationMode;
     }
 
+    /**
+     * Returns the current depth texture ID based on the combo box selection.
+     *
+     * @return The current depth texture ID.
+     */
     public static int getCurrentDepthTexture() {
         // Map the combo box selection to actual texture IDs
         switch (currentDepthTexture) {
@@ -97,11 +144,20 @@ public class RenderingDebuggingWindow extends EditorWindow {
         }
     }
 
+    /**
+     * Renders the rendering debugging window.
+     *
+     * @param io The ImGuiIO instance.
+     */
     @Override
     public void render(ImGuiIO io) {
         renderMainWindow();
     }
 
+    /**
+     * Renders the rendering debugging window.
+     * This window is used to display and manipulate rendering related data such as textures, render targets, and shader effects.
+     */
     private void renderMainWindow() {
         ImGe.window(title, () -> {
             ImGe.collapsingHeader(ImIcons.TUNE.get() + " Post Processing", () -> {
@@ -269,6 +325,12 @@ public class RenderingDebuggingWindow extends EditorWindow {
         });
     }
 
+    /**
+     * Renders a tab item with the given label and texture ID.
+     * If the tab item is active, it calls {@link #renderRenderTarget(String, int)} to render the texture.
+     * @param label The label of the tab item.
+     * @param textureId The ID of the texture to render.
+     */
     private void renderRenderTargetTab(String label, int textureId) {
         if (ImGe.beginTabItem(label)) {
             renderRenderTarget(label, textureId);
@@ -276,6 +338,14 @@ public class RenderingDebuggingWindow extends EditorWindow {
         }
     }
 
+    /**
+     * Renders a tab item with the given label and texture ID, and calls
+     * {@link #renderRenderTargetFlipped(String, int)} to render the texture.
+     * If the tab item is active, it calls {@link #renderRenderTargetFlipped(String, int)}
+     * to render the texture.
+     * @param label The label of the tab item.
+     * @param textureId The ID of the texture to render.
+     */
     private void renderRenderTargetTabFlipped(String label, int textureId) {
         if (ImGe.beginTabItem(label)) {
             renderRenderTargetFlipped(label, textureId);
@@ -283,6 +353,14 @@ public class RenderingDebuggingWindow extends EditorWindow {
         }
     }
 
+    /**
+     * Renders a texture with the given label and texture ID.
+     * The texture is rendered in the center of the window with a size of half the window's width and height.
+     * If the texture ID is valid, a tooltip is displayed on hover with information about the texture ID, size, and label.
+     * If the texture ID is invalid, a dummy texture is rendered with the given size and a tooltip is displayed on hover with the label "[ No texture captured ]".
+     * @param label The label of the texture.
+     * @param textureId The ID of the texture to render.
+     */
     private void renderRenderTarget(String label, int textureId) {
         float mcWidth = Minecraft.getInstance().getWindow().getWidth();
         float mcHeight = Minecraft.getInstance().getWindow().getHeight();
@@ -307,6 +385,14 @@ public class RenderingDebuggingWindow extends EditorWindow {
         }
     }
 
+    /**
+     * Renders a texture with the given label and texture ID, flipped horizontally.
+     * The texture is rendered in the center of the window with a size of half the window's width and height.
+     * If the texture ID is valid, a tooltip is displayed on hover with information about the texture ID, size, and label.
+     * If the texture ID is invalid, a dummy texture is rendered with the given size and a tooltip is displayed on hover with the label "[ No texture captured ]".
+     * @param label The label of the texture.
+     * @param textureId The ID of the texture to render.
+     */
     private void renderRenderTargetFlipped(String label, int textureId) {
         float mcWidth = Minecraft.getInstance().getWindow().getWidth();
         float mcHeight = Minecraft.getInstance().getWindow().getHeight();

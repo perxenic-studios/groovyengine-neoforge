@@ -51,6 +51,7 @@ public class VFXBuilders {
         CONSUMER_INFO_MAP.put(VertexFormatElement.UV2, (consumer, pose, builder, normal, x, y, z, u, v) -> consumer.setLight(builder.light));
     } //TODO: add more here
 
+
     public static Vector3f normal(PoseStack stack) {
         return normal(stack.last().normal());
     }

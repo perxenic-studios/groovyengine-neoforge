@@ -16,12 +16,27 @@ public class AnimationWindow extends EditorWindow {
         super(ImIcons.ANIMATION.get() + " AnimationWindow");
     }
 
+    /**
+     * Renders the animation window.
+     * This method renders two sections: a section to control the animation of the animated model and a section to control the animation of the Chupacabra animations.
+     * The first section contains three buttons: "Play animation", "Resume animation", and "Stop animation".
+     * The second section contains a slider to adjust the speed of the Chupacabra animations and a text display of the current speed.
+     * @param io the ImGuiIO to use for rendering
+     */
     @Override
     public void render(ImGuiIO io) {
         //renderChupacabraAnimationController(io);
         renderAmoController(io);
     }
 
+    /**
+     * Renders the animation window.
+     * This method renders three buttons: "Play animation", "Resume animation", and "Stop animation".
+     * The "Play animation" button plays the "rotate_x" animation of the animated model.
+     * The "Resume animation" button resumes the animation of the animated model.
+     * The "Stop animation" button stops the animation of the animated model.
+     * @param io the ImGuiIO to use for rendering
+     */
     private void renderAmoController(ImGuiIO io) {
         ImGe.window(ImIcons.ANIMATION.get() + " Animation Controller", () -> {
             ImGe.button("Play animation", () -> LensRendering.animatedModel.playAnimation("rotate_x"));
@@ -32,6 +47,19 @@ public class AnimationWindow extends EditorWindow {
         });
     }
 
+    /**
+     * UNUSED / DEPRECATED
+     * <p>
+     * Renders the Chupacabra animation window.
+     * This method renders several sections: a section to adjust the speed of the Chupacabra animations, a section to display the current animation, a section for idle animations, a section for locomotion animations, a section for actions, and a section for playback controls.
+     * The speed section contains a slider to adjust the speed of the Chupacabra animations and a text display of the current speed.
+     * The current animation section displays the current animation and whether it is playing.
+     * The idle animations section contains buttons to play the idle animations: "Idle Breathing", "Idle Look Around", and "Idle Look Around".
+     * The locomotion animations section contains buttons to play the locomotion animations: "Walk", "Run".
+     * The actions section contains buttons to play the actions: "Attack Bite", "Howl", "Sniff", "Crouch", "Jump", "Tail Wag".
+     * The playback controls section contains buttons to pause, resume, stop, and reset the Chupacabra animations.
+     * @param io the ImGuiIO to use for rendering
+     */
     private void renderChupacabraAnimationController(ImGuiIO io) {
         ImGe.window(ImIcons.ANIMATION.get() + " Animation Controller", () -> {
             ImGe.collapsingHeader("Chupacabra Animations", () -> {

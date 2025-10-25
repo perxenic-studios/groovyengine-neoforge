@@ -16,6 +16,9 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GeMaterials {
+    /**
+     * Default Pipeline for static rendering
+     */
     public static final PipelineState STATIC = new PipelineState(
             true,  // depthTest
             true,  // depthWrite
@@ -27,6 +30,9 @@ public class GeMaterials {
             WriteMask.COLOR_DEPTH // write both color and depth
     );
 
+    /**
+     * Default Pipeline for V2 rendering
+     */
     public static final PipelineState V2 = new PipelineState(
             true,  // depthTest
             true,  // depthWrite
@@ -53,27 +59,31 @@ public class GeMaterials {
     );
 
 
+    /**
+     * Default Material for custom quads
+     */
     public static final Material CUSTOM_QUADS = Materials.builder("custom_quads")
             .texture(ResourceLocation.withDefaultNamespace("textures/block/dirt.png"))
             .shader(TestShader.INSTANCE.getShader())
-            .transparency(TransparencyMode.NONE)
-            .lightmap(false)
-            .overlay(false)
             .format(DefaultVertexFormat.POSITION_TEX)
             .vertexMode(VertexFormat.Mode.QUADS)
             .bufferSize(256)
             .build().withPipeline(STATIC);
 
+    /**
+     * Default Material for debug triangles
+     */
     public static final Material DEBUG_TRIANGLES = Materials.builder("debug_triangles")
             .shader(GameRenderer.getPositionColorLightmapShader())
             .format(DefaultVertexFormat.POSITION_COLOR_LIGHTMAP)
             .vertexMode(VertexFormat.Mode.TRIANGLES)
             .bufferSize(256)
-            .transparency(TransparencyMode.TRANSLUCENT)
-            .cullFaces(false)
             .build()
             .withPipeline(V2);
 
+    /**
+     * Default Material for OBJ models (approved by Lio)
+     */
     public static final Material OBJ_MODEL = Materials.builder("obj_model")
             .shader(GameRenderer.getRendertypeEntitySolidShader())
             .format(DefaultVertexFormat.NEW_ENTITY)

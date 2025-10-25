@@ -10,6 +10,17 @@ import org.lwjgl.opengl.GL30;
 @OnlyIn(Dist.CLIENT)
 public class RenderTargetUtil {
 
+    /**
+     * Copy the contents of the source RenderTarget into the existing RenderTarget (if null, create a new one).
+     * If the existing RenderTarget is not null and does not match the source RenderTarget's dimensions,
+     * it will be destroyed and recreated with the correct dimensions.
+     * The contents of the source RenderTarget are copied into the destination RenderTarget using
+     * OpenGL's glBlitFramebuffer function with Y-flip.
+     *
+     * @param source The source RenderTarget to copy from
+     * @param existing The destination RenderTarget to copy into (or null to create a new one)
+     * @return The copied RenderTarget
+     */
     public static RenderTarget copyRenderTarget(RenderTarget source, RenderTarget existing) {
         // Create or resize the target if needed
         if (existing == null || existing.width != source.width || existing.height != source.height) {

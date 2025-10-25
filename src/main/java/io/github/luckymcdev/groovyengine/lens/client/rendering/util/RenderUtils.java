@@ -32,6 +32,12 @@ public class RenderUtils {
     public static final ResourceLocation CONCRETE_RES_LOC = ResourceLocation.withDefaultNamespace(CONCRETE_RES_LOC_STRING);
 
 
+    /**
+     * Check if a given point is inside the camera's frustum.
+     * @param camera The camera to check against
+     * @param worldPos The point to check in world coordinates
+     * @return true if the point is inside the camera's frustum, false otherwise
+     */
     public static boolean isInCameraFrustum(Camera camera, Vec3 worldPos) {
         Camera.NearPlane nearPlane = camera.getNearPlane();
         Vec3 cameraPos = camera.getPosition();
@@ -46,6 +52,15 @@ public class RenderUtils {
         return isPointInPyramidFrustum(cameraPos, frustumCorners, worldPos);
     }
 
+    /**
+     * Check if a given point is inside a pyramid frustum.
+     * A pyramid frustum is a 3D shape formed by a pyramid with its apex at the given position,
+     * and its base corners at the given positions.
+     * @param apex The position of the apex of the pyramid
+     * @param baseCorners The positions of the corners of the base of the pyramid
+     * @param point The point to check if it is inside the pyramid frustum
+     * @return true if the point is inside the pyramid frustum, false otherwise
+     */
     private static boolean isPointInPyramidFrustum(Vec3 apex, Vec3[] baseCorners, Vec3 point) {
         for (int i = 0; i < baseCorners.length; i++) {
             Vec3 corner1 = baseCorners[i];
@@ -58,6 +73,14 @@ public class RenderUtils {
         return true;
     }
 
+    /**
+     * Check if a given point is inside a plane defined by three points.
+     * @param planePoint1 The first point defining the plane
+     * @param planePoint2 The second point defining the plane
+     * @param planePoint3 The third point defining the plane
+     * @param testPoint The point to check if it is inside the plane
+     * @return true if the point is inside the plane, false otherwise
+     */
     private static boolean isPointInsidePlane(Vec3 planePoint1, Vec3 planePoint2, Vec3 planePoint3, Vec3 testPoint) {
         Vec3 edge1 = planePoint2.subtract(planePoint1);
         Vec3 edge2 = planePoint3.subtract(planePoint1);
@@ -69,48 +92,35 @@ public class RenderUtils {
         return dotProduct <= 0.0;
     }
 
+    /**
+     * Translate the given pose stack to the position of the main camera.
+     * This is used to set up rendering of the world, so that the camera's position is ignored.
+     * @param poseStack The pose stack to translate
+     */
     public static void setupWorldRendering(PoseStack poseStack) {
         Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
     }
 
+    /**
+     * Sets the position of a pose stack to the given position in world coordinates.
+     * This is used to set up rendering of the world, so that the camera's position is ignored.
+     * @param stack The pose stack to set the position of
+     * @param worldPos The position in world coordinates to set the pose stack to
+     */
     public static void setPoseStackPosition(PoseStack stack, Vec3 worldPos) {
         Vec3 camPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         stack.setIdentity(); // clear old transformations
         stack.translate(worldPos.x - camPos.x, worldPos.y - camPos.y, worldPos.z - camPos.z);
     }
 
-    public static void withPose(PoseStack stack, Runnable action) {
-        stack.pushPose();
-        try {
-            action.run();
-        } finally {
-            stack.popPose();
-        }
-    }
 
-    public static void withTranslated(PoseStack stack, double x, double y, double z, Runnable action) {
-        withPose(stack, () -> {
-            stack.translate(x, y, z);
-            action.run();
-        });
-    }
-
-    public static void withRotated(PoseStack stack, Quaternionf rotation, Runnable action) {
-        withPose(stack, () -> {
-            stack.mulPose(rotation);
-            action.run();
-        });
-    }
-
-    public static void withScaled(PoseStack stack, float x, float y, float z, Runnable action) {
-        withPose(stack, () -> {
-            stack.scale(x, y, z);
-            action.run();
-        });
-    }
-
-
+    /**
+     * Returns a vertex consumer for the given multi buffer source.
+     * The returned consumer is for the custom quads render type.
+     * @param bufferSource The multi buffer source to get a vertex consumer for
+     * @return A vertex consumer for the given multi buffer source
+     */
     public static VertexConsumer getConsumer(MultiBufferSource bufferSource) {
         return bufferSource.getBuffer(GeMaterials.CUSTOM_QUADS.renderType());
     }
@@ -132,10 +142,38 @@ public class RenderUtils {
         return LevelRenderer.getLightColor(mc.level, blockPos);
     }
 
+    /**
+     * Gets the main camera object for the current game renderer.
+     *
+     * @return the main camera object
+     */
     public static Camera getMainCamera() {
         return Minecraft.getInstance().gameRenderer.getMainCamera();
     }
 
+    /**
+     * Renders a quad using the given vertex consumer, matrix, and vertices.
+     * The quad will have the given normal, and the given UV coordinates.
+     * @param consumer The vertex consumer to render with
+     * @param matrix The matrix to transform the vertices with
+     * @param x1 The x coordinate of the first vertex
+     * @param y1 The y coordinate of the first vertex
+     * @param z1 The z coordinate of the first vertex
+     * @param x2 The x coordinate of the second vertex
+     * @param y2 The y coordinate of the second vertex
+     * @param z2 The z coordinate of the second vertex
+     * @param x3 The x coordinate of the third vertex
+     * @param y3 The y coordinate of the third vertex
+     * @param z3 The z coordinate of the third vertex
+     * @param x4 The x coordinate of the fourth vertex
+     * @param y4 The y coordinate of the fourth vertex
+     * @param z4 The z coordinate of the fourth vertex
+     * @param u1 The u coordinate of the first vertex
+     * @param v1 The v coordinate of the first vertex
+     * @param u2 The u coordinate of the second vertex
+     * @param v2 The v coordinate of the second vertex
+     * @param normal The normal vector of the quad
+     */
     public static void renderQuad(VertexConsumer consumer, Matrix4f matrix,
                                   float x1, float y1, float z1,
                                   float x2, float y2, float z2,
@@ -149,6 +187,23 @@ public class RenderUtils {
         consumer.addVertex(matrix, x4, y4, z4).setUv(u1, v2).setNormal(normal.x(), normal.y(), normal.z());
     }
 
+    /**
+     * Renders a centered quad at the given position, with the given size and normal.
+     * The quad will have the given UV coordinates.
+     * @param consumer The vertex consumer to render with
+     * @param matrix The matrix to transform the vertices with
+     * @param centerX The x coordinate of the center of the quad
+     * @param centerY The y coordinate of the center of the quad
+     * @param centerZ The z coordinate of the center of the quad
+     * @param sizeX The size of the quad in the x direction
+     * @param sizeY The size of the quad in the y direction
+     * @param sizeZ The size of the quad in the z direction
+     * @param u1 The u coordinate of the first vertex
+     * @param v1 The v coordinate of the first vertex
+     * @param u2 The u coordinate of the second vertex
+     * @param v2 The v coordinate of the second vertex
+     * @param normal The normal vector of the quad
+     */
     public static void renderCenteredQuad(VertexConsumer consumer, Matrix4f matrix,
                                           float centerX, float centerY, float centerZ,
                                           float sizeX, float sizeY, float sizeZ,
@@ -166,10 +221,25 @@ public class RenderUtils {
                 u1, v1, u2, v2, normal);
     }
 
+    /**
+     * Computes the parametric points of a 3D sphere
+     * @param u the u parameter of the sphere
+     * @param v the v parameter of the sphere
+     * @param r the radius of the sphere
+     * @return the parametric points of the sphere
+     */
     public static Vector3f parametricSphere(float u, float v, float r) {
         return new Vector3f(Mth.cos(u) * Mth.sin(v) * r, Mth.cos(v) * r, Mth.sin(u) * Mth.sin(v) * r);
     }
 
+    /**
+     * Computes the parametric points of a 3D torus
+     * @param u the u parameter of the torus
+     * @param v the v parameter of the torus
+     * @param majorRadius the major radius of the torus
+     * @param minorRadius the minor radius of the torus
+     * @return the parametric points of the torus
+     */
     public static Vector3f parametricTorus(float u, float v, float majorRadius, float minorRadius) {
         float x = (majorRadius + minorRadius * Mth.cos(v)) * Mth.cos(u);
         float y = minorRadius * Mth.sin(v);
@@ -177,6 +247,13 @@ public class RenderUtils {
         return new Vector3f(x, y, z);
     }
 
+    /**
+     * Computes the perpendicular trail points of a 3D line segment
+     * @param start the start point of the line segment
+     * @param end the end point of the line segment
+     * @param width the width of the trail
+     * @return the perpendicular trail points of the line segment
+     */
     public static Vec2 perpendicularTrailPoints(Vector4f start, Vector4f end, float width) {
         float x = -start.x();
         float y = -start.y();
@@ -200,6 +277,12 @@ public class RenderUtils {
         return new Vec2(-y, x);
     }
 
+    /**
+     * Returns the sum of the squares of the given float values.
+     * This is useful for computing the squared Euclidean distance between two points.
+     * @param a A variable number of float values
+     * @return The sum of the squares of the given values
+     */
     public static float distSqr(float... a) {
         float d = 0.0F;
         for (float f : a) {
@@ -208,14 +291,33 @@ public class RenderUtils {
         return d;
     }
 
+    /**
+     * Returns the Euclidean distance between two points.
+     * The Euclidean distance is the square root of the sum of the squares of the differences between corresponding coordinates.
+     * @param a A variable number of float values, where the number of values should be even and the values should be paired to represent coordinates.
+     * @return The Euclidean distance between the two points.
+     */
     public static float distance(float... a) {
         return Mth.sqrt(distSqr(a));
     }
 
+    /**
+     * Returns the midpoint of two vectors.
+     * The midpoint is the vector that is halfway between the two given vectors.
+     * @param a The first vector
+     * @param b The second vector
+     * @return The midpoint of the two vectors
+     */
     public static Vector4f midpoint(Vector4f a, Vector4f b) {
         return new Vector4f((a.x() + b.x()) * 0.5F, (a.y() + b.y()) * 0.5F, (a.z() + b.z()) * 0.5F, (a.w() + b.w()) * 0.5F);
     }
 
+    /**
+     * Transforms a world position into a texture coordinate using the given view model matrix and projection matrix.
+     * @param worldPos The world position to transform
+     * @param viewModelStack The pose stack containing the view model matrix
+     * @return The resulting texture coordinate
+     */
     public static Vec2 worldPosToTexCoord(Vector3f worldPos, PoseStack viewModelStack) {
         Matrix4f viewMat = viewModelStack.last().pose();
         Matrix4f projMat = RenderSystem.getProjectionMatrix();

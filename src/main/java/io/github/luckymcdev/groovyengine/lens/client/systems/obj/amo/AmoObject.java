@@ -21,6 +21,11 @@ public class AmoObject extends ObjObject {
         this.amoFaces = new ArrayList<>();
     }
 
+    /**
+     * Adds a face to this object.
+     * If the face is an instance of AmoFace, it will be added to the list of animated faces.
+     * @param face The face to add.
+     */
     @Override
     public void addFace(Face face) {
         super.addFace(face);
@@ -57,6 +62,11 @@ public class AmoObject extends ObjObject {
         poseStack.popPose();
     }
 
+    /**
+     * Get the list of animated faces for this object.
+     * These faces use joint transformations for skeletal animation.
+     * @return The list of animated faces.
+     */
     public List<AmoFace> getAmoFaces() {
         return amoFaces;
     }

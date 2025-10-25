@@ -9,6 +9,20 @@ import org.joml.Vector3f;
 @OnlyIn(Dist.CLIENT)
 public class GeometryBuilder {
 
+    /**
+     * Render a cube with a given size and center position.
+     *
+     * @param consumer Vertex consumer to render the cube
+     * @param matrix Matrix4f to use when rendering the cube
+     * @param centerX Center x-coordinate of the cube
+     * @param centerY Center y-coordinate of the cube
+     * @param centerZ Center z-coordinate of the cube
+     * @param size Size of the cube
+     * @param u1 UV coordinate of the first vertex of the cube
+     * @param v1 UV coordinate of the second vertex of the cube
+     * @param u2 UV coordinate of the third vertex of the cube
+     * @param v2 UV coordinate of the fourth vertex of the cube
+     */
     public static void renderCube(VertexConsumer consumer, Matrix4f matrix,
                                   float centerX, float centerY, float centerZ,
                                   float size, float u1, float v1, float u2, float v2) {
@@ -52,6 +66,22 @@ public class GeometryBuilder {
                 u1, v1, u2, v2, new Vector3f(-1, 0, 0));
     }
 
+    /**
+     * Render a plane with a given size, center position, and normal.
+     *
+     * @param consumer Vertex consumer to render the plane
+     * @param matrix Matrix4f to use when rendering the plane
+     * @param centerX Center x-coordinate of the plane
+     * @param centerY Center y-coordinate of the plane
+     * @param centerZ Center z-coordinate of the plane
+     * @param width Width of the plane
+     * @param height Height of the plane
+     * @param normal Normal of the plane
+     * @param u1 UV coordinate of the first vertex of the plane
+     * @param v1 UV coordinate of the second vertex of the plane
+     * @param u2 UV coordinate of the third vertex of the plane
+     * @param v2 UV coordinate of the fourth vertex of the plane
+     */
     public static void renderPlane(VertexConsumer consumer, Matrix4f matrix,
                                    float centerX, float centerY, float centerZ,
                                    float width, float height, Vector3f normal,
@@ -86,6 +116,28 @@ public class GeometryBuilder {
         consumer.addVertex(matrix, v4Pos.x, v4Pos.y, v4Pos.z).setUv(u1, v2).setNormal(normal.x, normal.y, normal.z);
     }
 
+    /**
+     * Render a triangle with the given vertices, UV coordinates, and normal.
+     *
+     * @param consumer Vertex consumer to render the triangle
+     * @param matrix Matrix4f to use when rendering the triangle
+     * @param x1 X-coordinate of the first vertex of the triangle
+     * @param y1 Y-coordinate of the first vertex of the triangle
+     * @param z1 Z-coordinate of the first vertex of the triangle
+     * @param x2 X-coordinate of the second vertex of the triangle
+     * @param y2 Y-coordinate of the second vertex of the triangle
+     * @param z2 Z-coordinate of the second vertex of the triangle
+     * @param x3 X-coordinate of the third vertex of the triangle
+     * @param y3 Y-coordinate of the third vertex of the triangle
+     * @param z3 Z-coordinate of the third vertex of the triangle
+     * @param u1 UV coordinate of the first vertex of the triangle
+     * @param v1 UV coordinate of the second vertex of the triangle
+     * @param u2 UV coordinate of the third vertex of the triangle
+     * @param v2 UV coordinate of the fourth vertex of the triangle
+     * @param u3 UV coordinate of the fifth vertex of the triangle
+     * @param v3 UV coordinate of the sixth vertex of the triangle
+     * @param normal Normal of the triangle
+     */
     public static void renderTriangle(VertexConsumer consumer, Matrix4f matrix,
                                       float x1, float y1, float z1,
                                       float x2, float y2, float z2,

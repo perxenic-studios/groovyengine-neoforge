@@ -13,6 +13,11 @@ public class RenderEvent extends Event {
         this.renderer = Renderer.getInstance();
     }
 
+    /**
+     * Returns the renderer instance.
+     *
+     * @return the renderer instance
+     */
     public Renderer getRenderer() {
         return renderer;
     }

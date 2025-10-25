@@ -16,6 +16,10 @@ public record PipelineState(boolean depthTest, boolean depthWrite, boolean cullF
         return new PipelineStateBuilder();
     }
 
+    /**
+     * Returns a RenderStateShard.TransparencyStateShard based on the given transparency mode
+     * @return a RenderStateShard.TransparencyStateShard representing the given transparency mode
+     */
     public RenderStateShard.TransparencyStateShard toTransparencyState() {
         return switch (transparency) {
             case NONE -> RenderStateShard.NO_TRANSPARENCY;
@@ -26,18 +30,34 @@ public record PipelineState(boolean depthTest, boolean depthWrite, boolean cullF
         };
     }
 
+    /**
+     * Returns a RenderStateShard.DepthTestStateShard based on the given depth test setting
+     * @return a RenderStateShard.DepthTestStateShard representing the given depth test setting
+     */
     public RenderStateShard.DepthTestStateShard toDepthState() {
         return depthTest ? RenderStateShard.LEQUAL_DEPTH_TEST : RenderStateShard.NO_DEPTH_TEST;
     }
 
+    /**
+     * Returns a RenderStateShard.LightmapStateShard representing the given lightmap setting
+     * @return a RenderStateShard.LightmapStateShard representing the given lightmap setting
+     */
     public RenderStateShard.LightmapStateShard toLightmapState() {
         return lightmap ? RenderStateShard.LIGHTMAP : RenderStateShard.NO_LIGHTMAP;
     }
 
+    /**
+     * Returns a RenderStateShard.OverlayStateShard based on the given overlay setting
+     * @return a RenderStateShard.OverlayStateShard representing the given overlay setting
+     */
     public RenderStateShard.OverlayStateShard toOverlayState() {
         return overlay ? RenderStateShard.OVERLAY : RenderStateShard.NO_OVERLAY;
     }
 
+    /**
+     * Returns a RenderStateShard.WriteMaskStateShard based on the given write mask setting
+     * @return a RenderStateShard.WriteMaskStateShard representing the given write mask setting
+     */
     public RenderStateShard.WriteMaskStateShard toWriteMaskState() {
         return switch (writeMask) {
             case COLOR_DEPTH -> RenderStateShard.COLOR_DEPTH_WRITE;

@@ -32,6 +32,16 @@ public class AmoModel extends ObjModel {
         this.isPlaying = false;
     }
 
+    /**
+     * Loads the animated model from the resource location.
+     *
+     * @implSpec
+     * @implNote This method loads the animated model from the resource location.
+     * It first checks if the resource is present, and if so, it parses the OBJ file
+     * and loads the model data. Finally, it logs the loaded model data.
+     *
+     * @throws RuntimeException if the resource is not found.
+     */
     @Override
     public void loadModel() {
         GE.LENS_LOG.info("Loading animated model: {}", modelLocation);
@@ -157,6 +167,11 @@ public class AmoModel extends ObjModel {
      * Get all available animation names.
      */
 
+    /**
+     * Gets a set of all available animation names for this model.
+     *
+     * @return A set of animation names.
+     */
     public java.util.Set<String> getAnimationNames() {
         return animations.keySet();
     }
@@ -192,6 +207,11 @@ public class AmoModel extends ObjModel {
         return isPlaying;
     }
 
+    /**
+     * Checks if the model is loaded.
+     *
+     * @return True if the model is loaded, false otherwise.
+     */
     public boolean isModelLoaded() {
         return getObjects() != null;
     }

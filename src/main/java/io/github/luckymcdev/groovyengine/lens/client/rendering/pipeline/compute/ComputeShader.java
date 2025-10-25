@@ -183,6 +183,7 @@ public class ComputeShader extends Shader implements AutoCloseable {
         LensRenderSystem.checkProgramLink(program);
     }
 
+
     /**
      * Loads compute shader config from JSON file and returns the compute shader path
      */

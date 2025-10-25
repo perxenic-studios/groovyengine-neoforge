@@ -24,16 +24,40 @@ public class Joint {
         this.worldTransform = new Matrix4f().identity();
     }
 
+    /**
+     * Sets the position of the joint.
+     * The position is given by the x, y, and z values.
+     * The local transform of the joint is updated after setting the position.
+     *
+     * @param x The x component of the position.
+     * @param y The y component of the position.
+     * @param z The z component of the position.
+     */
     public void setPosition(float x, float y, float z) {
         this.position.set(x, y, z);
         updateLocalTransform();
     }
 
+    /**
+     * Sets the rotation of the joint.
+     * The rotation is given by the x, y, z, and w values of a quaternion.
+     * The local transform of the joint is updated after setting the rotation.
+     *
+     * @param x The x component of the quaternion.
+     * @param y The y component of the quaternion.
+     * @param z The z component of the quaternion.
+     * @param w The w component of the quaternion.
+     */
     public void setRotation(float x, float y, float z, float w) {
         this.rotation.set(x, y, z, w);
         updateLocalTransform();
     }
 
+    /**
+     * Updates the local transform of the joint based on its position and rotation.
+     * The local transform is set to the identity matrix, then translated by the joint's position,
+     * and then rotated by the joint's rotation.
+     */
     private void updateLocalTransform() {
         localTransform.identity()
                 .translate(position)
@@ -60,22 +84,51 @@ public class Joint {
         return result;
     }
 
+    /**
+     * Returns the name of the joint.
+     *
+     * @return The name of the joint.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the index of the parent joint in the joints array.
+     * If the joint has no parent, the value is -1.
+     *
+     * @return The index of the parent joint.
+     */
     public int getParentIndex() {
         return parentIndex;
     }
 
+    /**
+     * Returns the position of this joint.
+     *
+     * @return The position of this joint.
+     */
     public Vector3f getPosition() {
         return position;
     }
 
+    /**
+     * Returns the rotation of this joint.
+     *
+     * The rotation is given as a quaternion (x, y, z, w) and is relative to the parent joint.
+     * If the joint has no parent, the rotation is relative to the world coordinate system.
+     *
+     * @return The rotation of this joint.
+     */
     public Quaternionf getRotation() {
         return rotation;
     }
 
+    /**
+     * Returns the world transform of this joint.
+     *
+     * @return The world transform of this joint.
+     */
     public Matrix4f getWorldTransform() {
         return worldTransform;
     }

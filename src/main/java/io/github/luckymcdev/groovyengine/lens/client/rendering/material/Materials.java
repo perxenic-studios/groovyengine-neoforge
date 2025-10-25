@@ -17,10 +17,6 @@ public class Materials {
     public static final Material ENTITY_SOLID = builder()
             .name("entity_solid")
             .entityShader()
-            .opaque()
-            .noCull()
-            .lightmap(true)
-            .overlay(true)
             .build();
 
     private Materials() {
@@ -43,31 +39,24 @@ public class Materials {
     public static Material createSolid(ResourceLocation texture) {
         return builder(texture)
                 .solidShader()
-                .opaque()
                 .build();
     }
 
     public static Material createCutout(ResourceLocation texture) {
         return builder(texture)
                 .cutoutShader()
-                .opaque()
                 .build();
     }
 
     public static Material createTranslucent(ResourceLocation texture) {
         return builder(texture)
                 .translucentShader()
-                .translucent()
                 .build();
     }
 
     public static Material createEntity(ResourceLocation texture) {
         return builder(texture)
                 .entityShader()
-                .opaque()
-                .noCull()
-                .lightmap(true)
-                .overlay(true)
                 .build();
     }
 }
