@@ -72,6 +72,20 @@ public interface BlockPattern {
             }
         }
 
+        /**
+         * Gets the block state for a specific position within the pattern.
+         *
+         * This pattern works by generating a random float between 0 and 1, and then
+         * iterating through the block states and their corresponding weights. When the
+         * cumulative weight exceeds the random float, the corresponding block state is
+         * returned. If the random float exceeds the total weight, the last
+         * block state is returned.
+         *
+         * @param pos    The target position
+         * @param origin The origin point of the pattern
+         * @param random Random instance for probabilistic patterns
+         * @return The block state to place at the given position
+         */
         @Override
         public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
             float rand = random.nextFloat();
@@ -100,6 +114,18 @@ public interface BlockPattern {
             this.scale = scale;
         }
 
+        /**
+         * Gets the block state for a specific position within the pattern.
+         * <p>
+         * This pattern works by dividing the position coordinates by the scale, and
+         * then summing the resulting coordinates. If the sum is even, the primary
+         * block state is returned. If the sum is odd, the secondary block state is returned.
+         *
+         * @param pos    The target position
+         * @param origin The origin point of the pattern
+         * @param random Random instance for probabilistic patterns
+         * @return The block state to place at the given position
+         */
         @Override
         public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
             int x = (pos.getX() - origin.getX()) / scale;
@@ -124,6 +150,19 @@ public interface BlockPattern {
             this.layerThickness = layerThickness;
         }
 
+        /**
+         * Gets the block state for a specific position within the pattern.
+         * <p>
+         * This pattern works by dividing the relative Y position of the target position
+         * by the layer thickness, and then using the resulting layer number to determine
+         * which block state to return. If the layer number is even, the primary block state
+         * is returned. If the layer number is odd, the secondary block state is returned.
+         * <p>
+         * @param pos    The target position
+         * @param origin The origin point of the pattern
+         * @param random Random instance for probabilistic patterns
+         * @return The block state to place at the given position
+         */
         @Override
         public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
             int relativeY = pos.getY() - origin.getY();
@@ -146,6 +185,20 @@ public interface BlockPattern {
             this.topBlock = topBlock;
         }
 
+        /**
+         * Gets the block state for a specific position within the pattern.
+         * <p>
+         * This pattern works by initializing the bounds of the gradient on the first call
+         * if they are not already set. The gradient is then calculated based on the Y
+         * position of the target position, and a random threshold is used to create a
+         * gradient effect. If the random value is less than the normalized Y position,
+         * the top block state is returned. Otherwise, the bottom block state is returned.
+         * <p>
+         * @param pos    The target position
+         * @param origin The origin point of the pattern
+         * @param random Random instance for probabilistic patterns
+         * @return The block state to place at the given position
+         */
         @Override
         public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
             // Initialize bounds on first call if needed
@@ -235,6 +288,15 @@ public interface BlockPattern {
             }
         }
 
+        /**
+         * Creates a WeightedPattern from a list of blocks and weights.
+         * The given blocks and weights must be in pairs, with the block at index i and its weight at index i+1.
+         * If the given blocks and weights are not in pairs, an IllegalArgumentException is thrown.
+         *
+         * @param blocks The list of blocks and weights
+         * @return A WeightedPattern representing the given blocks and weights
+         * @throws IllegalArgumentException If the given blocks and weights are not in pairs
+         */
         public static WeightedPattern fromBlocks(Object... blocks) {
             if (blocks.length % 2 != 0) {
                 throw new IllegalArgumentException("Must provide pairs of Block and weight");
@@ -252,6 +314,21 @@ public interface BlockPattern {
             return new WeightedPattern(blockStates);
         }
 
+        /**
+         * Gets the block state for a specific position within the pattern.
+         * This pattern works by generating a random float between 0 and 1, and then
+         * iterating through the block states and their corresponding weights. When the
+         * cumulative weight exceeds the random float, the corresponding block state is
+         * returned. If the random float exceeds the total weight, the last
+         * block state is returned.
+         * <p>
+         * If no blocks are defined in the weighted pattern, an IllegalStateException is thrown.
+         * @param pos    The target position
+         * @param origin The origin point of the pattern
+         * @param random Random instance for probabilistic patterns
+         * @return The block state to place at the given position
+         * @throws IllegalStateException If no blocks are defined in the weighted pattern
+         */
         @Override
         public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
             if (weightedBlocks.isEmpty()) {
@@ -271,10 +348,20 @@ public interface BlockPattern {
             return weightedBlocks.get(weightedBlocks.size() - 1).blockState;
         }
 
+        /**
+         * Gets a list of all the weighted blocks in this pattern.
+         * The list is a copy of the internal list, so modifying it will not affect the pattern.
+         * @return A list of all the weighted blocks in this pattern
+         */
         public List<WeightedBlock> getWeightedBlocks() {
             return new ArrayList<>(weightedBlocks);
         }
 
+        /**
+         * Gets the total weight of all the blocks in this weighted pattern.
+         * This is the sum of all the individual weights of the blocks in the pattern.
+         * @return The total weight of all the blocks in this weighted pattern
+         */
         public float getTotalWeight() {
             return totalWeight;
         }
@@ -317,6 +404,19 @@ public interface BlockPattern {
             this.threshold = threshold;
         }
 
+        /**
+         * Gets the block state for a specific position within the pattern.
+         * <p>
+         * This pattern works by generating Perlin-like noise at the specified position,
+         * scaled by the given scale. If the generated noise is greater than the
+         * given threshold, the primary block state is returned. Otherwise, the
+         * secondary block state is returned.
+         * <p>
+         * @param pos    The target position
+         * @param origin The origin point of the pattern
+         * @param random Random instance for probabilistic patterns
+         * @return The block state to place at the given position
+         */
         @Override
         public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
             double noise = generateNoise(
@@ -327,6 +427,17 @@ public interface BlockPattern {
             return noise > threshold ? primary : secondary;
         }
 
+        /**
+         * Generates a simple 3D noise value based on the given coordinates.
+         * This noise function is a simplified version of Perlin noise.
+         * The function takes three double coordinates (x, y, z) and returns a
+         * double noise value in the range of -1.0 to 1.0.
+         *
+         * @param x The x-coordinate of the position
+         * @param y The y-coordinate of the position
+         * @param z The z-coordinate of the position
+         * @return The generated noise value
+         */
         private double generateNoise(double x, double y, double z) {
             // Simple 3D noise function (simplified Perlin-like noise)
             double n = Math.sin(x * 12.9898 + y * 78.233 + z * 37.719) * 43758.5453;
@@ -350,6 +461,22 @@ public interface BlockPattern {
             this.axis = axis;
         }
 
+/* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+        /**
+         * Gets the block state for a specific position within the pattern.
+         * <p>
+         * This pattern works by calculating the position's coordinate along the
+         * specified axis, relative to the origin point. The coordinate is then
+         * divided by the stripe width to determine which block state to return.
+         * If the remainder of the division is 0, the primary block state is returned.
+         * Otherwise, the secondary block state is returned.
+         * <p>
+         * @param pos    The target position
+         * @param origin The origin point of the pattern
+         * @param random Random instance for probabilistic patterns
+         * @return The block state to place at the given position
+         */
+/* <<<<<<<<<<  c4652452-18b4-4fa0-b482-ce090f7528e0  >>>>>>>>>>> */
         @Override
         public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
             int coord = switch (axis) {

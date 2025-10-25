@@ -41,6 +41,10 @@ public class AsyncBlockPlacer {
     private AsyncBlockPlacer() {
     }
 
+    /**
+     * Retrieves the singleton instance of the asynchronous block placer.
+     * @return the singleton instance of the asynchronous block placer
+     */
     public static AsyncBlockPlacer getInstance() {
         return INSTANCE;
     }
@@ -67,18 +71,46 @@ public class AsyncBlockPlacer {
         INSTANCE.processQueues(level);
     }
 
+    /**
+     * Retrieves the current number of blocks that are processed per tick.
+     * This value can be modified by calling {@link #setBlocksPerTick(int)}.
+     * The value is adjusted automatically to maintain a target frame rate
+     * if the number of blocks per tick is greater than 10000.
+     *
+     * @return the current number of blocks per tick
+     */
     public int getBlocksPerTick() {
         return blocksPerTick;
     }
 
+    /**
+     * Sets the number of blocks to process per tick.
+     * The value is clamped to a minimum of 1 to prevent division by zero.
+     *
+     * @param blocksPerTick the number of blocks to process per tick
+     */
     public void setBlocksPerTick(int blocksPerTick) {
         this.blocksPerTick = Math.max(1, blocksPerTick);
     }
 
+    /**
+     * Retrieves the current number of block updates that are processed per tick.
+     * This value can be modified by calling {@link #setUpdatesPerTick(int)}.
+     * The value is adjusted automatically to maintain a target frame rate
+     * if the number of blocks per tick is greater than 10000.
+     *
+     * @return the current number of block updates per tick
+     */
     public int getUpdatesPerTick() {
         return updatesPerTick;
     }
 
+    /**
+     * Sets the number of block updates to process per tick.
+     * The value is clamped to a minimum of 1 to prevent division by zero.
+     *
+     * @param updatesPerTick the number of block updates to process per tick
+     */
     public void setUpdatesPerTick(int updatesPerTick) {
         this.updatesPerTick = Math.max(1, updatesPerTick);
     }
@@ -402,14 +434,30 @@ public class AsyncBlockPlacer {
         return true;
     }
 
+    /**
+     * Retrieves the current number of block placement operations that are queued.
+     * This value does not include block updates that are queued.
+     *
+     * @return the current number of block placement operations that are queued
+     */
     public int getQueuedPlacements() {
         return immediatePlacementQueue.size();
     }
 
+    /**
+     * Retrieves the current number of block updates that are queued.
+     * This value does not include block placement operations that are queued.
+     *
+     * @return the current number of block updates that are queued
+     */
     public int getQueuedUpdates() {
         return delayedUpdateQueue.size();
     }
 
+    /**
+     * Clears both the immediate block placement queue and the delayed block update queue.
+     * This method can be used to clear any queued block operations and updates.
+     */
     public void clearQueues() {
         immediatePlacementQueue.clear();
         delayedUpdateQueue.clear();

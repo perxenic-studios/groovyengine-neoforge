@@ -15,6 +15,11 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
+/**
+ * Responsible for rendering the selection box in the Construct Editor.
+ *
+ * @author LuckYMojarto
+ */
 @OnlyIn(Dist.CLIENT)
 public class SelectionRenderer {
 
@@ -34,14 +39,29 @@ public class SelectionRenderer {
     private static final float SELECTION_ALPHA = 0.4f;
     private Selection selection;
 
+    /**
+     * Constructs a new SelectionRenderer instance.
+     *
+     * @param selection The selection to render.
+     */
     public SelectionRenderer(Selection selection) {
         this.selection = selection;
     }
 
+    /**
+     * Sets the selection to render.
+     *
+     * @param selection The selection to render.
+     */
     public void setSelection(Selection selection) {
         this.selection = selection;
     }
 
+    /**
+     * Renders the selection box on the Render Level Stage event.
+     *
+     * @param event The Render Level Stage event.
+     */
     @SubscribeEvent
     public void onRenderLevel(RenderLevelStageEvent event) {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
@@ -98,6 +118,17 @@ public class SelectionRenderer {
         poseStack.popPose();
     }
 
+    /**
+     * Renders a block outline at the specified position.
+     *
+     * @param poseStack The pose stack to render on.
+     * @param builder   The vertex consumer to render with.
+     * @param pos       The position to render the outline at.
+     * @param r         The red color component (0-1 range).
+     * @param g         The green color component (0-1 range).
+     * @param b         The blue color component (0-1 range).
+     * @param a         The alpha color component (0-1 range).
+     */
     private void renderBlockOutline(PoseStack poseStack, VertexConsumer builder,
                                     BlockPos pos, float r, float g, float b, float a) {
         AABB box = new AABB(pos.getX(), pos.getY(), pos.getZ(),

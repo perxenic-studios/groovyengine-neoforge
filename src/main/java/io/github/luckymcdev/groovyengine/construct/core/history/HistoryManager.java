@@ -154,24 +154,5 @@ public class HistoryManager {
         System.out.println("History cleared");
     }
 
-    /**
-     * Represents a snapshot of block states at a point in time.
-     */
-    private static class HistorySnapshot {
-        private final Map<BlockPos, BlockState> blockStates;
-        private final long timestamp;
 
-        public HistorySnapshot(Map<BlockPos, BlockState> blockStates) {
-            this.blockStates = new HashMap<>(blockStates);
-            this.timestamp = System.currentTimeMillis();
-        }
-
-        public Map<BlockPos, BlockState> getBlockStates() {
-            return blockStates;
-        }
-
-        public long getTimestamp() {
-            return timestamp;
-        }
-    }
 }

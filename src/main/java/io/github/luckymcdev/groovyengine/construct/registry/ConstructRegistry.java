@@ -11,6 +11,11 @@ public class ConstructRegistry {
 
     public static final DeferredItem<Item> BRUSH = ITEMS.registerSimpleItem("brush");
 
+    /**
+     * Registers the Construct registry items to the given event bus.
+     *
+     * @param modEventBus the event bus to register to
+     */
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
     }

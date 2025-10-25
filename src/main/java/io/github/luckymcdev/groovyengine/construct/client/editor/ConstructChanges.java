@@ -47,26 +47,26 @@ public class ConstructChanges extends EditorWindow {
     // ===== CONFIGURATION TOGGLES =====
 
     /**
-     * Controls whether block updates are enabled when placing blocks.
+     * Toggles block updates when placing blocks.
      * When disabled, prevents the game from sending block updates, which can
      * improve performance during large-scale building operations.
      */
     private final ImBoolean blockUpdatesEnabled = new ImBoolean(true);
 
     /**
-     * Controls whether blocks are placed instantly without cooldown.
-     * When enabled, removes the default placement delay for rapid building.
+     * Toggles instant block placement without cooldown.
+     * When enabled, allows placing multiple blocks simultaneously without delay.
      */
     private final ImBoolean instantPlacement = new ImBoolean(false);
 
     /**
-     * Controls whether extended reach distance is enabled.
+     * Toggles extended reach distance for block interaction.
      * When enabled, increases block interaction range from 3 blocks to 10 blocks.
      */
     private final ImBoolean extendedReach = new ImBoolean(false);
 
     /**
-     * Controls whether flying movement modifications are applied.
+     * Toggles flying movement modifications.
      * When enabled, provides more responsive flight controls with immediate stopping.
      */
     private final ImBoolean flyingChanges = new ImBoolean(true);
@@ -99,39 +99,25 @@ public class ConstructChanges extends EditorWindow {
      * Contains controls for block placement behavior and building optimizations.
      */
     private void renderBuildingSettingsSection() {
-        // Building Settings Section
         ImGe.title(ImIcons.WIDGETS.get() + " Building Settings");
 
         // Block Updates Toggle
         ImGe.checkbox(ImIcons.BLOCK.get() + " Block Updates", blockUpdatesEnabled, () -> {
             System.out.println("Block updates: " + blockUpdatesEnabled.get());
-            // TODO: Implement block updates toggle functionality
-            // This could hook into block placement events to suppress updates
         });
-        ImGe.helpMarker("Disables block updates when placing blocks. " +
-                "This can significantly improve performance during large-scale " +
-                "building operations but may cause rendering issues with " +
-                "blocks that depend on updates (like redstone).");
+        ImGe.helpMarker("Disable block updates when placing blocks. This can significantly improve performance during large-scale building operations but may cause rendering issues with blocks that depend on updates (like redstone).");
 
         // Instant Placement Toggle
         ImGe.checkbox(ImIcons.ADD.get() + " Instant Placement", instantPlacement, () -> {
             System.out.println("Instant placement: " + instantPlacement.get());
-            // TODO: Implement instant placement functionality
-            // This would modify the block placement cooldown mechanism
         });
-        ImGe.helpMarker("Removes the block placement cooldown for rapid building. " +
-                "Allows placing multiple blocks simultaneously without delay. " +
-                "Useful for fast construction but may feel less vanilla.");
+        ImGe.helpMarker("Allows placing multiple blocks simultaneously without delay. Useful for fast construction but may feel less vanilla.");
 
         // Extended Reach Toggle
         ImGe.checkbox(ImIcons.ARROW_RIGHT.get() + " Extended Reach", extendedReach, () -> {
             System.out.println("Extended reach: " + extendedReach.get());
-            // TODO: Implement extended reach functionality
-            // This would modify the player's block interaction range
         });
-        ImGe.helpMarker("Extends block interaction range from 3 blocks to 10 blocks. " +
-                "Useful for building tall structures or making precise placements " +
-                "from a distance. May affect PvP balance if enabled in multiplayer.");
+        ImGe.helpMarker("Extends block interaction range from 3 blocks to 10 blocks. Useful for building tall structures or making precise placements from a distance. May affect PvP balance if enabled in multiplayer.");
     }
 
     /**
@@ -139,14 +125,11 @@ public class ConstructChanges extends EditorWindow {
      * Contains controls for flight behavior and movement modifications.
      */
     private void renderMovementSettingsSection() {
-        // Movement Settings Section
         ImGe.title(ImIcons.SPEED.get() + " Movement Settings");
 
         // Flying Changes Toggle
         ImGe.checkbox(ImIcons.ROCKET.get() + " Flying Changes", flyingChanges, MovementController::toggleFlyingChanges);
-        ImGe.helpMarker("Improves flight responsiveness by eliminating momentum-based sliding. " +
-                "When enabled, flying stops immediately when movement keys are released. " +
-                "Provides more precise control for building and navigation.");
+        ImGe.helpMarker("Improves flight responsiveness by eliminating momentum-based sliding. When enabled, flying stops immediately when movement keys are released. Provides more precise control for building and navigation.");
 
         // Fly Speed Slider
         if (ImGui.sliderInt(ImIcons.SPEED.get() + " Fly Speed", flySpeedInt, 0, 100)) {
@@ -157,9 +140,7 @@ public class ConstructChanges extends EditorWindow {
             // Optional: Add visual feedback or logging
             System.out.println("Fly speed updated to: " + flySpeedInt[0] + "%");
         }
-        ImGe.helpMarker("Controls flight movement speed as a percentage of maximum. " +
-                "0% = No movement, 100% = Maximum flight speed. " +
-                "Adjust for precise building control or fast travel.");
+        ImGe.helpMarker("Controls flight movement speed as a percentage of maximum. 0% = No movement, 100% = Maximum flight speed. Adjust for precise building control or fast travel.");
     }
 
     // ===== PUBLIC ACCESSOR METHODS =====

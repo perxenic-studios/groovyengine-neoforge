@@ -56,6 +56,15 @@ public class ConstructEditorWindow extends EditorWindow {
         NeoForge.EVENT_BUS.register(new SelectionRenderer(selectionManager));
     }
 
+    /**
+     * Renders the Construct Editor window.
+     * This method is called every frame to update the UI and handle user interactions.
+     * It renders a window with multiple sections including selection information, pattern configuration,
+     * shape options, operation controls, history management, and statistics.
+     *
+     * @param io the ImGui IO context for handling input/output operations
+     * @see ImGuiIO
+     */
     @Override
     public void render(ImGuiIO io) {
         ImGe.window(title, () -> {
@@ -68,22 +77,33 @@ public class ConstructEditorWindow extends EditorWindow {
         });
     }
 
+    /**
+     * Renders the selection section in the Construct Editor window.
+     * This section displays information about the current selection and provides buttons to set the position 1 and 2, clear the selection, and expand the selection.
+     */
     private void renderSelectionSection() {
+        // Selection header
         ImGe.collapsingHeader(ImIcons.SELECT_ALL.get() + " Selection", () -> {
+            // Display positions
             ImGe.text("Position 1: " + pos1Display.get());
             ImGe.text("Position 2: " + pos2Display.get());
 
+            // Set position buttons
             if (ImGe.button("Set Pos1")) setPositionFromLookingAt(true);
             ImGe.sameLine();
             if (ImGe.button("Set Pos2")) setPositionFromLookingAt(false);
 
+            // Clear selection button
             if (ImGe.button("Clear Selection")) {
                 selectionManager.clearSelection();
                 updatePositionDisplays();
             }
+
+            // Expand selection button
             ImGe.sameLine();
             if (ImGe.button("Expand Selection")) expandSelection();
 
+            // Display selection size and dimensions if valid
             if (selectionManager.hasValidSelection()) {
                 ImGe.text("Selection Size: " + selectionManager.getSelectionSize() + " blocks");
                 ImGe.text("Dimensions: " + selectionManager.getDimensions());
@@ -91,6 +111,12 @@ public class ConstructEditorWindow extends EditorWindow {
         });
     }
 
+    /**
+     * Renders the Pattern Configuration section in the Construct Editor window.
+     * This section allows the user to select the block placement pattern and configure relevant inputs.
+     * The available patterns are Single Block, Random Mix, Checkerboard, Layers, Weighted Random, Sphere, and Cylinder.
+     * Each pattern has its own set of relevant inputs and buttons to perform the operation.
+     */
     private void renderPatternSection() {
         if (ImGe.collapsingHeader("Pattern Configuration", true)) {
             ImGe.combo("Pattern Type", patternType, PATTERN_TYPES);
@@ -125,6 +151,12 @@ public class ConstructEditorWindow extends EditorWindow {
         }
     }
 
+    /**
+     * Renders the Shape Options section of the Construct Editor window.
+     * This section includes controls for selecting the shape operation to perform on the current selection.
+     * The available shape operations are Fill, Hollow, Walls, Outline, Sphere, and Cylinder.
+     * Each shape operation has its own set of relevant inputs and buttons to perform the operation.
+     */
     private void renderShapeSection() {
         if (ImGe.collapsingHeader("Shape Options", true)) {
             ImGe.combo("Shape", shapeType, SHAPE_TYPES);
@@ -151,6 +183,10 @@ public class ConstructEditorWindow extends EditorWindow {
         }
     }
 
+    /**
+     * Renders the Operations section of the Construct Editor window.
+     * This section includes buttons to execute a queued operation, clear the current selection, and replace blocks in the selection.
+     */
     private void renderOperationsSection() {
         if (ImGe.collapsingHeader("Operations", true)) {
             if (ImGe.button("Execute Operation")) executeOperation();
@@ -175,6 +211,11 @@ public class ConstructEditorWindow extends EditorWindow {
         }
     }
 
+    /**
+     * Renders the History section of the Construct Editor window.
+     * This section includes buttons to undo and redo the last operation, as well as a button to clear the entire history.
+     * It also displays the current history size and whether or not undo and redo are available.
+     */
     private void renderHistorySection() {
         if (ImGe.collapsingHeader("History", true)) {
             boolean canUndo = historyManager.canUndo();
@@ -199,6 +240,11 @@ public class ConstructEditorWindow extends EditorWindow {
         }
     }
 
+    /**
+     * Renders the Statistics section of the Construct Editor window.
+     * Displays the current queue sizes, blocks per tick, updates per tick, and current FPS.
+     * Also includes a button to clear the queues.
+     */
     private void renderStatsSection() {
         if (ImGe.collapsingHeader("Statistics", true)) {
             ImGe.text("Queued Placements: " + blockPlacer.getQueuedPlacements());
@@ -212,6 +258,14 @@ public class ConstructEditorWindow extends EditorWindow {
         }
     }
 
+    /**
+     * Sets the current position of the player to either Pos1 or Pos2, depending on the value of pos1.
+     * The position is determined by the block that the player is currently looking at.
+     * If the player is not looking at a block, or if the level is null, does nothing.
+     * Updates the position displays after setting the position.
+     *
+     * @param pos1 If true, sets the position to Pos1. If false, sets the position to Pos2.
+     */
     private void setPositionFromLookingAt(boolean pos1) {
         if (mc.hitResult == null || mc.level == null) return;
 
@@ -222,6 +276,10 @@ public class ConstructEditorWindow extends EditorWindow {
         updatePositionDisplays();
     }
 
+    /**
+     * Updates the display strings of the current position 1 and position 2.
+     * If either position is not set, sets the display string to "Not set".
+     */
     private void updatePositionDisplays() {
         BlockPos pos1 = selectionManager.getPos1();
         BlockPos pos2 = selectionManager.getPos2();
@@ -230,6 +288,13 @@ public class ConstructEditorWindow extends EditorWindow {
         pos2Display.set(pos2 != null ? pos2.toShortString() : "Not set");
     }
 
+    /**
+     * Executes the current shape operation on the selection area.
+     * If the selection area is not valid, prints an error message and returns.
+     * If the pattern cannot be created, returns without performing the operation.
+     * Saves the current state of blocks before performing the operation.
+     * Applies the shape transformation to the selection area.
+     */
     private void executeOperation() {
         if (!selectionManager.hasValidSelection()) {
             System.out.println("No valid selection!");
@@ -246,6 +311,13 @@ public class ConstructEditorWindow extends EditorWindow {
         applyShapeOperation(pattern);
     }
 
+    /**
+     * Creates a BlockPattern based on the current values of the blockIdInput, patternType, and other relevant inputs.
+     * The created pattern is then used to perform the shape operation.
+     * If the pattern cannot be created for any reason, null is returned.
+     *
+     * @return A BlockPattern representing the created pattern, or null if the pattern cannot be created.
+     */
     private BlockPattern createPattern() {
         Block primaryBlock = parseBlock(blockIdInput.get());
         if (primaryBlock == null) return null;
@@ -300,6 +372,14 @@ public class ConstructEditorWindow extends EditorWindow {
         }
     }
 
+    /**
+     * Parses a weighted pattern from the given string.
+     * The string should be in the format of "block1,weight1,block2,weight2,...".
+     * Each block should be a valid block ID, and each weight should be a valid float value.
+     * If the string is invalid, returns null.
+     *
+     * @return A BlockPattern representing the parsed weighted pattern, or null if the string is invalid.
+     */
     private BlockPattern parseWeightedPattern() {
         String[] parts = weightedBlocks.get().split(",");
         if (parts.length < 2 || parts.length % 2 != 0) {
@@ -325,6 +405,13 @@ public class ConstructEditorWindow extends EditorWindow {
         return BlockPattern.WeightedPattern.fromBlocks(blocks);
     }
 
+    /**
+     * Applies a shape operation on the current selection using the given pattern.
+     * The type of operation is determined by the current value of shapeType.
+     * Saves the current state before performing the operation.
+     *
+     * @param pattern The BlockPattern to use when performing the operation
+     */
     private void applyShapeOperation(BlockPattern pattern) {
         int currentShape = shapeType.get();
 
@@ -353,6 +440,10 @@ public class ConstructEditorWindow extends EditorWindow {
         System.out.println("Started operation on " + selectionManager.getSelectionSize() + " blocks");
     }
 
+    /**
+     * Clears the current selection by replacing all blocks with air.
+     * Saves the current state before performing the operation.
+     */
     private void clearSelection() {
         if (!selectionManager.hasValidSelection()) return;
 
@@ -364,6 +455,10 @@ public class ConstructEditorWindow extends EditorWindow {
         System.out.println("Started clearing " + selectionManager.getSelectionSize() + " blocks");
     }
 
+    /**
+     * Replaces all blocks of one type with another in a selection.
+     * Saves the current state before performing the operation.
+     */
     private void replaceBlocks() {
         if (!selectionManager.hasValidSelection()) return;
 
@@ -379,6 +474,10 @@ public class ConstructEditorWindow extends EditorWindow {
         System.out.println("Replacing " + blockIdInput.get() + " with " + secondaryBlockInput.get());
     }
 
+    /**
+     * Expands the current selection by 1 block in all directions.
+     * Useful for quickly expanding a selection to encompass a larger area.
+     */
     private void expandSelection() {
         if (!selectionManager.hasValidSelection()) return;
 
@@ -388,6 +487,12 @@ public class ConstructEditorWindow extends EditorWindow {
         System.out.println("Expanded selection to " + selectionManager.getSelectionSize() + " blocks");
     }
 
+    /**
+     * Creates a sphere at the specified center with the given radius.
+     * The sphere is filled with blocks from a specified pattern.
+     *
+     * @throws NullPointerException if Pos1 is not set
+     */
     private void createSphere() {
         BlockPos center = selectionManager.getPos1();
         if (center == null) {
@@ -405,6 +510,11 @@ public class ConstructEditorWindow extends EditorWindow {
         System.out.println("Creating sphere with radius " + sphereRadius.get());
     }
 
+    /**
+     * Creates a cylinder between the two positions in the selection area.
+     * The cylinder's radius is determined by the sphereRadius input.
+     * The cylinder is filled with blocks from the pattern created by the createPattern method.
+     */
     private void createCylinder() {
         if (!selectionManager.hasValidSelection()) {
             System.out.println("Set both positions first!");
@@ -422,6 +532,12 @@ public class ConstructEditorWindow extends EditorWindow {
         System.out.println("Creating cylinder with radius " + sphereRadius.get());
     }
 
+    /**
+     * Undoes the last operation.
+     * <p>
+     * This will revert the last operation, restoring the previous state.
+     * If there are no operations to undo, this will do nothing.
+     */
     private void undo() {
         if (!historyManager.canUndo()) return;
 
@@ -429,6 +545,11 @@ public class ConstructEditorWindow extends EditorWindow {
         System.out.println("Undo completed");
     }
 
+    /**
+     * Redoes the last operation.
+     *
+     * @see #undo()
+     */
     private void redo() {
         if (!historyManager.canRedo()) return;
 
@@ -436,6 +557,12 @@ public class ConstructEditorWindow extends EditorWindow {
         System.out.println("Redo completed");
     }
 
+    /**
+     * Parses a block ID and returns the corresponding block.
+     *
+     * @param blockId The block ID to parse. Can be in the format of "namespace:blockname" or "namespace:blockname[state]".
+     * @return The parsed block, or null if the block ID is invalid.
+     */
     private Block parseBlock(String blockId) {
         try {
             var loc = ResourceLocation.tryParse(blockId);
