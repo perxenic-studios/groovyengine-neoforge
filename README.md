@@ -1,25 +1,71 @@
+# Groovy Engine for NeoForge
 
-Installation information
-=======
+A powerful and flexible modding engine for Minecraft, built on NeoForge. Groovy Engine provides a robust framework for creating dynamic and maintainable Minecraft mods using Groovy scripting language.
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+## 🌟 Features
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+- **Modular Architecture**: Built with a modular design for easy extension and maintenance
+- **Groovy Scripting**: Write mod logic in Groovy for rapid development
+- **Event System**: Comprehensive event handling system for game interactions
+- **Resource Management**: Built-in resource pack generation and management
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+## 🚀 Getting Started
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+### Prerequisites
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+- Java 21 or later
+- Gradle 8.0+
+- Minecraft 1.21.1
+- NeoForge
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/LuckyMcDev/groovyengine-neoforge.git
+   cd groovyengine-neoforge
+   ```
+2. Build the project:
+   ```bash
+   ./gradlew build
+   ```
+
+## 📁 Project Structure
+
+```
+groovyengine-neoforge/
+├── src/
+│   ├── main/
+│   │   ├── java/io/github/luckymcdev/groovyengine/
+│   │   │   ├── core/         # Core engine components
+│   │   │   ├── construct/    # Game object construction system
+│   │   │   ├── lens/         # Data transformation and mapping
+│   │   │   ├── threads/      # Thread management
+│   │   │   └── util/         # Utility classes
+│   │   └── resources/        # Resource files
+├── run/                      # Runtime files and configurations
+└── libs/                     # External library dependencies
+```
+
+## 📚 Documentation
+
+For detailed documentation, please refer to the [Wiki](https://github.com/LuckyMcDev/groovyengine-neoforge/wiki).
+
+## 📄 License
+
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Contact
+
+For questions or support, please open an issue on our [GitHub repository](https://github.com/LuckyMcDev/groovyengine-neoforge/issues),
+Or visit the Discord: [Discord](https://discord.gg/dUefmxFvWr)
+
+## 📊 Stats
+
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/LuckyMcDev/groovyengine-neoforge)
+![GitHub](https://img.shields.io/github/license/LuckyMcDev/groovyengine-neoforge)
+![GitHub last commit](https://img.shields.io/github/last-commit/LuckyMcDev/groovyengine-neoforge)
+
+---
+
+Made with ❤️ by [Your Name]
