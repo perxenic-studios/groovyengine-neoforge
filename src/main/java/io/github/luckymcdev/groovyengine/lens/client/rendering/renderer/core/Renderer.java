@@ -46,6 +46,7 @@ public class Renderer {
      * @param rendererClass the class of the sub-renderer to retrieve
      * @return the sub-renderer instance associated with the given class, or null if no such instance exists
      */
+    @SuppressWarnings("unchecked")
     public <T extends BaseRenderer> T getRenderer(Class<T> rendererClass) {
         return (T) renderers.get(rendererClass);
     }
