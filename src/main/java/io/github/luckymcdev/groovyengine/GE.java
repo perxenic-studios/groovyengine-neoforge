@@ -31,6 +31,11 @@ public class GE {
     public static final CachedSupplier<RepositorySource> RESOURCE_SOURCE = CachedSupplier.cache(() -> new GroovyEngineRepositorySource(PackType.CLIENT_RESOURCES));
 
 
+    /**
+     * Creates a ResourceLocation from the given path, using the {@link GE#MODID} as the namespace.
+     * @param path The path to use for the ResourceLocation
+     * @return A ResourceLocation with the given path and the {@link GE#MODID} as the namespace
+     */
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }

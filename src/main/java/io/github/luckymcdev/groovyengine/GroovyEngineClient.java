@@ -41,6 +41,13 @@ public class GroovyEngineClient {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 
+    /**
+     * Called when the client setup event is fired.
+     * This method is responsible for setting up the rendering system,
+     * initializing the module windows, and executing the compute shader test.
+     *
+     * @param event the client setup event
+     */
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         ModuleManager.getInstance().runOnClientSetup();
@@ -87,12 +94,25 @@ public class GroovyEngineClient {
         });
     }
 
+    /**
+     * Called when the client tick event is fired.
+     * This method is responsible for registering the module windows and calling the
+     * {@link LensRendering#onClientTick(ClientTickEvent.Pre)} method.
+     *
+     * @param event the client tick event
+     */
     @SubscribeEvent
     static void tick(ClientTickEvent.Pre event) {
         registerModuleWindows();
         LensRendering.onClientTick(event);
     }
 
+    /**
+     * Registers all module windows with the window manager.
+     * This method should only be called on the client-side.
+     * If the player or level is null, the method will not register any windows and will return immediately.
+     * If the method has already been called, it will not register any windows and will return immediately.
+     */
     private static void registerModuleWindows() {
         if (initializedModuleWindows) return;
 
@@ -106,6 +126,13 @@ public class GroovyEngineClient {
         initializedModuleWindows = true;
     }
 
+    /**
+     * Called when the register shader event is fired.
+     * This method is responsible for calling the
+     * {@link LensRendering#onRegisterShaders(RegisterShadersEvent)} method.
+     *
+     * @param event the register shader event
+     */
     @SubscribeEvent
     static void onRegisterShader(RegisterShadersEvent event) {
         LensRendering.onRegisterShaders(event);
