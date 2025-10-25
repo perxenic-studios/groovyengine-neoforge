@@ -254,3 +254,419 @@ idea {
 tasks.named("build") {
     dependsOn("runData")
 }
+
+tasks.register("doxygen", Exec) {
+    group = "documentation"
+    description = "Generates Doxygen documentation"
+    commandLine "doxygen", "./Doxyfile"
+    workingDir project.projectDir
+}
+
+tasks.register('countLines') {
+    group = 'reporting'
+    description = 'Counts all lines of code in src directory including json and shader files.'
+
+    def exts = ['java', 'json', 'glsl', 'vsh', 'fsh',
+                'vert', 'frag', 'geom', 'tesc', 'tese', 'comp', 'shader']
+    def srcDir = file('src')
+
+    inputs.dir(srcDir)
+    outputs.upToDateWhen { false }
+
+    doLast {
+        def filesByExt = [:].withDefault { [] }
+
+        srcDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+            def ext = exts.find { file.name.toLowerCase().endsWith(it) }
+            if (ext) filesByExt[ext] << file
+        }
+
+        def total = 0
+        println "\nLine count breakdown by file type:"
+        println "=" * 50
+
+        filesByExt.sort().each { ext, files ->
+            def lines = files.collect { it.readLines().size() }.sum() ?: 0
+            total += lines
+            println String.format("%-10s: %5d lines in %3d files", ext, lines, files.size())
+        }
+
+        println "=" * 50
+        println String.format("%-10s: %5d lines in %3d files", "TOTAL", total, filesByExt.values().flatten().size())
+    }
+}
+
+tasks.register('countLinesNoJavadoc') {
+    group = 'reporting'
+    description = 'Counts lines of code excluding Javadoc comments (/** ... */).'
+
+    def exts = ['java', 'json', 'glsl', 'vsh', 'fsh',
+                'vert', 'frag', 'geom', 'tesc', 'tese', 'comp', 'shader']
+    def srcDir = file('src')
+
+    inputs.dir(srcDir)
+    outputs.upToDateWhen { false }
+
+    doLast {
+        def countLinesExcludingJavadoc = { File file ->
+            def lines = file.readLines()
+            def count = 0
+            def inJavadoc = false
+
+            lines.each { line ->
+                def trimmed = line.trim()
+                if (trimmed.startsWith('/**')) {
+                    inJavadoc = true
+                    return
+                }
+                if (inJavadoc) {
+                    if (trimmed.endsWith('*/')) inJavadoc = false
+                    return
+                }
+                count++
+            }
+            count
+        }
+
+        def filesByExt = [:].withDefault { [] }
+
+        srcDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+            def ext = exts.find { file.name.toLowerCase().endsWith(it) }
+            if (ext) filesByExt[ext] << file
+        }
+
+        def total = 0
+        println "\nLine count breakdown by file type (excluding Javadoc):"
+        println "=" * 50
+
+        filesByExt.sort().each { ext, files ->
+            def lines = 0
+            files.each { file ->
+                lines += (ext == 'java') ? countLinesExcludingJavadoc(file) : file.readLines().size()
+            }
+            total += lines
+            println String.format("%-10s: %5d lines in %3d files", ext, lines, files.size())
+        }
+
+        println "=" * 50
+        println String.format("%-10s: %5d lines in %3d files", "TOTAL", total, filesByExt.values().flatten().size())
+    }
+}
+
+tasks.register('trackTechDebt') {
+    group = 'reporting'
+    description = 'Tracks TODO, FIXME, HACK, and XXX comments in the codebase.'
+
+    def exts = ['java', 'json', 'glsl', 'vsh', 'fsh',
+                'vert', 'frag', 'geom', 'tesc', 'tese', 'comp', 'shader']
+    def srcDir = file('src')
+
+    inputs.dir(srcDir)
+    outputs.upToDateWhen { false }
+
+    doLast {
+        def markers = ['TODO', 'FIXME', 'HACK', 'XXX']
+        def findings = [:].withDefault { [] }
+        def totals = [:].withDefault { 0 }
+
+        srcDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+            def ext = exts.find { file.name.toLowerCase().endsWith(it) }
+            if (!ext) return
+
+            file.eachLine { line, lineNum ->
+                markers.each { marker ->
+                    if (line =~ /(?i)\b${marker}\b/) {
+                        def relativePath = srcDir.toPath().relativize(file.toPath()).toString()
+                        findings[marker] << [file: relativePath, line: lineNum, text: line.trim()]
+                        totals[marker]++
+                    }
+                }
+            }
+        }
+
+        println "\nTechnical Debt Report:"
+        println "=" * 70
+
+        markers.each { marker ->
+            def count = totals[marker]
+            println "\n${marker}: ${count} occurrences"
+            def entries = findings[marker]
+            if (count > 0) {
+                entries.take(10).each { finding ->
+                    println "  ${finding.file}:${finding.line}"
+                    println "    ${finding.text}"
+                }
+                if (count > 10) println "  (Showing first 10 of ${count})"
+            }
+        }
+
+        println "\n" + "=" * 70
+        println "Total technical debt markers: ${totals.values().sum() ?: 0}"
+    }
+}
+
+tasks.register('analyzeShaders') {
+    group = 'reporting'
+    description = 'Analyzes shader complexity and features.'
+
+    def shaderExts = ['glsl', 'vsh', 'fsh', 'vert', 'frag',
+                      'geom', 'tesc', 'tese', 'comp', 'shader']
+    def srcDir = file('src')
+
+    inputs.dir(srcDir)
+    outputs.upToDateWhen { false }
+
+    doLast {
+        def shaderStats = []
+
+        srcDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+            def ext = shaderExts.find { file.name.toLowerCase().endsWith(it) }
+            if (!ext) return
+
+            def content = file.text
+            def lines = file.readLines()
+            def relativePath = srcDir.toPath().relativize(file.toPath()).toString()
+
+            shaderStats << [
+                    file: relativePath,
+                    lines: lines.size(),
+                    uniforms: (content =~ /\buniform\b/).count,
+                    attributes: (content =~ /\battribute\b/).count,
+                    varyings: (content =~ /\bvarying\b/).count,
+                    ins: (content =~ /\bin\b/).count,
+                    outs: (content =~ /\bout\b/).count,
+                    textures: (content =~ /\bsampler\w+\b/).count,
+                    functions: (content =~ /\w+\s+\w+\s*\([^)]*\)\s*\{/).count
+            ]
+        }
+
+        if (shaderStats.isEmpty()) {
+            println "\nNo shaders found!"
+            return
+        }
+
+        println "\nShader Complexity Analysis:"
+        println "=" * 90
+        println String.format("%-40s %6s %8s %8s %8s %8s", "Shader", "Lines", "Uniforms", "In/Attr", "Out/Vary", "Funcs")
+        println "-" * 90
+
+        shaderStats.sort { -it.lines }.each { s ->
+            def inputs = s.attributes + s.ins
+            def outputs = s.varyings + s.outs
+            println String.format("%-40s %6d %8d %8d %8d %8d",
+                    s.file.length() > 40 ? "..." + s.file.substring(s.file.length() - 37) : s.file,
+                    s.lines, s.uniforms, inputs, outputs, s.functions)
+        }
+
+        println "=" * 90
+        println "Total shaders: ${shaderStats.size()}"
+        println "Average lines per shader: ${(shaderStats.sum { it.lines } / shaderStats.size()).round(1)}"
+            println "Total uniforms: ${shaderStats.sum { it.uniforms }}"
+            println "Total texture samplers: ${shaderStats.sum { it.textures }}"
+            }
+            }
+
+            tasks.register('findLongMethods') {
+            group = 'reporting'
+            description = 'Finds Java methods longer than 50 lines (configurable).'
+
+            def srcDir = file('src')
+            def threshold = 50
+
+            inputs.dir(srcDir)
+            outputs.upToDateWhen { false }
+
+            doLast {
+            def longMethods = []
+
+            srcDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+            if (!file.name.endsWith('.java')) return
+            def lines = file.readLines()
+            def inMethod = false
+            def methodStart = 0
+            def methodName = ""
+            def braceCount = 0
+
+            lines.eachWithIndex { line, idx ->
+            def trimmed = line.trim()
+
+            if (!inMethod && trimmed =~ /(?:public|private|protected|static|final|native|synchronized|abstract|transient)+\s+[\w<>\[\]]+\s+\w+\s*\([^)]*\)\s*(\{|throws)/) {
+            inMethod = true
+            methodStart = idx + 1
+            methodName = (trimmed =~ /\s(\w+)\s*\(/)[0][1]
+            braceCount = (trimmed =~ /\{/).count - (trimmed =~ /\}/).count
+            } else if (inMethod) {
+            braceCount += (trimmed =~ /\{/).count - (trimmed =~ /\}/).count
+            if (braceCount == 0) {
+            def methodLength = idx - methodStart + 2
+            if (methodLength > threshold) {
+            def relativePath = srcDir.toPath().relativize(file.toPath()).toString()
+            longMethods << [file: relativePath, method: methodName, startLine: methodStart, length: methodLength]
+            }
+            inMethod = false
+            }
+            }
+            }
+            }
+
+            println "\nLong Methods Report (>${threshold} lines):"
+            println "=" * 80
+
+            if (longMethods.isEmpty()) {
+            println "No methods found exceeding ${threshold} lines. Great job!"
+            } else {
+            longMethods.sort { -it.length }.each { m ->
+            println String.format("%-50s %-20s Line: %4d Length: %4d",
+            m.file.length() > 50 ? "..." + m.file.substring(m.file.length() - 47) : m.file,
+            m.method, m.startLine, m.length)
+            }
+
+            println "\n" + "=" * 80
+            println "Total long methods: ${longMethods.size()}"
+            println "Average length: ${(longMethods.sum { it.length } / longMethods.size()).round(1)} lines"
+            println "Longest method: ${longMethods.max { it.length }.length} lines"
+        }
+    }
+}
+
+tasks.register('packageSizeReport') {
+    group = 'reporting'
+    description = 'Shows lines of code per package.'
+
+    def srcDir = file('src')
+
+    inputs.dir(srcDir)
+    outputs.upToDateWhen { false }
+
+    doLast {
+        def countLinesExcludingJavadoc = { File file ->
+            def lines = file.readLines()
+            def count = 0
+            def inJavadoc = false
+
+            lines.each { line ->
+                def trimmed = line.trim()
+                if (trimmed.startsWith('/**')) {
+            inJavadoc = true
+            return
+            }
+            if (inJavadoc) {
+            if (trimmed.endsWith('*/')) inJavadoc = false
+            return
+            }
+            count++
+            }
+        count
+    }
+
+    def packageStats = [:].withDefault { [files: 0, lines: 0] }
+
+    srcDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+        if (file.name.endsWith('.java')) {
+            def relativePath = srcDir.toPath().relativize(file.toPath()).toString()
+            def pkg = relativePath.contains(File.separator) ?
+                    relativePath.substring(0, relativePath.lastIndexOf(File.separator)) : '(default)'
+
+            packageStats[pkg].files++
+            packageStats[pkg].lines += countLinesExcludingJavadoc(file)
+        }
+    }
+
+    println "\nPackage Size Report:"
+    println "=" * 80
+    println String.format("%-50s %10s %10s %10s", "Package", "Files", "Lines", "Avg/File")
+    println "-" * 80
+
+    packageStats.sort { -it.value.lines }.each { pkg, stats ->
+        def avg = (stats.lines / stats.files).round(1)
+        println String.format("%-50s %10d %10d %10.1f",
+                pkg.length() > 50 ? "..." + pkg.substring(pkg.length() - 47) : pkg,
+                stats.files, stats.lines, avg)
+    }
+
+    println "=" * 80
+    def totalFiles = packageStats.values().sum { it.files }
+    def totalLines = packageStats.values().sum { it.lines }
+    println "Total packages: ${packageStats.size()}"
+    println "Total files: ${totalFiles}"
+    println "Total lines: ${totalLines}"
+    println "Average lines per package: ${(totalLines / packageStats.size()).round(1)}"
+}
+}
+
+tasks.register('commentDensity') {
+    group = 'reporting'
+    description = 'Calculates comment-to-code ratio for Java files.'
+
+    def srcDir = file('src')
+
+    inputs.dir(srcDir)
+    outputs.upToDateWhen { false }
+
+    doLast {
+        def totalCode = 0
+        def totalComments = 0
+        def totalBlank = 0
+        def fileStats = []
+
+        srcDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+            if (!file.name.endsWith('.java')) return
+            def lines = file.readLines()
+            def code = 0
+            def comments = 0
+            def blanks = 0
+            def inBlock = false
+
+            lines.each { line ->
+                def t = line.trim()
+                if (t.isEmpty()) blanks++
+                else if (t.startsWith('//')) comments++
+                else if (t.startsWith('/*')) {
+                    inBlock = true
+                    comments++
+                    if (t.endsWith('*/')) inBlock = false
+                } else if (inBlock) {
+                    comments++
+                    if (t.endsWith('*/')) inBlock = false
+                } else code++
+            }
+
+            totalCode += code
+            totalComments += comments
+            totalBlank += blanks
+
+            def relativePath = srcDir.toPath().relativize(file.toPath()).toString()
+            def density = code > 0 ? (comments * 100.0 / code) : 0
+            fileStats << [file: relativePath, code: code, comments: comments, density: density]
+        }
+
+        println "\nComment Density Report:"
+        println "=" * 80
+        println String.format("Total Code Lines: %,d", totalCode)
+        println String.format("Total Comment Lines: %,d", totalComments)
+        println String.format("Total Blank Lines: %,d", totalBlank)
+        println String.format("Overall Comment Density: %.1f%%", totalCode > 0 ? (totalComments * 100.0 / totalCode) : 0)
+
+        println "\n" + "=" * 80
+        println "Most documented files (Top 10):"
+        println String.format("%-50s %10s %10s %10s", "File", "Code", "Comments", "Density")
+        println "-" * 80
+
+        fileStats.sort { -it.density }.take(10).each { s ->
+            println String.format("%-50s %10d %10d %9.1f%%",
+                    s.file.length() > 50 ? "..." + s.file.substring(s.file.length() - 47) : s.file,
+                    s.code, s.comments, s.density)
+        }
+
+        println "\n" + "=" * 80
+        println "Least documented files (Bottom 10):"
+        println String.format("%-50s %10s %10s %10s", "File", "Code", "Comments", "Density")
+        println "-" * 80
+
+        fileStats.findAll { it.code > 20 }.sort { it.density }.take(10).each { s ->
+            println String.format("%-50s %10d %10d %9.1f%%",
+                    s.file.length() > 50 ? "..." + s.file.substring(s.file.length() - 47) : s.file,
+                    s.code, s.comments, s.density)
+        }
+    }
+}
