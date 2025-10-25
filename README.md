@@ -2,14 +2,14 @@
 
 A powerful and flexible modding engine for Minecraft, built on NeoForge. Groovy Engine provides a robust framework for creating dynamic and maintainable Minecraft mods using Groovy scripting language.
 
-## 🌟 Features
+## Features
 
 - **Modular Architecture**: Built with a modular design for easy extension and maintenance
 - **Groovy Scripting**: Write mod logic in Groovy for rapid development
 - **Event System**: Comprehensive event handling system for game interactions
 - **Resource Management**: Built-in resource pack generation and management
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -30,7 +30,7 @@ A powerful and flexible modding engine for Minecraft, built on NeoForge. Groovy 
    ./gradlew build
    ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 groovyengine-neoforge/
@@ -47,20 +47,20 @@ groovyengine-neoforge/
 └── libs/                     # External library dependencies
 ```
 
-## 📚 Documentation
+## Documentation
 
 For detailed documentation, please refer to the [Wiki](https://github.com/LuckyMcDev/groovyengine-neoforge/wiki).
 
-## 📄 License
+## License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
 
-## 📞 Contact
+## Contact
 
 For questions or support, please open an issue on our [GitHub repository](https://github.com/LuckyMcDev/groovyengine-neoforge/issues),
 Or visit the Discord: [Discord](https://discord.gg/dUefmxFvWr)
 
-## 📊 Stats
+## Stats
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/LuckyMcDev/groovyengine-neoforge)
 ![GitHub](https://img.shields.io/github/license/LuckyMcDev/groovyengine-neoforge)
@@ -68,4 +68,4 @@ Or visit the Discord: [Discord](https://discord.gg/dUefmxFvWr)
 
 ---
 
-Made with ❤️ by [Your Name]
+Made with Love by LuckyMcDev
