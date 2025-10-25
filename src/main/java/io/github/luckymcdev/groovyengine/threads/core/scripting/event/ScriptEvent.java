@@ -10,6 +10,11 @@ public abstract class ScriptEvent extends Event {
         this.shell = shell;
     }
 
+    /**
+     * Gets the Groovy shell associated with this event.
+     *
+     * @return the Groovy shell associated with this event
+     */
     public GroovyShell getShell() {
         return shell;
     }

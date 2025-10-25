@@ -17,6 +17,22 @@ public class ThreadsEntry extends ObjectSelectionList.Entry<ThreadsEntry> {
         this.error = error;
     }
 
+    /**
+     * Renders the given entry in the ObjectSelectionList.
+     * This method is responsible for rendering the script name, error message, and fix description
+     * of the given script error.
+     *
+     * @param guiGraphics the GuiGraphics object to render to
+     * @param index the index of the entry in the list
+     * @param y the y position of the entry
+     * @param x the x position of the entry
+     * @param width the width of the entry
+     * @param height the height of the entry
+     * @param mouseX the x position of the mouse
+     * @param mouseY the y position of the mouse
+     * @param hovered whether the entry is currently hovered
+     * @param partialTick the partial tick of the render
+     */
     @Override
     public void render(GuiGraphics guiGraphics, int index, int y, int x, int width, int height,
                        int mouseX, int mouseY, boolean hovered, float partialTick) {
@@ -49,6 +65,16 @@ public class ThreadsEntry extends ObjectSelectionList.Entry<ThreadsEntry> {
         }
     }
 
+    /**
+     * Gets the narration for the entry, which is used to describe the entry to screen readers.
+     * <p>
+     * The narration is a short description of the entry that is read out to screen readers.
+     * <p>
+     * In this case, the narration is "Error in script {scriptName}", where {scriptName} is the name of the script
+     * that the error occurred in.
+     *
+     * @return the narration for the entry
+     */
     @Override
     public Component getNarration() {
         return Component.literal("Error in script " + error.scriptName());

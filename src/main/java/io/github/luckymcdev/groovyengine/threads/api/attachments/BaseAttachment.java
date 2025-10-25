@@ -24,9 +24,15 @@ public interface BaseAttachment {
         return getTargets().contains(target);
     }
 
+    /**
+     * Called when the attachment manager is initialized, allowing attachments to initialize themselves if needed.
+     */
     default void onInit() {
     }
 
+    /**
+     * Called when the attachment manager is being shut down, allowing attachments to clean up after themselves if needed.
+     */
     default void onDestroy() {
     }
 }

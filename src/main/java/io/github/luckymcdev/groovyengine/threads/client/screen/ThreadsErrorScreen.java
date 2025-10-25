@@ -19,6 +19,11 @@ public class ThreadsErrorScreen extends ErrorScreen {
         );
     }
 
+    /**
+     * Initializes the screen components.
+     * Clears all widgets, creates a new {@link ThreadsEntryList} and adds it to the screen,
+     * sets the focus to the entry list, and adds a "Close" button to the screen.
+     */
     @Override
     protected void init() {
         this.clearWidgets();
@@ -34,11 +39,27 @@ public class ThreadsErrorScreen extends ErrorScreen {
         );
     }
 
+    /**
+     * Handles a key press event.
+     *
+     * @param keyCode the key code of the key that was pressed
+     * @param scanCode the scan code of the key that was pressed
+     * @param modifiers the modifier keys that were pressed
+     * @return whether the key press event was handled
+     */
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         return false;
     }
 
+    /**
+     * Renders the screen components.
+     *
+     * @param guiGraphics the graphics object to render with
+     * @param mouseX the x position of the mouse
+     * @param mouseY the y position of the mouse
+     * @param partialTick the partial tick to render with
+     */
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);

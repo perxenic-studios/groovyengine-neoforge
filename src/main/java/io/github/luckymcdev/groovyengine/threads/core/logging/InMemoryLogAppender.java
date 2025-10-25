@@ -23,12 +23,25 @@ public class InMemoryLogAppender extends AbstractAppender {
         super(name, filter, layout, ignoreExceptions);
     }
 
+    /**
+     * Returns a copy of the current log lines.
+     * The log lines are returned as a new {@link List} containing the same elements
+     * as the current log lines in the order they were added.
+     * The returned list is safe to modify without affecting the internal state of the appender.
+     * @return a copy of the current log lines
+     */
     public static List<String> getLogLines() {
         synchronized (logLines) {
             return new LinkedList<>(logLines);
         }
     }
 
+    /**
+     * Creates an instance of the InMemoryLogAppender plugin.
+     *
+     * @param name the name of the appender
+     * @return an instance of the InMemoryLogAppender plugin
+     */
     @PluginFactory
     public static Appender createAppender(
             @PluginAttribute("name") String name
@@ -36,6 +49,14 @@ public class InMemoryLogAppender extends AbstractAppender {
         return new InMemoryLogAppender(name, null, null, true);
     }
 
+    /**
+     * Appends a log event to the in-memory log.
+     * The event is converted to a string with the format
+     * <code>LEVEL | LOGGER_NAME | MESSAGE</code> and added to the end of the log.
+     * If the log exceeds the maximum number of lines, the oldest line is removed.
+     * This method is thread-safe.
+     * @param event the log event to append
+     */
     @Override
     public void append(LogEvent event) {
         synchronized (logLines) {

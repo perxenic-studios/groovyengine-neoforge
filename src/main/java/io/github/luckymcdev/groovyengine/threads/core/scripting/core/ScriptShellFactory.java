@@ -17,6 +17,16 @@ public class ScriptShellFactory {
         return new GroovyClassLoader(ScriptShellFactory.class.getClassLoader());
     }
 
+    /**
+     * Creates a binding for use in a Groovy shell.
+     * <p>
+     * The binding contains a single variable, "logger", which is set to
+     * {@link io.github.luckymcdev.groovyengine.GE#SCRIPT_LOG}.
+     * <p>
+     * After creating the binding, a {@link ScriptEvent.BindingSetupEvent} is fired
+     * to allow other mods to add their own bindings.
+     * @return the created binding
+     */
     public static Binding createBinding() {
         Binding binding = new Binding();
         binding.setVariable("logger", GE.SCRIPT_LOG);
@@ -28,6 +38,11 @@ public class ScriptShellFactory {
         return binding;
     }
 
+    /**
+     * Creates a compiler configuration for use in a Groovy shell.
+     *
+     * @return the created compiler configuration
+     */
     public static CompilerConfiguration createCompilerConfig() {
         CompilerConfiguration config = new CompilerConfiguration();
         ImportCustomizer imports = new ImportCustomizer();
@@ -50,6 +65,14 @@ public class ScriptShellFactory {
         return config;
     }
 
+    /**
+     * Creates a shared Groovy shell for use in script execution.
+     * <p>
+     * This method creates a new Groovy shell with the class loader, binding, and compiler configuration
+     * created by the respective factory methods.
+     *
+     * @return the created shared Groovy shell
+     */
     public static GroovyShell createSharedShell() {
         GE.THREADS_LOG.info("Creating shared Groovy shell");
         return new GroovyShell(

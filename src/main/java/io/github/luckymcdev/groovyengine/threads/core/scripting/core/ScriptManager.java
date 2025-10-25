@@ -24,18 +24,32 @@ public class ScriptManager {
     private static final AttachmentEventManager attachmentEventManager = AttachmentEventManager.getInstance();
     private static GroovyShell shell;
 
+    /**
+     * Initializes the script manager. This method is called when the mod is initialized.
+     * It creates a shared Groovy shell and loads all scripts.
+     */
     public static void initialize() {
         GE.THREADS_LOG.info("Initializing script manager");
         shell = ScriptShellFactory.createSharedShell();
         loadAllScripts();
     }
 
+    /**
+     * Reloads all scripts in the script manager. This method is called when the mod is reinitialized.
+     * It creates a new shared Groovy shell and loads all scripts.
+     */
     public static void reloadScripts() {
         GE.THREADS_LOG.info("Reloading scripts");
         shell = ScriptShellFactory.createSharedShell();
         loadAllScripts();
     }
 
+    /**
+     * Loads all scripts in the script manager. This method first loads all scripts in the
+     * "common" environment, and then loads all scripts in the "client" environment if
+     * the mod is running on the client, or the "server" environment if the mod is
+     * running on the server.
+     */
     private static void loadAllScripts() {
         Dist dist = FMLLoader.getDist();
         runScriptsIn("common");
@@ -43,6 +57,13 @@ public class ScriptManager {
         else runScriptsIn("server");
     }
 
+    /**
+     * Runs all scripts in the given environment directory.
+     * The scripts are sorted by their priority, and then executed in order.
+     * If an error occurs while loading the scripts, an error message will be logged.
+     *
+     * @param environment The environment directory to load scripts from.
+     */
     private static void runScriptsIn(String environment) {
         Path envDir = SCRIPTS_DIR.resolve(environment);
         if (!Files.exists(envDir)) return;
@@ -61,6 +82,22 @@ public class ScriptManager {
         }
     }
 
+    /**
+     * Evaluates a script and logs any errors that occur.
+     *
+     * <p>This method will first log an info message about the script being evaluated,
+     * and then fire a {@link ScriptEvent.PreExecutionEvent} to allow other mods to
+     * attach to the script evaluation process. After that, it will parse the script and
+     * run it. The result of the script will be posted to a
+     * {@link ScriptEvent.PostExecutionEvent}.</p>
+     *
+     * <p>If an error occurs while evaluating the script, an error message will be logged,
+     * and a {@link ScriptEvent} will be fired to allow other mods to handle the error.
+     * The error message, along with the error description and the script name, will be added
+     * to the {@link ScriptErrors} list.</p>
+     *
+     * @param scriptPath The path to the script to evaluate.
+     */
     private static void evaluateScript(Path scriptPath) {
         GE.THREADS_LOG.info("Evaluating script: {}", scriptPath.getFileName());
 
