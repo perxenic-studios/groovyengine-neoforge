@@ -21,12 +21,27 @@ public class MinecraftClientMixin {
     @Final
     private Window window;
 
+    /**
+     * Initializes ImGuiImpl when the Minecraft client is initialized.
+     * This method is only called on the client side, and is used to initialize ImGuiImpl.
+     * It creates an instance of ImGuiImpl and loads the fonts from the resource manager.
+     *
+     * @param gameConfig the game configuration
+     * @param ci the callback information for the initialization method
+     */
     @Inject(method = "<init>", at = @At("RETURN"))
     public void initImGui(GameConfig gameConfig, CallbackInfo ci) {
         ImGuiImpl.create(window.getWindow());
         ImGuiImpl.loadFonts(Minecraft.getInstance().getResourceManager());
     }
 
+    /**
+     * Called when the Minecraft client is closed.
+     * This method is only called on the client side, and is used to dispose of ImGuiImpl.
+     * It disposes of ImGuiImpl, freeing up resources and preventing memory leaks.
+     *
+     * @param ci the callback information for the close method
+     */
     @Inject(method = "close", at = @At("RETURN"))
     public void closeImGui(CallbackInfo ci) {
         ImGuiImpl.dispose();

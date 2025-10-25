@@ -7,7 +7,7 @@
   "client": [
     "core.imgui.MinecraftClientMixin",
     "lens.rendering.GameRendererMixin",
-    "lens.rendering.LightTextureMixin"
+    "lens.rendering.light.LightTextureMixin"
   ],
   "injectors": {
     "defaultRequire": 1

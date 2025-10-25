@@ -1,4 +1,12 @@
-package io.github.luckymcdev.groovyengine.mixin.lens.rendering;
+/*
+ * Copyright (c) 2025. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
+package io.github.luckymcdev.groovyengine.mixin.lens.rendering.light;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import io.github.luckymcdev.groovyengine.lens.client.editor.RenderingDebuggingWindow;
@@ -114,10 +122,6 @@ public abstract class LightTextureMixin {
         return lightTexture;
     }
 
-    /**
-     * Get the appropriate light color for a specific light level combination
-     * This samples a smaller, more localized area to avoid sudden changes
-     */
     @Unique
     /**
      * Get the appropriate light color for a specific light level combination
