@@ -1,0 +1,43 @@
+name: Build and Publish Docs
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Generate Doxygen Docs
+        run: doxygen Doxyfile
+
+      - name: Deploy to External Pages Repo
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.TARGET_REPO_TOKEN }}
+          external_repository: LuckyMcDev/luckymcdev.github.io
+          publish_branch: main
+          publish_dir: ./docs/html
+          destination_dir: groovyengine
+          user_name: github-actions
+          user_email: github-actions@github.com
