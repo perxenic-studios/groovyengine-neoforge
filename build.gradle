@@ -104,7 +104,6 @@ neoForge {
             // "REGISTRYDUMP": For getting the contents of all registries.
             systemProperty 'forge.logging.markers', 'REGISTRIES'
 
-            programArguments.addAll '-XX:+UseShenandoahGC'
 
 
             // Recommended logging level for the console
