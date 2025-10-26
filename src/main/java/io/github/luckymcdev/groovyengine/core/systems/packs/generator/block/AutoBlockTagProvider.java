@@ -12,8 +12,8 @@ import java.util.concurrent.CompletableFuture;
 
 import static io.github.luckymcdev.groovyengine.GE.MODID;
 
-public class ModBlockTagProvider extends AcidBlockTagProvider {
-    public ModBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
+public class AutoBlockTagProvider extends AcidBlockTagProvider {
+    public AutoBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, MODID, existingFileHelper);
     }
 

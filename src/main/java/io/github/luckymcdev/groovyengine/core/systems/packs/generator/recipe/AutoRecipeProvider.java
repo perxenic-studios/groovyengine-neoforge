@@ -7,8 +7,8 @@ import net.minecraft.data.PackOutput;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModRecipeProvider extends AcidRecipeProvider {
-    public ModRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+public class AutoRecipeProvider extends AcidRecipeProvider {
+    public AutoRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries);
     }
 }

@@ -6,8 +6,8 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import static io.github.luckymcdev.groovyengine.GE.MODID;
 
-public class ModBlockStateProvider extends AcidBlockStateProvider {
-    public ModBlockStateProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
+public class AutoBlockStateProvider extends AcidBlockStateProvider {
+    public AutoBlockStateProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, MODID, existingFileHelper);
     }
 

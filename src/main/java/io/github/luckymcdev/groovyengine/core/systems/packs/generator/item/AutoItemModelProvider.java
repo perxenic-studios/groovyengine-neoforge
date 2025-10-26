@@ -7,8 +7,8 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import static io.github.luckymcdev.groovyengine.GE.MODID;
 
-public class ModItemModelProvider extends AcidItemModelProvider {
-    public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
+public class AutoItemModelProvider extends AcidItemModelProvider {
+    public AutoItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, MODID, existingFileHelper);
     }
 
