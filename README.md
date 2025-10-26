@@ -49,11 +49,11 @@ groovyengine-neoforge/
 
 ## Documentation
 
-For detailed documentation, please refer to the [Wiki](https://github.com/LuckyMcDev/groovyengine-neoforge/wiki).
+See the documentation starting in [Home Page](wiki/HomePage.md)
 
 ## License
 
-This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the ![GitHub License](https://img.shields.io/github/license/perxenic-studios/groovyengine-neoforge).
 
 ## Contact
 
@@ -62,9 +62,9 @@ Or visit the Discord: [Discord](https://discord.gg/dUefmxFvWr)
 
 ## Stats
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/LuckyMcDev/groovyengine-neoforge)
-![GitHub](https://img.shields.io/github/license/LuckyMcDev/groovyengine-neoforge)
-![GitHub last commit](https://img.shields.io/github/last-commit/LuckyMcDev/groovyengine-neoforge)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/perxenic-studios/groovyengine-neoforge)
+![GitHub](https://img.shields.io/github/license/perxenic-studios/groovyengine-neoforge)
+![GitHub last commit](https://img.shields.io/github/last-commit/perxenic-studios/groovyengine-neoforge)
 
 ---
 
