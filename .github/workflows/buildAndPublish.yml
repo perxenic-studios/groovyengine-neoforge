@@ -28,6 +28,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
+
       - name: Generate Doxygen Docs
         run: doxygen Doxyfile
 
