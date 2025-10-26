@@ -5,11 +5,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 
-@OnlyIn(Dist.CLIENT)
+
 /**
  * Base class for all editor windows.
- * Subclasses should override the {@link #render()} method to render the window content.
+ * Subclasses should override the {@link #render(ImGuiIO)} method to render the window content.
  */
+@OnlyIn(Dist.CLIENT)
 public abstract class EditorWindow {
     protected final String title;
     protected final String id;
