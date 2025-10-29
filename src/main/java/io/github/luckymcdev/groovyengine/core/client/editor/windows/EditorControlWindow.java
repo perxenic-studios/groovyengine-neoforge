@@ -37,7 +37,7 @@ public class EditorControlWindow extends EditorWindow {
 
     /**
      * Renders the window.
-     *
+     * <p>
      * This method renders the window and its contents.
      * It is called automatically by the ImGui library.
      *

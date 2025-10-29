@@ -21,7 +21,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 
-
 /**
  * Base class for all editor windows.
  * Subclasses should override the {@link #render(ImGuiIO)} method to render the window content.

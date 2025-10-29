@@ -45,14 +45,10 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 @Mod(GE.MODID)
@@ -95,7 +91,7 @@ public class GroovyEngine {
 
     /**
      * Registers the mod's registries with the given event bus.
-     *
+     * <p>
      * This method is responsible for registering the mod's registries with the event bus.
      * It registers the ModRegistry and ConstructRegistry with the given event bus.
      *
@@ -146,6 +142,7 @@ public class GroovyEngine {
      * The {@link ModuleManager#runOnCommonSetup()} method is called on both the server-side and client-side after the module has been initialized.
      * It is called automatically by the module system when the module is initialized on both the server-side and client-side.
      * Modules should not call this method manually, as it may interfere with the module system's internal workings.
+     *
      * @param event The event that triggered this method call.
      */
     private void onCommonSetup(FMLCommonSetupEvent event) {

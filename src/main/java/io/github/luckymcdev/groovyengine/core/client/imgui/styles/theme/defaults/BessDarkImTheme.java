@@ -30,6 +30,7 @@ public class BessDarkImTheme implements ImTheme {
 
     /**
      * Applies the BessDark theme to the given ImGuiStyle.
+     *
      * @param style The ImGuiStyle to apply the theme to.
      */
     @Override

@@ -28,6 +28,7 @@ public class DarkImTheme implements ImTheme {
 
     /**
      * Applies the Dark theme to the given ImGuiStyle.
+     *
      * @param style The ImGuiStyle to apply the theme to.
      */
     @Override

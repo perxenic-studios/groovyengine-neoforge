@@ -33,7 +33,7 @@ public abstract class BaseRenderer {
      * Executes the given event based on the event type.
      *
      * @param eventType the type of the event
-     * @param event the event to execute
+     * @param event     the event to execute
      */
     public abstract <T extends Event> void execute(Enum<?> eventType, T event);
 
@@ -41,7 +41,7 @@ public abstract class BaseRenderer {
      * Registers a callback for the given event type.
      *
      * @param eventType the type of the event
-     * @param callback the callback to register
+     * @param callback  the callback to register
      */
     public abstract <T extends Event> void registerCallback(Enum<?> eventType, Consumer<T> callback);
 }

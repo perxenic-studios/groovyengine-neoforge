@@ -93,9 +93,10 @@ public class EventBusHandler {
     }
 
     /**
-    * Registers all renderers and their respective event mappings to the event bus.
-    * @param renderer the renderer to register
-    */
+     * Registers all renderers and their respective event mappings to the event bus.
+     *
+     * @param renderer the renderer to register
+     */
     public static void register(Renderer renderer) {
         IEventBus eventBus = NeoForge.EVENT_BUS;
 
@@ -111,9 +112,9 @@ public class EventBusHandler {
     /**
      * Handles the given event on the given renderer.
      *
-     * @param renderer the renderer that is handling the event
+     * @param renderer   the renderer that is handling the event
      * @param eventClass the class of the event being handled
-     * @param event the event being handled
+     * @param event      the event being handled
      * @throws RuntimeException if any exception occurs while handling the event
      */
     @SuppressWarnings("unchecked")

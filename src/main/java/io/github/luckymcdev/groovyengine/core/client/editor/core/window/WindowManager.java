@@ -21,6 +21,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.*;
+
 /**
  * Manages the Construct windows and their respective categories.
  * This class is responsible for registering the Construct windows with the Window Manager.

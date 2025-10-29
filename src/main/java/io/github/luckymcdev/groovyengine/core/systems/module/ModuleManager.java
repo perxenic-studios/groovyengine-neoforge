@@ -33,6 +33,7 @@ public class ModuleManager {
     /**
      * Registers a module with the module system.
      * This method is typically used to register modules manually.
+     *
      * @param module The module to register.
      */
     public static void registerModule(Module module) {
@@ -42,6 +43,7 @@ public class ModuleManager {
     /**
      * Registers a list of modules with the module system.
      * This method is typically used to register a list of modules in bulk.
+     *
      * @param moduleList The list of modules to register.
      */
     public static void registerModules(List<Module> moduleList) {
@@ -51,6 +53,7 @@ public class ModuleManager {
     /**
      * Returns the single instance of the ModuleManager class.
      * This method is used to get a reference to the ModuleManager, which is responsible for managing the modules in the Groovy Engine.
+     *
      * @return The single instance of the ModuleManager class.
      */
     public static ModuleManager getInstance() {
@@ -60,6 +63,7 @@ public class ModuleManager {
     /**
      * Initializes all modules registered with the module system.
      * This method is responsible for calling the {@link Module#init(IEventBus)} method on each registered module.
+     *
      * @param eventBus The event bus to pass to the modules' {@link Module#init(IEventBus)} method.
      */
     public void runInit(IEventBus eventBus) {

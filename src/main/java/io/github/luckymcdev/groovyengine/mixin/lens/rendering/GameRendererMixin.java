@@ -36,9 +36,10 @@ public class GameRendererMixin {
     /**
      * A callback method that is called when the game's window is resized.
      * It is used to notify the post-processing manager to update its internal state.
-     * @param width The new width of the window
+     *
+     * @param width  The new width of the window
      * @param height The new height of the window
-     * @param ci The callback information object
+     * @param ci     The callback information object
      */
     @Inject(method = "resize", at = @At(value = "HEAD"))
     public void groovyengine$injectionResizeListener(int width, int height, CallbackInfo ci) {

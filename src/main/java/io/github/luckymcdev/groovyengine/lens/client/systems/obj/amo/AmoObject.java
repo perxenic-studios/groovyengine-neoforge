@@ -40,6 +40,7 @@ public class AmoObject extends ObjObject {
     /**
      * Adds a face to this object.
      * If the face is an instance of AmoFace, it will be added to the list of animated faces.
+     *
      * @param face The face to add.
      */
     @Override
@@ -81,6 +82,7 @@ public class AmoObject extends ObjObject {
     /**
      * Get the list of animated faces for this object.
      * These faces use joint transformations for skeletal animation.
+     *
      * @return The list of animated faces.
      */
     public List<AmoFace> getAmoFaces() {

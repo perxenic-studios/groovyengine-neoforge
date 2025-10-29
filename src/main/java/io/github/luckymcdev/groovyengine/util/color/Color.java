@@ -32,6 +32,7 @@ public class Color {
         this.b = b;
         this.a = a;
     }
+
     public Color(int argb) {
         this.a = ((argb >> 24) & 0xFF) / 255.0f;
         this.r = ((argb >> 16) & 0xFF) / 255.0f;
@@ -47,6 +48,7 @@ public class Color {
      * <code>G</code> is the green component, and <code>B</code> is the blue component.
      * Each component is an 8-bit unsigned integer, ranging from 0 (minimum intensity)
      * to 255 (maximum intensity).
+     *
      * @return The color as an integer in ARGB format.
      */
     public int argb() {
@@ -63,8 +65,9 @@ public class Color {
      * A factor of 0.0 yields this color, while a factor of 1.0 yields the given color.
      * Factors between 0.0 and 1.0 yield colors that are linearly interpolated between
      * this color and the given color.
+     *
      * @param factor The factor to use for linear interpolation.
-     * @param other The color to interpolate towards.
+     * @param other  The color to interpolate towards.
      * @return The interpolated color.
      */
     public Color lerp(float factor, Color other) {

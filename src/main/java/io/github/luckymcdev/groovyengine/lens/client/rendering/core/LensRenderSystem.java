@@ -25,7 +25,6 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
-import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -57,7 +56,8 @@ public class LensRenderSystem extends RenderSystem {
 
     /**
      * Asserts that the current stage matches the expected stage.
-     * @param event the RenderLevelStageEvent to check
+     *
+     * @param event    the RenderLevelStageEvent to check
      * @param expected the expected stage
      * @return true if the current stage matches the expected stage, false otherwise
      */
@@ -67,6 +67,7 @@ public class LensRenderSystem extends RenderSystem {
 
     /**
      * Registers a buffer object with the render system. This allows the render system to clean up the buffer object when it is no longer needed.
+     *
      * @param bufferObject the buffer object to register
      */
     public static void registerBufferObject(IBufferObject bufferObject) {
@@ -75,6 +76,7 @@ public class LensRenderSystem extends RenderSystem {
 
     /**
      * Unregisters a buffer object from the render system. This prevents the render system from cleaning up the buffer object when it is no longer needed.
+     *
      * @param bufferObject the buffer object to unregister
      */
     public static void unregisterBufferObject(IBufferObject bufferObject) {
@@ -83,11 +85,11 @@ public class LensRenderSystem extends RenderSystem {
 
     /**
      * Destroys all registered buffer objects.
-     *<p>
-     *This method iterates over all registered buffer objects and calls their destroy method.
-     *Afterwards, the buffer objects are removed from the render system's internal list.
-     *<p>
-     *This method should be called when the render system is about to be shut down.
+     * <p>
+     * This method iterates over all registered buffer objects and calls their destroy method.
+     * Afterwards, the buffer objects are removed from the render system's internal list.
+     * <p>
+     * This method should be called when the render system is about to be shut down.
      */
     public static void destroyBufferObjects() {
         Iterator<IBufferObject> objects = bufferObjects.iterator();
@@ -109,6 +111,7 @@ public class LensRenderSystem extends RenderSystem {
      * The buffer object is deleted and its name is freed.
      * If the buffer object is currently bound to a target, it is unbound.
      * If the buffer object's data store is currently mapped, it is unmapped.
+     *
      * @param buffer the OpenGL buffer object to delete
      */
     public static void deleteBuffers(int buffer) {
@@ -121,6 +124,7 @@ public class LensRenderSystem extends RenderSystem {
      * The buffer object is bound to the target and its data store is mapped.
      * The buffer object's data store is mapped into the client's address space.
      * The data can be modified and used until the buffer object is unmapped.
+     *
      * @param target the OpenGL buffer target
      * @param buffer the OpenGL buffer object to bind
      */
@@ -137,9 +141,10 @@ public class LensRenderSystem extends RenderSystem {
      * <p>
      * The data store for the buffer object is mapped into the client's address space.
      * The data can be modified and used until the buffer object is unmapped.
+     *
      * @param target the target of the buffer object
-     * @param data the data to store in the buffer object's data store
-     * @param usage the expected usage of the buffer object's data store
+     * @param data   the data to store in the buffer object's data store
+     * @param usage  the expected usage of the buffer object's data store
      */
     public static void bufferData(int target, ByteBuffer data, int usage) {
         GlStateManager._glBufferData(target, data, usage);
@@ -151,8 +156,9 @@ public class LensRenderSystem extends RenderSystem {
      * The buffer object is bound to the target and its data store is mapped.
      * The data store for the buffer object is mapped into the client's address space.
      * The data can be modified and used until the buffer object is unmapped.
+     *
      * @param target the indexed buffer target
-     * @param index the index of the buffer target
+     * @param index  the index of the buffer target
      * @param buffer the OpenGL buffer object to bind
      */
     public static void bindBufferBase(int target, int index, int buffer) {
@@ -170,6 +176,7 @@ public class LensRenderSystem extends RenderSystem {
      * <p>
      * The source code is a CharSequence, which is converted to a
      * List of Strings before being passed to GlStateManager.
+     *
      * @param shader the shader object to modify
      * @param source the source code to replace the shader object's source code
      */
@@ -183,6 +190,7 @@ public class LensRenderSystem extends RenderSystem {
      * <p>
      * The compile status of the shader object can be queried with
      * {@link #getShaderi(int, int)}.
+     *
      * @param shader the shader object to compile
      */
     public static void compileShader(int shader) {
@@ -194,8 +202,9 @@ public class LensRenderSystem extends RenderSystem {
      * <p>
      * After calling {@link #compileShader(int)}, the compile status of the shader object can be queried with this method.
      * The value of <code>GL_COMPILE_STATUS</code> is queried and returned as an integer.
+     *
      * @param shader the shader object to query
-     * @param pname the parameter to query, must be <code>GL_COMPILE_STATUS</code>
+     * @param pname  the parameter to query, must be <code>GL_COMPILE_STATUS</code>
      * @return the queried value as an integer
      */
     public static int getShaderi(int shader, int pname) {

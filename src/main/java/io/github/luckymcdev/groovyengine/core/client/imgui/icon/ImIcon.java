@@ -31,6 +31,7 @@ public class ImIcon {
 
     /**
      * Returns the name of the icon.
+     *
      * @return The name of the icon.
      */
     public String iconName() {
@@ -39,6 +40,7 @@ public class ImIcon {
 
     /**
      * Returns the Unicode character for the icon.
+     *
      * @return The Unicode character for the icon.
      */
     public char toChar() {
@@ -48,6 +50,7 @@ public class ImIcon {
     /**
      * Returns the icon as a string, in the format of a single Unicode character.
      * This is useful for passing the icon to ImGui functions that expect a string.
+     *
      * @return The icon as a string, in the format of a single Unicode character.
      */
     public String get() {

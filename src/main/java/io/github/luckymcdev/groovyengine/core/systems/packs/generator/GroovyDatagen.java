@@ -34,7 +34,6 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.rmi.registry.RegistryHandler;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
@@ -73,6 +72,7 @@ public class GroovyDatagen {
         addAuto();
         INSTANCE.run();
     }
+
     /**
      * Automatically adds all the necessary data generators to the helper.
      * This method is used internally by the data generator runtime to add all the necessary data generators.

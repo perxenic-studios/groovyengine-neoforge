@@ -36,7 +36,7 @@ public class CachedSupplier<T> implements Supplier<T> {
      * Create a new instance of a {@link CachedSupplier} that caches the result of the given delegate supplier.
      *
      * @param delegate the supplier to cache
-     * @param <T> the type of the value returned by the supplier
+     * @param <T>      the type of the value returned by the supplier
      * @return a new instance of a {@link CachedSupplier} that caches the result of the given delegate supplier
      */
     public static <T> CachedSupplier<T> cache(Supplier<T> delegate) {

@@ -28,6 +28,7 @@ public class PipelineStateBuilder {
 
     /**
      * Enables or disables depth testing for the pipeline.
+     *
      * @param enabled Whether to enable depth testing.
      * @return This builder.
      */
@@ -39,6 +40,7 @@ public class PipelineStateBuilder {
     /**
      * Enables or disables depth writing for the pipeline.
      * This controls whether the pipeline writes to the depth buffer.
+     *
      * @param enabled Whether to enable depth writing.
      * @return This builder.
      */
@@ -53,6 +55,7 @@ public class PipelineStateBuilder {
      * Face culling is used to remove back-facing polygons from being rendered.
      * This can be useful for reducing the amount of geometry rendered, but may also
      * result in some visual artifacts.
+     *
      * @param enabled Whether to enable face culling.
      * @return This builder.
      */
@@ -64,6 +67,7 @@ public class PipelineStateBuilder {
     /**
      * Sets the blend mode for the pipeline.
      * The blend mode determines how the pixels of this pipeline are blended with the pixels of the underlying render target.
+     *
      * @param mode The blend mode to set.
      * @return This builder.
      */
@@ -76,6 +80,7 @@ public class PipelineStateBuilder {
      * Enables or disables lightmap rendering for the pipeline.
      * Lightmap rendering is a technique used to visualize the lighting information of a scene.
      * This can be useful for debugging lighting issues.
+     *
      * @param enabled Whether to enable lightmap rendering.
      * @return This builder.
      */
@@ -88,6 +93,7 @@ public class PipelineStateBuilder {
      * Enables or disables overlay rendering for the pipeline.
      * Overlay rendering is a technique used to render a pipeline on top of another render target.
      * This can be useful for rendering GUI elements or other visual information on top of a scene.
+     *
      * @param enabled Whether to enable overlay rendering.
      * @return This builder.
      */
@@ -99,6 +105,7 @@ public class PipelineStateBuilder {
     /**
      * Sets the transparency mode for the pipeline.
      * The transparency mode determines how the pipeline is composited with the underlying render target.
+     *
      * @param mode The transparency mode to set.
      * @return This builder.
      */
@@ -110,6 +117,7 @@ public class PipelineStateBuilder {
     /**
      * Sets the write mask for the pipeline.
      * The write mask determines which buffers the pipeline is allowed to write to.
+     *
      * @param mask The write mask to set.
      * @return This builder.
      */
@@ -121,6 +129,7 @@ public class PipelineStateBuilder {
     /**
      * Creates a pipeline state with opaque blending and no transparency.
      * This pipeline state is suitable for rendering opaque objects such as solid objects or terrain.
+     *
      * @return A pipeline state with opaque blending and no transparency.
      */
     public PipelineStateBuilder opaque() {
@@ -130,6 +139,7 @@ public class PipelineStateBuilder {
     /**
      * Creates a pipeline state with alpha blending and translucent transparency.
      * This pipeline state is suitable for rendering translucent objects such as transparent blocks or water.
+     *
      * @return A pipeline state with alpha blending and translucent transparency.
      */
     public PipelineStateBuilder translucent() {
@@ -139,6 +149,7 @@ public class PipelineStateBuilder {
     /**
      * Creates a pipeline state with additive blending and translucent transparency.
      * This pipeline state is suitable for rendering translucent objects such as transparent blocks or water.
+     *
      * @return A pipeline state with additive blending and translucent transparency.
      */
     public PipelineStateBuilder additive() {
@@ -147,6 +158,7 @@ public class PipelineStateBuilder {
 
     /**
      * Disables face culling for the pipeline.
+     *
      * @return This builder.
      */
     public PipelineStateBuilder noCull() {
@@ -155,6 +167,7 @@ public class PipelineStateBuilder {
 
     /**
      * Disables depth testing for the pipeline.
+     *
      * @return This builder.
      */
     public PipelineStateBuilder noDepthTest() {
@@ -164,6 +177,7 @@ public class PipelineStateBuilder {
     /**
      * Disables depth writing for the pipeline.
      * This can be useful for optimizing rendering performance when depth writing is not needed.
+     *
      * @return This builder.
      */
     public PipelineStateBuilder noDepthWrite() {
@@ -172,6 +186,7 @@ public class PipelineStateBuilder {
 
     /**
      * Builds a pipeline state from the current configuration.
+     *
      * @return A pipeline state with the current configuration.
      */
     public PipelineState build() {

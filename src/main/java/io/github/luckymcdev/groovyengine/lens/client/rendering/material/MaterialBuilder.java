@@ -18,7 +18,8 @@ package io.github.luckymcdev.groovyengine.lens.client.rendering.material;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.state.*;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.state.PipelineState;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.state.PipelineStateBuilder;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;

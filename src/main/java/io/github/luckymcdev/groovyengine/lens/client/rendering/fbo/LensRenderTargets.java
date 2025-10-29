@@ -43,6 +43,7 @@ public class LensRenderTargets implements AutoCloseable {
 
     /**
      * Get the render targets for the current render stage.
+     *
      * @param event the RenderLevelStageEvent
      */
     @SubscribeEvent
@@ -130,10 +131,10 @@ public class LensRenderTargets implements AutoCloseable {
 
     /**
      * Destroys all render targets created by the LensRenderTargets class.
-     *<p>
-     *This method is called when the LensRenderTargets class is about to be shut down.
-     *It iterates over all render targets and calls their destroyBuffers method.
-     *Afterwards, the render targets are set to null.
+     * <p>
+     * This method is called when the LensRenderTargets class is about to be shut down.
+     * It iterates over all render targets and calls their destroyBuffers method.
+     * Afterwards, the render targets are set to null.
      */
     public static void cleanup() {
         if (afterSkyTarget != null) {
@@ -180,10 +181,10 @@ public class LensRenderTargets implements AutoCloseable {
 
     /**
      * Destroys all render targets created by the LensRenderTargets class.
-     *<p>
-     *This method is called when the LensRenderTargets class is about to be shut down.
-     *It iterates over all render targets and calls their destroyBuffers method.
-     *Afterward, the render targets are set to null.
+     * <p>
+     * This method is called when the LensRenderTargets class is about to be shut down.
+     * It iterates over all render targets and calls their destroyBuffers method.
+     * Afterward, the render targets are set to null.
      *
      * @throws Exception if an error occurs when destroying the render targets
      */

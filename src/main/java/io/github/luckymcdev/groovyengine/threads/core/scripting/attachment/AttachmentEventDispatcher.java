@@ -17,14 +17,13 @@
 package io.github.luckymcdev.groovyengine.threads.core.scripting.attachment;
 
 import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
-import io.github.luckymcdev.groovyengine.threads.api.attachments.global.ClientAttachment;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.global.ServerAttachment;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -32,8 +31,8 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * Central dispatcher for all attachment-related events.
@@ -158,14 +157,14 @@ public class AttachmentEventDispatcher {
     @SubscribeEvent
     public void onEntityHurt(LivingDamageEvent.Post event) {
         if (event.getEntity() instanceof LivingEntity) {
-            manager.getEntityAttachments(event.getEntity().getType()).forEach(a -> a.onHurt((LivingEntity) event.getEntity(), event.getSource(), event.getNewDamage()));
+            manager.getEntityAttachments(event.getEntity().getType()).forEach(a -> a.onHurt(event.getEntity(), event.getSource(), event.getNewDamage()));
         }
     }
 
     @SubscribeEvent
     public void onEntityDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
-            manager.getEntityAttachments(event.getEntity().getType()).forEach(a -> a.onDeath((LivingEntity) event.getEntity(), event.getSource()));
+            manager.getEntityAttachments(event.getEntity().getType()).forEach(a -> a.onDeath(event.getEntity(), event.getSource()));
         }
     }
 }

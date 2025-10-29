@@ -41,6 +41,7 @@ public class ScriptShellFactory {
      * <p>
      * After creating the binding, a {@link ScriptEvent.BindingSetupEvent} is fired
      * to allow other mods to add their own bindings.
+     *
      * @return the created binding
      */
     public static Binding createBinding() {

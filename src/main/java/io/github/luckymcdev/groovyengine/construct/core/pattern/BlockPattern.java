@@ -90,7 +90,7 @@ public interface BlockPattern {
 
         /**
          * Gets the block state for a specific position within the pattern.
-         *
+         * <p>
          * This pattern works by generating a random float between 0 and 1, and then
          * iterating through the block states and their corresponding weights. When the
          * cumulative weight exceeds the random float, the corresponding block state is
@@ -174,6 +174,7 @@ public interface BlockPattern {
          * which block state to return. If the layer number is even, the primary block state
          * is returned. If the layer number is odd, the secondary block state is returned.
          * <p>
+         *
          * @param pos    The target position
          * @param origin The origin point of the pattern
          * @param random Random instance for probabilistic patterns
@@ -210,6 +211,7 @@ public interface BlockPattern {
          * gradient effect. If the random value is less than the normalized Y position,
          * the top block state is returned. Otherwise, the bottom block state is returned.
          * <p>
+         *
          * @param pos    The target position
          * @param origin The origin point of the pattern
          * @param random Random instance for probabilistic patterns
@@ -339,6 +341,7 @@ public interface BlockPattern {
          * block state is returned.
          * <p>
          * If no blocks are defined in the weighted pattern, an IllegalStateException is thrown.
+         *
          * @param pos    The target position
          * @param origin The origin point of the pattern
          * @param random Random instance for probabilistic patterns
@@ -367,6 +370,7 @@ public interface BlockPattern {
         /**
          * Gets a list of all the weighted blocks in this pattern.
          * The list is a copy of the internal list, so modifying it will not affect the pattern.
+         *
          * @return A list of all the weighted blocks in this pattern
          */
         public List<WeightedBlock> getWeightedBlocks() {
@@ -376,6 +380,7 @@ public interface BlockPattern {
         /**
          * Gets the total weight of all the blocks in this weighted pattern.
          * This is the sum of all the individual weights of the blocks in the pattern.
+         *
          * @return The total weight of all the blocks in this weighted pattern
          */
         public float getTotalWeight() {
@@ -428,6 +433,7 @@ public interface BlockPattern {
          * given threshold, the primary block state is returned. Otherwise, the
          * secondary block state is returned.
          * <p>
+         *
          * @param pos    The target position
          * @param origin The origin point of the pattern
          * @param random Random instance for probabilistic patterns
@@ -477,7 +483,8 @@ public interface BlockPattern {
             this.axis = axis;
         }
 
-/* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+        /* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+
         /**
          * Gets the block state for a specific position within the pattern.
          * <p>
@@ -487,12 +494,13 @@ public interface BlockPattern {
          * If the remainder of the division is 0, the primary block state is returned.
          * Otherwise, the secondary block state is returned.
          * <p>
+         *
          * @param pos    The target position
          * @param origin The origin point of the pattern
          * @param random Random instance for probabilistic patterns
          * @return The block state to place at the given position
          */
-/* <<<<<<<<<<  c4652452-18b4-4fa0-b482-ce090f7528e0  >>>>>>>>>>> */
+        /* <<<<<<<<<<  c4652452-18b4-4fa0-b482-ce090f7528e0  >>>>>>>>>>> */
         @Override
         public BlockState getBlockState(BlockPos pos, BlockPos origin, Random random) {
             int coord = switch (axis) {

@@ -46,6 +46,7 @@ public class ObjObject {
     /**
      * Adds a face to this object group.
      * The face will be rendered when this object group is rendered.
+     *
      * @param face The face to add to this object group.
      */
     public void addFace(Face face) {

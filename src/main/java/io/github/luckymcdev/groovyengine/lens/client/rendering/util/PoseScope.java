@@ -30,7 +30,7 @@ public class PoseScope {
 
     /**
      * Enables world rendering for the pose stack.
-     *
+     * <p>
      * This method will return a new PoseScope instance with world rendering
      * enabled for the pose stack before the action is executed.
      *
@@ -43,7 +43,7 @@ public class PoseScope {
 
     /**
      * Apply a translation transformation to the pose stack.
-     *
+     * <p>
      * This method will return a new PoseScope instance with the given translation
      * applied to the pose stack before the action is executed.
      *
@@ -70,7 +70,7 @@ public class PoseScope {
 
     /**
      * Adds a pre-action to the PoseScope.
-     *
+     * <p>
      * A pre-action is an action that is executed before the main action of
      * the PoseScope. Pre-actions are executed in the order they are added.
      *
@@ -92,14 +92,14 @@ public class PoseScope {
 
     /**
      * Runs the given action on the pose stack.
-     *
+     * <p>
      * This method will first push the current pose and set the identity matrix.
      * Then, it will execute the given action on the pose stack. Finally, it will pop
      * the pose that was pushed at the beginning of this method.
-     *
+     * <p>
      * If world rendering is enabled using the {@link #world()} method, it will
      * be setup before the action is executed.
-     *
+     * <p>
      * If a pre-action is specified using the {@link #addPreAction(Runnable)}
      * method, it will be executed before the main action is executed.
      *

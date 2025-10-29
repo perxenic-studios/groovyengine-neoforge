@@ -19,13 +19,11 @@ package io.github.luckymcdev.groovyengine;
 import io.github.luckymcdev.groovyengine.core.client.imgui.core.ImGuiRenderer;
 import io.github.luckymcdev.groovyengine.core.systems.module.ModuleManager;
 import io.github.luckymcdev.groovyengine.lens.LensRendering;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute.ComputeShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.PostProcessManager;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.CrtPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.test.SuperDuperPostShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.event.RenderEvent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -39,11 +37,7 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
-import org.lwjgl.system.MemoryUtil;
 
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.util.Arrays;
 import java.util.List;
 
 @Mod(value = GE.MODID, dist = Dist.CLIENT)

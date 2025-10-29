@@ -33,7 +33,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -50,7 +49,8 @@ public class RenderUtils {
 
     /**
      * Check if a given point is inside the camera's frustum.
-     * @param camera The camera to check against
+     *
+     * @param camera   The camera to check against
      * @param worldPos The point to check in world coordinates
      * @return true if the point is inside the camera's frustum, false otherwise
      */
@@ -72,9 +72,10 @@ public class RenderUtils {
      * Check if a given point is inside a pyramid frustum.
      * A pyramid frustum is a 3D shape formed by a pyramid with its apex at the given position,
      * and its base corners at the given positions.
-     * @param apex The position of the apex of the pyramid
+     *
+     * @param apex        The position of the apex of the pyramid
      * @param baseCorners The positions of the corners of the base of the pyramid
-     * @param point The point to check if it is inside the pyramid frustum
+     * @param point       The point to check if it is inside the pyramid frustum
      * @return true if the point is inside the pyramid frustum, false otherwise
      */
     private static boolean isPointInPyramidFrustum(Vec3 apex, Vec3[] baseCorners, Vec3 point) {
@@ -91,10 +92,11 @@ public class RenderUtils {
 
     /**
      * Check if a given point is inside a plane defined by three points.
+     *
      * @param planePoint1 The first point defining the plane
      * @param planePoint2 The second point defining the plane
      * @param planePoint3 The third point defining the plane
-     * @param testPoint The point to check if it is inside the plane
+     * @param testPoint   The point to check if it is inside the plane
      * @return true if the point is inside the plane, false otherwise
      */
     private static boolean isPointInsidePlane(Vec3 planePoint1, Vec3 planePoint2, Vec3 planePoint3, Vec3 testPoint) {
@@ -111,6 +113,7 @@ public class RenderUtils {
     /**
      * Translate the given pose stack to the position of the main camera.
      * This is used to set up rendering of the world, so that the camera's position is ignored.
+     *
      * @param poseStack The pose stack to translate
      */
     public static void setupWorldRendering(PoseStack poseStack) {
@@ -121,7 +124,8 @@ public class RenderUtils {
     /**
      * Sets the position of a pose stack to the given position in world coordinates.
      * This is used to set up rendering of the world, so that the camera's position is ignored.
-     * @param stack The pose stack to set the position of
+     *
+     * @param stack    The pose stack to set the position of
      * @param worldPos The position in world coordinates to set the pose stack to
      */
     public static void setPoseStackPosition(PoseStack stack, Vec3 worldPos) {
@@ -134,6 +138,7 @@ public class RenderUtils {
     /**
      * Returns a vertex consumer for the given multi buffer source.
      * The returned consumer is for the custom quads render type.
+     *
      * @param bufferSource The multi buffer source to get a vertex consumer for
      * @return A vertex consumer for the given multi buffer source
      */
@@ -170,25 +175,26 @@ public class RenderUtils {
     /**
      * Renders a quad using the given vertex consumer, matrix, and vertices.
      * The quad will have the given normal, and the given UV coordinates.
+     *
      * @param consumer The vertex consumer to render with
-     * @param matrix The matrix to transform the vertices with
-     * @param x1 The x coordinate of the first vertex
-     * @param y1 The y coordinate of the first vertex
-     * @param z1 The z coordinate of the first vertex
-     * @param x2 The x coordinate of the second vertex
-     * @param y2 The y coordinate of the second vertex
-     * @param z2 The z coordinate of the second vertex
-     * @param x3 The x coordinate of the third vertex
-     * @param y3 The y coordinate of the third vertex
-     * @param z3 The z coordinate of the third vertex
-     * @param x4 The x coordinate of the fourth vertex
-     * @param y4 The y coordinate of the fourth vertex
-     * @param z4 The z coordinate of the fourth vertex
-     * @param u1 The u coordinate of the first vertex
-     * @param v1 The v coordinate of the first vertex
-     * @param u2 The u coordinate of the second vertex
-     * @param v2 The v coordinate of the second vertex
-     * @param normal The normal vector of the quad
+     * @param matrix   The matrix to transform the vertices with
+     * @param x1       The x coordinate of the first vertex
+     * @param y1       The y coordinate of the first vertex
+     * @param z1       The z coordinate of the first vertex
+     * @param x2       The x coordinate of the second vertex
+     * @param y2       The y coordinate of the second vertex
+     * @param z2       The z coordinate of the second vertex
+     * @param x3       The x coordinate of the third vertex
+     * @param y3       The y coordinate of the third vertex
+     * @param z3       The z coordinate of the third vertex
+     * @param x4       The x coordinate of the fourth vertex
+     * @param y4       The y coordinate of the fourth vertex
+     * @param z4       The z coordinate of the fourth vertex
+     * @param u1       The u coordinate of the first vertex
+     * @param v1       The v coordinate of the first vertex
+     * @param u2       The u coordinate of the second vertex
+     * @param v2       The v coordinate of the second vertex
+     * @param normal   The normal vector of the quad
      */
     public static void renderQuad(VertexConsumer consumer, Matrix4f matrix,
                                   float x1, float y1, float z1,
@@ -206,19 +212,20 @@ public class RenderUtils {
     /**
      * Renders a centered quad at the given position, with the given size and normal.
      * The quad will have the given UV coordinates.
+     *
      * @param consumer The vertex consumer to render with
-     * @param matrix The matrix to transform the vertices with
-     * @param centerX The x coordinate of the center of the quad
-     * @param centerY The y coordinate of the center of the quad
-     * @param centerZ The z coordinate of the center of the quad
-     * @param sizeX The size of the quad in the x direction
-     * @param sizeY The size of the quad in the y direction
-     * @param sizeZ The size of the quad in the z direction
-     * @param u1 The u coordinate of the first vertex
-     * @param v1 The v coordinate of the first vertex
-     * @param u2 The u coordinate of the second vertex
-     * @param v2 The v coordinate of the second vertex
-     * @param normal The normal vector of the quad
+     * @param matrix   The matrix to transform the vertices with
+     * @param centerX  The x coordinate of the center of the quad
+     * @param centerY  The y coordinate of the center of the quad
+     * @param centerZ  The z coordinate of the center of the quad
+     * @param sizeX    The size of the quad in the x direction
+     * @param sizeY    The size of the quad in the y direction
+     * @param sizeZ    The size of the quad in the z direction
+     * @param u1       The u coordinate of the first vertex
+     * @param v1       The v coordinate of the first vertex
+     * @param u2       The u coordinate of the second vertex
+     * @param v2       The v coordinate of the second vertex
+     * @param normal   The normal vector of the quad
      */
     public static void renderCenteredQuad(VertexConsumer consumer, Matrix4f matrix,
                                           float centerX, float centerY, float centerZ,
@@ -239,6 +246,7 @@ public class RenderUtils {
 
     /**
      * Computes the parametric points of a 3D sphere
+     *
      * @param u the u parameter of the sphere
      * @param v the v parameter of the sphere
      * @param r the radius of the sphere
@@ -250,8 +258,9 @@ public class RenderUtils {
 
     /**
      * Computes the parametric points of a 3D torus
-     * @param u the u parameter of the torus
-     * @param v the v parameter of the torus
+     *
+     * @param u           the u parameter of the torus
+     * @param v           the v parameter of the torus
      * @param majorRadius the major radius of the torus
      * @param minorRadius the minor radius of the torus
      * @return the parametric points of the torus
@@ -265,8 +274,9 @@ public class RenderUtils {
 
     /**
      * Computes the perpendicular trail points of a 3D line segment
+     *
      * @param start the start point of the line segment
-     * @param end the end point of the line segment
+     * @param end   the end point of the line segment
      * @param width the width of the trail
      * @return the perpendicular trail points of the line segment
      */
@@ -296,6 +306,7 @@ public class RenderUtils {
     /**
      * Returns the sum of the squares of the given float values.
      * This is useful for computing the squared Euclidean distance between two points.
+     *
      * @param a A variable number of float values
      * @return The sum of the squares of the given values
      */
@@ -310,6 +321,7 @@ public class RenderUtils {
     /**
      * Returns the Euclidean distance between two points.
      * The Euclidean distance is the square root of the sum of the squares of the differences between corresponding coordinates.
+     *
      * @param a A variable number of float values, where the number of values should be even and the values should be paired to represent coordinates.
      * @return The Euclidean distance between the two points.
      */
@@ -320,6 +332,7 @@ public class RenderUtils {
     /**
      * Returns the midpoint of two vectors.
      * The midpoint is the vector that is halfway between the two given vectors.
+     *
      * @param a The first vector
      * @param b The second vector
      * @return The midpoint of the two vectors
@@ -330,7 +343,8 @@ public class RenderUtils {
 
     /**
      * Transforms a world position into a texture coordinate using the given view model matrix and projection matrix.
-     * @param worldPos The world position to transform
+     *
+     * @param worldPos       The world position to transform
      * @param viewModelStack The pose stack containing the view model matrix
      * @return The resulting texture coordinate
      */

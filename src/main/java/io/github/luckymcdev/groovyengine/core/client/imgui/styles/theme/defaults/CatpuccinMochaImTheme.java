@@ -28,6 +28,7 @@ public class CatpuccinMochaImTheme implements ImTheme {
 
     /**
      * Applies the Catppuccin Mocha theme to the given ImGuiStyle.
+     *
      * @param style The ImGuiStyle to apply the theme to.
      */
     @Override

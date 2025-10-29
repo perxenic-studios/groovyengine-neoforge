@@ -28,7 +28,7 @@ public record CubeVertexData(Vector3f[] bottomVertices, Vector3f[] topVertices, 
 
     /**
      * Creates a CubeVertexData object with the given scale applied to the x and y axes.
-     *
+     * <p>
      * The resulting cube will have its bottom vertices at (-xScale/2, -yScale/2, -xScale/2), (-xScale/2, -yScale/2, xScale/2), (xScale/2, -yScale/2, xScale/2), and (xScale/2, -yScale/2, -xScale/2),
      * and its top vertices at (-xScale/2, yScale/2, -xScale/2), (-xScale/2, yScale/2, xScale/2), (xScale/2, yScale/2, xScale/2), and (xScale/2, yScale/2, -xScale/2).
      * The offset map will be populated with the vertices in the order of bottom left, bottom right, top right, top left.
@@ -63,9 +63,9 @@ public record CubeVertexData(Vector3f[] bottomVertices, Vector3f[] topVertices, 
      * The offset map will be populated with the vertices in the order of bottom left, bottom right, top right, top left.
      *
      * @param xStart The starting x position of the cube.
-     * @param xEnd The ending x position of the cube.
+     * @param xEnd   The ending x position of the cube.
      * @param yStart The starting y position of the cube.
-     * @param yEnd The ending y position of the cube.
+     * @param yEnd   The ending y position of the cube.
      * @return A CubeVertexData object representing the cube with the given positions.
      */
     public static CubeVertexData makeCubePositions(float xStart, float xEnd, float yStart, float yEnd) {
@@ -85,9 +85,9 @@ public record CubeVertexData(Vector3f[] bottomVertices, Vector3f[] topVertices, 
      * The sine offset is increased by 0.25f for each iteration.
      * The wobble is applied in the x and y axes.
      *
-     * @param offsets The offsets to apply the wobble to
+     * @param offsets    The offsets to apply the wobble to
      * @param sineOffset The sine offset to use for the wobble calculation
-     * @param strength The strength of the wobble
+     * @param strength   The strength of the wobble
      */
     public static void applyVertexWobble(Vector3f[] offsets, float sineOffset, float strength) {
         float offset = sineOffset;
@@ -139,7 +139,7 @@ public record CubeVertexData(Vector3f[] bottomVertices, Vector3f[] topVertices, 
      * The wobble is applied in the x and y axes.
      *
      * @param sineOffset The sine offset to use for the wobble calculation
-     * @param strength The strength of the wobble
+     * @param strength   The strength of the wobble
      * @return This cube vertex data with the wobble applied
      */
     public CubeVertexData applyWobble(float sineOffset, float strength) {
@@ -153,8 +153,8 @@ public record CubeVertexData(Vector3f[] bottomVertices, Vector3f[] topVertices, 
      * The wobble is applied in the x and y axes.
      *
      * @param bottomSineOffset The sine offset to use for the wobble calculation on the bottom vertices
-     * @param topSineOffset The sine offset to use for the wobble calculation on the top vertices
-     * @param strength The strength of the wobble
+     * @param topSineOffset    The sine offset to use for the wobble calculation on the top vertices
+     * @param strength         The strength of the wobble
      * @return This cube vertex data with the wobble applied
      */
     public CubeVertexData applyWobble(float bottomSineOffset, float topSineOffset, float strength) {
@@ -167,9 +167,9 @@ public record CubeVertexData(Vector3f[] bottomVertices, Vector3f[] topVertices, 
      * The sine offset is increased by 0.25f for each iteration.
      * The wobble is applied in the x and y axes.
      *
-     * @param offsets The offsets to apply the wobble to
+     * @param offsets    The offsets to apply the wobble to
      * @param sineOffset The sine offset to use for the wobble calculation
-     * @param strength The strength of the wobble
+     * @param strength   The strength of the wobble
      * @return This cube vertex data with the wobble applied
      */
     public CubeVertexData applyWobble(Vector3f[] offsets, float sineOffset, float strength) {
@@ -190,7 +190,7 @@ public record CubeVertexData(Vector3f[] bottomVertices, Vector3f[] topVertices, 
     /**
      * Scales this cube vertex data by the given width and height in the x and y axes, and by the given width in the z axis.
      *
-     * @param width The width to scale the cube vertex data by
+     * @param width  The width to scale the cube vertex data by
      * @param height The height to scale the cube vertex data by
      * @return This cube vertex data with the scale applied
      */

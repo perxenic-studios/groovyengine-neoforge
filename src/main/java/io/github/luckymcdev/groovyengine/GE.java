@@ -25,7 +25,6 @@ import net.minecraft.server.packs.repository.RepositorySource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.stream.ImageInputStream;
 import java.text.DecimalFormat;
 
 public class GE {
@@ -49,6 +48,7 @@ public class GE {
 
     /**
      * Creates a ResourceLocation from the given path, using the {@link GE#MODID} as the namespace.
+     *
      * @param path The path to use for the ResourceLocation
      * @return A ResourceLocation with the given path and the {@link GE#MODID} as the namespace
      */

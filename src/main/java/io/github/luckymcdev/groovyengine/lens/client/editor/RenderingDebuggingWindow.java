@@ -344,7 +344,8 @@ public class RenderingDebuggingWindow extends EditorWindow {
     /**
      * Renders a tab item with the given label and texture ID.
      * If the tab item is active, it calls {@link #renderRenderTarget(String, int)} to render the texture.
-     * @param label The label of the tab item.
+     *
+     * @param label     The label of the tab item.
      * @param textureId The ID of the texture to render.
      */
     private void renderRenderTargetTab(String label, int textureId) {
@@ -359,7 +360,8 @@ public class RenderingDebuggingWindow extends EditorWindow {
      * {@link #renderRenderTargetFlipped(String, int)} to render the texture.
      * If the tab item is active, it calls {@link #renderRenderTargetFlipped(String, int)}
      * to render the texture.
-     * @param label The label of the tab item.
+     *
+     * @param label     The label of the tab item.
      * @param textureId The ID of the texture to render.
      */
     private void renderRenderTargetTabFlipped(String label, int textureId) {
@@ -374,7 +376,8 @@ public class RenderingDebuggingWindow extends EditorWindow {
      * The texture is rendered in the center of the window with a size of half the window's width and height.
      * If the texture ID is valid, a tooltip is displayed on hover with information about the texture ID, size, and label.
      * If the texture ID is invalid, a dummy texture is rendered with the given size and a tooltip is displayed on hover with the label "[ No texture captured ]".
-     * @param label The label of the texture.
+     *
+     * @param label     The label of the texture.
      * @param textureId The ID of the texture to render.
      */
     private void renderRenderTarget(String label, int textureId) {
@@ -406,7 +409,8 @@ public class RenderingDebuggingWindow extends EditorWindow {
      * The texture is rendered in the center of the window with a size of half the window's width and height.
      * If the texture ID is valid, a tooltip is displayed on hover with information about the texture ID, size, and label.
      * If the texture ID is invalid, a dummy texture is rendered with the given size and a tooltip is displayed on hover with the label "[ No texture captured ]".
-     * @param label The label of the texture.
+     *
+     * @param label     The label of the texture.
      * @param textureId The ID of the texture to render.
      */
     private void renderRenderTargetFlipped(String label, int textureId) {

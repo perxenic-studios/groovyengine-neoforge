@@ -40,6 +40,7 @@ public class GroovyEngineEditor {
 
     /**
      * Gets the current state of the Construct Editor.
+     *
      * @return The current state of the Construct Editor.
      */
     public static EditorState getEditorState() {
@@ -49,6 +50,7 @@ public class GroovyEngineEditor {
 
     /**
      * Sets the current state of the Construct Editor.
+     *
      * @param editorState The new state of the Construct Editor.
      */
     public static void setEditorState(EditorState editorState) {

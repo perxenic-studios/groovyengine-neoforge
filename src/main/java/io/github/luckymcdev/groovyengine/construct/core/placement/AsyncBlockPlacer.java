@@ -54,11 +54,13 @@ public class AsyncBlockPlacer {
     private int blocksPerTick = 1000;
     private int updatesPerTick = blocksPerTick / 2;
     private int tickCounter = 0;
+
     private AsyncBlockPlacer() {
     }
 
     /**
      * Retrieves the singleton instance of the asynchronous block placer.
+     *
      * @return the singleton instance of the asynchronous block placer
      */
     public static AsyncBlockPlacer getInstance() {

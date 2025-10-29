@@ -130,7 +130,7 @@ public class Joint {
 
     /**
      * Returns the rotation of this joint.
-     *
+     * <p>
      * The rotation is given as a quaternion (x, y, z, w) and is relative to the parent joint.
      * If the joint has no parent, the rotation is relative to the world coordinate system.
      *

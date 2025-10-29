@@ -43,7 +43,7 @@ public class MinecraftClientMixin {
      * It creates an instance of ImGuiImpl and loads the fonts from the resource manager.
      *
      * @param gameConfig the game configuration
-     * @param ci the callback information for the initialization method
+     * @param ci         the callback information for the initialization method
      */
     @Inject(method = "<init>", at = @At("RETURN"))
     public void initImGui(GameConfig gameConfig, CallbackInfo ci) {

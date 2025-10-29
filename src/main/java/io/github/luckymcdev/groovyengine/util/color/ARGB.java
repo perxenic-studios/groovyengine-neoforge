@@ -31,6 +31,7 @@ public class ARGB {
      * </pre>
      * Where AA is the alpha component, BB is the blue component,
      * GG is the green component, and RR is the red component.
+     *
      * @param argb the ARGB color value to convert
      * @return the ABGR color value
      */

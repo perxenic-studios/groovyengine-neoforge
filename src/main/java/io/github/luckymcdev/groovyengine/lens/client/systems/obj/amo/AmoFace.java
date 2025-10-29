@@ -60,14 +60,14 @@ public class AmoFace extends Face {
 
     /**
      * Render a triangle face with animation applied.
-     *
+     * <p>
      * This method takes a list of animated vertices and renders them as a triangle.
      * The first vertex is duplicated to close the triangle.
      *
-     * @param poseStack The pose stack.
-     * @param buffer The vertex consumer buffer.
+     * @param poseStack   The pose stack.
+     * @param buffer      The vertex consumer buffer.
      * @param packedLight The packed light.
-     * @param joints The joints to apply to the vertices for animation.
+     * @param joints      The joints to apply to the vertices for animation.
      */
     private void renderTriangleAnimated(PoseStack poseStack, VertexConsumer buffer, int packedLight, Joint[] joints) {
         for (AmoVertex vertex : amoVertices) {
@@ -80,7 +80,7 @@ public class AmoFace extends Face {
     /**
      * Render a quad face with animation applied.
      *
-     * @param poseStack  The pose stack to render with
+     * @param poseStack   The pose stack to render with
      * @param buffer      The buffer to render to
      * @param packedLight The packed light
      * @param joints      The joints to apply animation to
@@ -94,11 +94,11 @@ public class AmoFace extends Face {
     /**
      * Add an animated vertex to the given buffer.
      *
-     * @param buffer The buffer to add the vertex to
-     * @param vertex The animated vertex to add
-     * @param poseStack The pose stack to use for rendering
+     * @param buffer      The buffer to add the vertex to
+     * @param vertex      The animated vertex to add
+     * @param poseStack   The pose stack to use for rendering
      * @param packedLight The packed light value to use for rendering
-     * @param joints The joints to apply to the vertex for animation
+     * @param joints      The joints to apply to the vertex for animation
      */
     private void addAnimatedVertex(VertexConsumer buffer, AmoVertex vertex, PoseStack poseStack, int packedLight, Joint[] joints) {
         PoseStack.Pose pose = poseStack.last();

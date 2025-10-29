@@ -43,6 +43,7 @@ public class ObjParser {
     /**
      * Parse an OBJ file and populate the given lists with the contents.
      * This method will also initialize the default object with the given name.
+     *
      * @param resource the OBJ file resource to parse
      * @throws IOException if there is an error reading the file
      */

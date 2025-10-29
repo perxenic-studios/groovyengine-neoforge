@@ -18,8 +18,6 @@ package io.github.luckymcdev.groovyengine.threads.api.attachments.global;
 
 import io.github.luckymcdev.groovyengine.threads.api.attachments.BaseAttachment;
 
-import java.util.List;
-
 /**
  * Attachment for script lifecycle events.
  * Use this to track when scripts are loaded, reloaded, or encounter errors.

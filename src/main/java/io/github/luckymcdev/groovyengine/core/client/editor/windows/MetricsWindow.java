@@ -44,14 +44,12 @@ public class MetricsWindow extends EditorWindow {
     private final double[] memoryHistory = new double[HISTORY_SIZE];
     private final double[] frameTimeHistory = new double[HISTORY_SIZE];
     private final double[] entityHistory = new double[HISTORY_SIZE];
-    private int historyIndex = 0;
-    private int sampleCount = 0;
-
     // Graph settings
     private final boolean autoScaleFPS = false;
     private final boolean autoScaleMemory = false;
     private final boolean showCombinedGraph = true;
-
+    private int historyIndex = 0;
+    private int sampleCount = 0;
     // Frame time tracking
     private long lastFrameTime = System.nanoTime();
     private double avgFps = 60.0;
@@ -64,7 +62,7 @@ public class MetricsWindow extends EditorWindow {
 
     /**
      * Renders the metrics window with the given ImGuiIO.
-     *
+     * <p>
      * If the player or world is null, it will display a warning message.
      * Otherwise, it will render the tab bar with the performance, player, world, and graph sections.
      *
@@ -387,7 +385,7 @@ public class MetricsWindow extends EditorWindow {
     /**
      * Renders the graphs tab, containing information about the current and average FPS,
      * current and average frame time, used and allocated memory, and other relevant metrics.
-     *
+     * <p>
      * If the player or world is null, it will display a warning message.
      * Otherwise, it will render the tab bar with the performance, player, world, and graph sections.
      */

@@ -70,6 +70,7 @@ public class ImGuiRenderer {
      * It initializes the windows managed by the Window Manager if necessary, and then renders the ImGui UI using the ImGuiImpl.draw method.
      * The {@link ImGuiImpl#draw} method is passed a render interface, which is called once per frame.
      * The render interface is responsible for setting up the docking and main window, rendering the main menu bar, and rendering all enabled windows.
+     *
      * @param event The RenderGuiEvent.Post event which triggered this method call.
      */
     public static void onRender(RenderGuiEvent.Post event) {
@@ -175,7 +176,8 @@ public class ImGuiRenderer {
         }
     }
 
-/* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+    /* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+
     /**
      * Returns a list of categories sorted according to the given desired order.
      * If a category is not in the desired order list, it is sorted alphabetically.
@@ -186,7 +188,7 @@ public class ImGuiRenderer {
      * @param desiredOrder The list of categories in the desired order
      * @return A list of categories sorted according to the given desired order
      */
-/* <<<<<<<<<<  eb41226b-af41-4337-9a38-d89a5cedfae2  >>>>>>>>>>> */
+    /* <<<<<<<<<<  eb41226b-af41-4337-9a38-d89a5cedfae2  >>>>>>>>>>> */
     private static @NotNull List<String> getSortedCategoriesFor(List<String> desiredOrder) {
         List<String> sortedCategories = new ArrayList<>(WindowManager.getCategories());
         sortedCategories.sort((a, b) -> {

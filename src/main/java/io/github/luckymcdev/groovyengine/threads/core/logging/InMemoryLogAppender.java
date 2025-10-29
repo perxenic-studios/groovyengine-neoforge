@@ -44,6 +44,7 @@ public class InMemoryLogAppender extends AbstractAppender {
      * The log lines are returned as a new {@link List} containing the same elements
      * as the current log lines in the order they were added.
      * The returned list is safe to modify without affecting the internal state of the appender.
+     *
      * @return a copy of the current log lines
      */
     public static List<String> getLogLines() {
@@ -71,6 +72,7 @@ public class InMemoryLogAppender extends AbstractAppender {
      * <code>LEVEL | LOGGER_NAME | MESSAGE</code> and added to the end of the log.
      * If the log exceeds the maximum number of lines, the oldest line is removed.
      * This method is thread-safe.
+     *
      * @param event the log event to append
      */
     @Override

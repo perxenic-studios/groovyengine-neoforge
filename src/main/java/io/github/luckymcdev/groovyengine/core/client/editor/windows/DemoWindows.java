@@ -36,6 +36,7 @@ public class DemoWindows {
 
         /**
          * Renders the about window for the demo window.
+         *
          * @param io The ImGuiIO object to use for rendering.
          */
         @Override
@@ -53,6 +54,7 @@ public class DemoWindows {
          * Renders the demo window.
          * <p>This method is called every frame to update the UI and handle user interactions.
          * It renders a window with a single section containing information about the demo window.
+         *
          * @param io The ImGuiIO object to use for rendering.
          * @see ImGuiIO
          */
@@ -71,6 +73,7 @@ public class DemoWindows {
          * Renders the ImGui Metrics window.
          * <p>This method is called every frame to update the UI and handle user interactions.
          * It renders a window with a single section containing information about ImGui metrics.
+         *
          * @param io The ImGuiIO object to use for rendering.
          * @see ImGuiIO
          */
@@ -93,6 +96,7 @@ public class DemoWindows {
          * Renders the Icons window.
          * <p>This method is called every frame to update the UI and handle user interactions.
          * It renders a window with multiple sections containing information about various icons.
+         *
          * @param io The ImGuiIO object to use for rendering.
          * @see ImGuiIO
          */
@@ -228,7 +232,7 @@ public class DemoWindows {
 
         /**
          * Renders a section of icons in the Demo Window.
-         *
+         * <p>
          * This method takes an array of icon names and renders them in a grid layout.
          * Each icon is rendered with its name and Unicode value as a tooltip.
          * Clicking an icon copies its character to the clipboard.

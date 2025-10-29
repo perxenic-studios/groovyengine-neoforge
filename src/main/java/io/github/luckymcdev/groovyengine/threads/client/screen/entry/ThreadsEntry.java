@@ -39,14 +39,14 @@ public class ThreadsEntry extends ObjectSelectionList.Entry<ThreadsEntry> {
      * of the given script error.
      *
      * @param guiGraphics the GuiGraphics object to render to
-     * @param index the index of the entry in the list
-     * @param y the y position of the entry
-     * @param x the x position of the entry
-     * @param width the width of the entry
-     * @param height the height of the entry
-     * @param mouseX the x position of the mouse
-     * @param mouseY the y position of the mouse
-     * @param hovered whether the entry is currently hovered
+     * @param index       the index of the entry in the list
+     * @param y           the y position of the entry
+     * @param x           the x position of the entry
+     * @param width       the width of the entry
+     * @param height      the height of the entry
+     * @param mouseX      the x position of the mouse
+     * @param mouseY      the y position of the mouse
+     * @param hovered     whether the entry is currently hovered
      * @param partialTick the partial tick of the render
      */
     @Override

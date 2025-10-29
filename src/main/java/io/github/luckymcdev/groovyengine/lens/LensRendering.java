@@ -61,6 +61,7 @@ public class LensRendering {
 
     // Add AMO model registration
     public static final AmoModel animatedModel = new AmoModel(GE.id("animated"));
+    public static final PostProcessChain POST_CHAIN = new PostProcessChain();
     private static final ObjModel circle = new ObjModel(GE.id("mesh/circle/circle"));
     private static final ObjModel cone = new ObjModel(GE.id("mesh/cone/cone"));
     private static final ObjModel cube = new ObjModel(GE.id("mesh/cube/cube"));
@@ -72,10 +73,7 @@ public class LensRendering {
     private static final ObjModel torus = new ObjModel(GE.id("mesh/torus/torus"));
     private static final ObjModel chupacabraModel = new ObjModel(GE.id("chupacabra"));
     private static final ResourceLocation chupacabraTexture = GE.id("obj/chupacabra.png");
-
     private static final Renderer renderer = Renderer.getInstance();
-
-    public static final PostProcessChain POST_CHAIN = new PostProcessChain();
 
     /**
      * Initializes the rendering system by registering all OBJ models and initializing animations.
@@ -132,6 +130,7 @@ public class LensRendering {
      * Updates the animation time for the animated model on the client tick event.
      * This method is called automatically on the client tick event.
      * It scales the delta time to seconds and updates the animation time of the animated model.
+     *
      * @param event The client tick event.
      */
     public static void onClientTick(ClientTickEvent.Pre event) {
@@ -145,6 +144,7 @@ public class LensRendering {
      * Registers the test shader with the given register shaders event.
      * This method is called automatically on the register shaders event.
      * It registers the test shader with the event and logs any errors during registration.
+     *
      * @param event The register shaders event to register the test shader with.
      */
     public static void onRegisterShaders(RegisterShadersEvent event) {
@@ -160,6 +160,7 @@ public class LensRendering {
      * This method is called automatically on the render level stage event.
      * It renders the final composition of the level if the event stage is AFTER_LEVEL,
      * and renders particle effects, VFX shapes, and models if the event stage is AFTER_TRANSLUCENT_BLOCKS.
+     *
      * @param event The render level stage event to set up rendering for.
      */
     @SubscribeEvent
@@ -184,6 +185,7 @@ public class LensRendering {
      * Renders the final composition of the level after all rendering is complete.
      * This method is called automatically on the render level stage event.
      * It renders the final composition of the level with any active shader effects.
+     *
      * @param event The render level stage event to render the final composition for.
      */
     private static void renderFinal(RenderLevelStageEvent event) {
@@ -228,6 +230,7 @@ public class LensRendering {
     /**
      * Resets the post-processing chain by clearing all effects on the render level stage event.
      * This method is automatically called on the render level stage event with the highest priority.
+     *
      * @param event The render level stage event to reset the post-processing chain for.
      */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -239,6 +242,7 @@ public class LensRendering {
      * Renders the entire post-processing chain on the render level stage event.
      * This method is automatically called on the render level stage event with the lowest priority.
      * It executes the entire post-processing chain and then disposes all shader effects.
+     *
      * @param event The render level stage event to render the post-processing chain for.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -253,6 +257,7 @@ public class LensRendering {
      * This method is used to test the particle system and is not intended to be used in production code.
      * It creates a range of effects, from simple flames and smoke to more complex effects like portals and notes.
      * The effects are spawned at different positions in the world, with some being spawned in a circle pattern.
+     *
      * @param level The client level to create the particle effects in.
      */
     private static void createParticleEffects(ClientLevel level) {
@@ -325,12 +330,12 @@ public class LensRendering {
 
     /**
      * Renders various shapes using VFXBuilders.
-     *
+     * <p>
      * The shapes that are rendered are a triangle, a sphere, and a torus.
      * These shapes are rendered at position (100, 200, 100) in the world.
      * After rendering the shapes, the screen is rendered with a screen VFX.
      *
-     * @param stack The pose stack to use for rendering.
+     * @param stack   The pose stack to use for rendering.
      * @param buffers The buffer source to use for rendering.
      */
     private static void renderVFXShapes(PoseStack stack, MultiBufferSource.BufferSource buffers) {
@@ -395,11 +400,11 @@ public class LensRendering {
 
     /**
      * Renders all primitive models in a grid at the given start position.
-     *
+     * <p>
      * The models that are rendered are cube, sphere, cylinder, cone, plane, circle, icosphere, torus, and suzanne.
      * These models are rendered at the given start position with a spacing of 30 units on the x-axis.
      *
-     * @param stack The pose stack to use for rendering.
+     * @param stack         The pose stack to use for rendering.
      * @param startPosition The start position of the grid.
      */
     static void renderAllObjModels(PoseStack stack, Vec3 startPosition) {
@@ -424,8 +429,8 @@ public class LensRendering {
      * The packed light value at the given position is used for rendering.
      * If an exception occurs while rendering the model, an error message is logged.
      *
-     * @param stack The pose stack to use for rendering.
-     * @param model The animated model to render.
+     * @param stack    The pose stack to use for rendering.
+     * @param model    The animated model to render.
      * @param position The position to render the model at.
      */
     static void renderAmoModel(PoseStack stack, AmoModel model, Vec3 position) {
@@ -450,8 +455,8 @@ public class LensRendering {
      * The model is translated to the given position and scaled by a factor of 10.
      * The packed light value at the given position is used for rendering.
      *
-     * @param stack The pose stack to use for rendering.
-     * @param model The OBJ model to render.
+     * @param stack    The pose stack to use for rendering.
+     * @param model    The OBJ model to render.
      * @param position The position to render the model at.
      */
     static void renderObjModel(PoseStack stack, ObjModel model, Vec3 position) {
@@ -469,8 +474,8 @@ public class LensRendering {
      * The model is translated to the given position and scaled by a factor of 10.
      * The packed light value at the given position is used for rendering.
      *
-     * @param stack The pose stack to use for rendering.
-     * @param model The OBJ model to render.
+     * @param stack    The pose stack to use for rendering.
+     * @param model    The OBJ model to render.
      * @param position The position to render the model at.
      * @param material The material to use for rendering.
      */
@@ -488,8 +493,8 @@ public class LensRendering {
      * The model is translated to the given position and scaled by a factor of 10.
      * The packed light value at the given position is used for rendering.
      *
-     * @param stack The pose stack to use for rendering.
-     * @param model The animated OBJ model to render.
+     * @param stack    The pose stack to use for rendering.
+     * @param model    The animated OBJ model to render.
      * @param position The position to render the model at.
      * @param material The material to use for rendering.
      */
@@ -505,11 +510,11 @@ public class LensRendering {
 
     /**
      * Renders a triangle using VFXBuilders.
-     *
+     * <p>
      * The triangle is rendered with material {@link GeMaterials#DEBUG_TRIANGLES}, color (0.0f, 1.0f, 0.0f, 1.0f), and UV coordinates (0f, 0f, 1f, 1f).
      * The triangle is placed at position (0, 50, 0) in the world.
      *
-     * @param poseStack The pose stack to use for rendering.
+     * @param poseStack    The pose stack to use for rendering.
      * @param bufferSource The buffer source to use for rendering.
      */
     static void renderVFXBuilderTriangle(PoseStack poseStack, MultiBufferSource bufferSource) {
@@ -528,11 +533,11 @@ public class LensRendering {
 
     /**
      * Renders a sphere using VFXBuilders.
-     *
+     * <p>
      * The sphere is rendered with material {@link GeMaterials#DEBUG_TRIANGLES}, color (0.0f, 0.0f, 1.0f, 1.0f), and UV coordinates (0f, 0f, 1f, 1f).
      * The sphere is placed at position (-50, 0, 0) in the world, with radius 15f, and is rendered with 8x8 segments.
      *
-     * @param poseStack The pose stack to use for rendering.
+     * @param poseStack    The pose stack to use for rendering.
      * @param bufferSource The buffer source to use for rendering.
      */
     static void renderVFXBuilderSphere(PoseStack poseStack, MultiBufferSource bufferSource) {
@@ -549,11 +554,11 @@ public class LensRendering {
 
     /**
      * Renders a torus using VFXBuilders.
-     *
+     * <p>
      * The torus is rendered with material {@link GeMaterials#DEBUG_TRIANGLES}, color (1.0f, 1.0f, 0.0f, 1.0f), and UV coordinates (0f, 0f, 1f, 1f).
      * The torus is placed at position (0, 0, 50) in the world, with radius 10f, inner radius 3f, and is rendered with 50x30 segments.
      *
-     * @param poseStack The pose stack to use for rendering.
+     * @param poseStack    The pose stack to use for rendering.
      * @param bufferSource The buffer source to use for rendering.
      */
     static void renderVFXBuilderTorus(PoseStack poseStack, MultiBufferSource bufferSource) {
@@ -571,11 +576,11 @@ public class LensRendering {
 
     /**
      * Renders a cube using VFXBuilders.
-     *
+     * <p>
      * The cube is rendered with render type {@link RenderType#debugQuads()}, material {@link RenderType#debugQuads()}, color (1.0f, 0.5f, 0.0f, 1.0f), and UV coordinates (0f, 0f, 1f, 1f).
      * The cube is placed at position (-50, 50, 0) in the world.
      *
-     * @param poseStack The pose stack to use for rendering.
+     * @param poseStack    The pose stack to use for rendering.
      * @param bufferSource The buffer source to use for rendering.
      */
     static void renderVFXBuilderCube(PoseStack poseStack, MultiBufferSource bufferSource) {
@@ -590,7 +595,7 @@ public class LensRendering {
 
     /**
      * Renders a screen-space VFX using VFXBuilders.
-     *
+     * <p>
      * The VFX is rendered with the blit shader, the dirt texture, and a white color.
      * The VFX is placed at position (100, 100) in the screen, with a size of 200x200 pixels.
      * The UV coordinates are set to (0f, 0f, 1f, 1f).

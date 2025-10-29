@@ -55,6 +55,7 @@ public class KeybindManager {
 
     /**
      * Registers the keybinds for the Construct Editor.
+     *
      * @param event The RegisterKeyMappingsEvent to register the keybinds to.
      */
     @SubscribeEvent
@@ -65,6 +66,7 @@ public class KeybindManager {
 
     /**
      * Handles key input events for the Construct Editor.
+     *
      * @param event The InputEvent.Key to handle.
      */
     @SubscribeEvent

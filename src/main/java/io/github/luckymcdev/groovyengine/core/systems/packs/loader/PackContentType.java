@@ -30,14 +30,14 @@ public record PackContentType(boolean data, boolean resources) {
 
     /**
      * Attempts to determine the type of the given pack candidate file.
-     *
+     * <p>
      * This method will check if the given file is a regular file, and if so, attempts to open it as a ZIP archive.
      * If the file is an archive, it will check if the archive contains a pack.mcmeta file, and if it does,
      * it will return a new PackContentType instance with the data and resources directories set accordingly.
-     *
+     * <p>
      * If the file is a directory, it will check if the directory contains a pack.mcmeta file, and if it does,
      * it will return a new PackContentType instance with the data and resources directories set accordingly.
-     *
+     * <p>
      * If the file is neither a regular file nor a directory, or if it does not contain a pack.mcmeta file,
      * this method will return the INVALID PackContentType instance.
      *
@@ -66,11 +66,11 @@ public record PackContentType(boolean data, boolean resources) {
 
     /**
      * Attempts to determine the type of the given resources directory.
-     *
+     * <p>
      * This method will check if the given path is a directory, and if so, attempts to check if the directory
      * contains a "data" or "assets" subdirectory. If either of these directories exist, it will return a new
      * PackContentType instance with the data and resources directories set accordingly.
-     *
+     * <p>
      * If the path is not a directory, or if neither "data" nor "assets" exist, this method will return the
      * INVALID pack type.
      *

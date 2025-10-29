@@ -16,10 +16,6 @@
 
 package io.github.luckymcdev.groovyengine.threads.api.attachments.global;
 
-import io.github.luckymcdev.groovyengine.threads.api.attachments.BaseAttachment;
-
-import java.util.List;
-
 /**
  * Attachment for server-side only events.
  * Use this for world management, player tracking, server lifecycle, etc.
