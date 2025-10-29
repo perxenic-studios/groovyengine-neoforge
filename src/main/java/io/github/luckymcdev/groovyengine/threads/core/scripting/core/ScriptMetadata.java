@@ -12,6 +12,8 @@ public class ScriptMetadata {
      * <p>
      * The priority of a script is the integer value following the "//priority=" string in the script's
      * first non-empty line. If no such string is present, the priority is 0.
+     * <p>
+     * For a script with priority 0, it is loaded later than a script with priority 1, and so on.
      *
      * @param script the script to get the priority from
      * @return the priority of the script

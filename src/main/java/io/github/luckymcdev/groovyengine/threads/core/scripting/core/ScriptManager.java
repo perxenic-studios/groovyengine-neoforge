@@ -74,7 +74,7 @@ public class ScriptManager {
                     .filter(p -> !ScriptMetadata.isDisabled(p))
                     .collect(Collectors.toList());
 
-            scripts.sort(Comparator.comparingInt(ScriptMetadata::getPriority));
+            scripts.sort(Comparator.comparingInt(ScriptMetadata::getPriority).reversed());
 
             scripts.forEach(ScriptManager::evaluateScript);
         } catch (IOException e) {
