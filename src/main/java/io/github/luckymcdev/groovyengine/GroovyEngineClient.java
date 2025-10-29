@@ -62,36 +62,7 @@ public class GroovyEngineClient {
 
         NeoForge.EVENT_BUS.addListener(ImGuiRenderer::onRender);
 
-        // Initialize rendering system
-        LensRendering.initialize();
-
-        // Execute compute shader test
-        Minecraft.getInstance().execute(() -> {
-            ResourceLocation shaderConfig = GE.id("compute_test");
-            int elementCount = 128;
-            ByteBuffer data = MemoryUtil.memAlloc(elementCount * Float.BYTES);
-
-            try {
-                FloatBuffer floatBuffer = data.asFloatBuffer();
-                for (int i = 0; i < elementCount; i++) {
-                    floatBuffer.put(i, i * 0.1f);
-                }
-
-                float[] beforeArray = new float[16];
-                floatBuffer.position(0);
-                floatBuffer.get(beforeArray, 0, 16);
-                System.err.println("BEFORE: " + Arrays.toString(beforeArray));
-
-                try (ComputeShader shader = new ComputeShader(data, Float.BYTES, shaderConfig)) {
-                    shader.dispatch();
-                    float[] result = shader.readBackFloats();
-                    System.err.println("COMPUTE READBACK:");
-                    System.err.println("AFTER:  " + Arrays.toString(Arrays.copyOf(result, 16)));
-                }
-            } finally {
-                MemoryUtil.memFree(data);
-            }
-        });
+        //LensRendering.initialize();
     }
 
     /**
@@ -104,7 +75,7 @@ public class GroovyEngineClient {
     @SubscribeEvent
     static void tick(ClientTickEvent.Pre event) {
         registerModuleWindows();
-        LensRendering.onClientTick(event);
+        //LensRendering.onClientTick(event);
     }
 
     /**
@@ -135,6 +106,6 @@ public class GroovyEngineClient {
      */
     @SubscribeEvent
     static void onRegisterShader(RegisterShadersEvent event) {
-        LensRendering.onRegisterShaders(event);
+        //LensRendering.onRegisterShaders(event);
     }
 }

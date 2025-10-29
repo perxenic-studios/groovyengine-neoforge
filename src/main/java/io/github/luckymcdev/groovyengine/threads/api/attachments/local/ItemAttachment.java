@@ -1,11 +1,3 @@
-/*
- * Copyright (c) 2025. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
- */
-
 package io.github.luckymcdev.groovyengine.threads.api.attachments.local;
 
 import io.github.luckymcdev.groovyengine.threads.api.attachments.BaseAttachment;
@@ -28,15 +20,15 @@ import java.util.function.Predicate;
  * Attachment for adding custom behavior to items.
  * Supports targeting specific items or matching items based on a predicate.
  */
-public abstract class ItemAttachment implements BaseAttachment<Item> {
+public abstract class ItemAttachment implements BaseAttachment {
 
-    private final Set<Item> targetItems;
+    public final Set<Item> targetItems;
     private final Predicate<Item> itemMatcher;
 
     /**
      * Constructor for single item attachment
      */
-    protected ItemAttachment(Item item) {
+    public ItemAttachment(Item item) {
         this.targetItems = Set.of(item);
         this.itemMatcher = null;
     }
@@ -44,7 +36,7 @@ public abstract class ItemAttachment implements BaseAttachment<Item> {
     /**
      * Constructor for multiple specific items
      */
-    protected ItemAttachment(Item... items) {
+    public ItemAttachment(Item... items) {
         this.targetItems = new HashSet<>(Arrays.asList(items));
         this.itemMatcher = null;
     }
@@ -52,17 +44,20 @@ public abstract class ItemAttachment implements BaseAttachment<Item> {
     /**
      * Constructor for predicate-based matching (e.g., all tools, all food items)
      */
-    protected ItemAttachment(Predicate<Item> itemMatcher) {
+    public ItemAttachment(Predicate<Item> itemMatcher) {
         this.targetItems = Set.of();
         this.itemMatcher = itemMatcher;
     }
 
     @Override
-    public final boolean appliesTo(Item item) {
-        if (itemMatcher != null) {
-            return itemMatcher.test(item);
+    public final boolean appliesTo(Object target) {
+        if (target instanceof Item item) {
+            if (itemMatcher != null) {
+                return itemMatcher.test(item);
+            }
+            return targetItems.contains(item);
         }
-        return targetItems.contains(item);
+        return false;
     }
 
     // === Item Usage Events ===

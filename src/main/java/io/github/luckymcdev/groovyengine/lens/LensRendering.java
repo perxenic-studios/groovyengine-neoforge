@@ -8,6 +8,7 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.core.VFXBuilders;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.material.Material;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.particle.ParticleBuilder;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.PostProcessChain;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute.ComputeShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.test.TestShader;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.effect.ShaderEffectTest;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.core.Renderer;
@@ -28,8 +29,12 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 import static io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials.DEBUG_TRIANGLES;
 import static io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials.OBJ_MODEL;
@@ -60,8 +65,36 @@ public class LensRendering {
      * Initializes the rendering system by registering all OBJ models and initializing animations.
      */
     public static void initialize() {
-        // Register models
 
+        // Execute compute shader test
+        Minecraft.getInstance().execute(() -> {
+            ResourceLocation shaderConfig = GE.id("compute_test");
+            int elementCount = 128;
+            ByteBuffer data = MemoryUtil.memAlloc(elementCount * Float.BYTES);
+
+            try {
+                FloatBuffer floatBuffer = data.asFloatBuffer();
+                for (int i = 0; i < elementCount; i++) {
+                    floatBuffer.put(i, i * 0.1f);
+                }
+
+                float[] beforeArray = new float[16];
+                floatBuffer.position(0);
+                floatBuffer.get(beforeArray, 0, 16);
+                System.err.println("BEFORE: " + Arrays.toString(beforeArray));
+
+                try (ComputeShader shader = new ComputeShader(data, Float.BYTES, shaderConfig)) {
+                    shader.dispatch();
+                    float[] result = shader.readBackFloats();
+                    System.err.println("COMPUTE READBACK:");
+                    System.err.println("AFTER:  " + Arrays.toString(Arrays.copyOf(result, 16)));
+                }
+            } finally {
+                MemoryUtil.memFree(data);
+            }
+        });
+
+        // Register models
         registerObjModel(circle);
         registerObjModel(cone);
         registerObjModel(cube);
@@ -121,11 +154,14 @@ public class LensRendering {
             renderFinal(event);
         }
 
+        /*
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
             createParticleEffects(level);
             renderVFXShapes(event.getPoseStack(), Minecraft.getInstance().renderBuffers().bufferSource());
             renderModels(event.getPoseStack());
         }
+
+         */
     }
 
     /**

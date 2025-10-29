@@ -10,6 +10,7 @@ import java.util.List;
  * This event is fired on the NeoForge event bus.
  */
 public class RegisterModuleEvent extends Event {
+    public static final RegisterModuleEvent INSTANCE = new RegisterModuleEvent();
 
     private final List<Module> modules = new ArrayList<>();
 
@@ -20,6 +21,7 @@ public class RegisterModuleEvent extends Event {
      */
     public void register(Module module) {
         modules.add(module);
+        ModuleManager.registerModule(module);
     }
 
     /**

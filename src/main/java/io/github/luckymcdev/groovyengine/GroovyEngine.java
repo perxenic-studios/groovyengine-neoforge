@@ -54,7 +54,6 @@ public class GroovyEngine {
         NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.register(new AttachmentEventDispatcher());
 
-        // Module setup pipeline
         setupRegistries(modEventBus);
         setupModules(modEventBus);
 
@@ -100,9 +99,14 @@ public class GroovyEngine {
      * @param modEventBus the event bus to register to
      */
     private void setupModules(IEventBus modEventBus) {
-        final RegisterModuleEvent event = new RegisterModuleEvent();
-        NeoForge.EVENT_BUS.post(event);
-        ModuleManager.registerModules(event.getModules());
+
+        NeoForge.EVENT_BUS.post(RegisterModuleEvent.INSTANCE);
+
+        ModuleManager.registerModule(new CoreModule());
+        ModuleManager.registerModule(new ThreadsModule());
+        ModuleManager.registerModule(new LensModule());
+        ModuleManager.registerModule(new ConstructModule());
+
         moduleManager.runInit(modEventBus);
     }
 
@@ -166,26 +170,11 @@ public class GroovyEngine {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         moduleManager.runOnServerStarting();
-
         try {
             GroovyDatagen.run();
         } catch (IOException e) {
             GE.CORE_LOG.error(e.toString());
         }
-    }
-
-    /**
-     * Called when the server is stopping.
-     * This method is responsible for calling the {@link AttachmentEventManager#fireServerStop()} method, which allows scripts to run once the server has stopped.
-     * It is called automatically by the module system when the server is stopping.
-     * Modules should not call this method manually, as it may interfere with the module system's internal workings.
-     * <p>
-     * This method is useful for scripts that need to run once the server has stopped, such as saving data or cleaning up resources.
-     *
-     * @param event The event that triggered this method call.
-     */
-    @SubscribeEvent
-    public void onServerStopping(ServerStoppingEvent event) {
     }
 
     @SubscribeEvent
@@ -201,13 +190,5 @@ public class GroovyEngine {
                 ScriptManager.reloadScripts();
             }
         });
-    }
-
-    @SubscribeEvent
-    public void onRegisterModules(RegisterModuleEvent event) {
-        event.register(new CoreModule());
-        event.register(new ThreadsModule());
-        event.register(new LensModule());
-        event.register(new ConstructModule());
     }
 }
