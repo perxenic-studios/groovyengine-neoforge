@@ -3,7 +3,8 @@ package io.github.luckymcdev.groovyengine.threads.core.scripting.core;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 import io.github.luckymcdev.groovyengine.GE;
-import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManager;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.global.ScriptAttachment;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.event.ScriptEvent;
 import net.neoforged.api.distmarker.Dist;
@@ -21,7 +22,6 @@ import java.util.stream.Stream;
 import static io.github.luckymcdev.groovyengine.core.systems.structure.FileConstants.SCRIPTS_DIR;
 
 public class ScriptManager {
-    private static final AttachmentEventManager attachmentEventManager = AttachmentEventManager.getInstance();
     private static GroovyShell shell;
 
     /**
@@ -99,18 +99,18 @@ public class ScriptManager {
     private static void evaluateScript(Path scriptPath) {
         GE.THREADS_LOG.info("Evaluating script: {}", scriptPath.getFileName());
 
-        attachmentEventManager.fireScriptLoad(scriptPath.getFileName().toString());
-        attachmentEventManager.fireScriptReload(scriptPath.getFileName().toString());
+        AttachmentManager.getInstance().getScriptAttachments(scriptPath.getFileName().toString()).forEach(ScriptAttachment::onScriptLoad);
 
         try {
             NeoForge.EVENT_BUS.post(new ScriptEvent.PreExecutionEvent(shell, scriptPath.toString()));
             Script compiledScript = shell.parse(scriptPath.toFile());
+            GE.THREADS_LOG.info(compiledScript.toString());
             Object result = compiledScript.run();
             NeoForge.EVENT_BUS.post(new ScriptEvent.PostExecutionEvent(shell, scriptPath.toString(), result));
         } catch (Exception ex) {
             GE.THREADS_LOG.error("Script error in {}", scriptPath.getFileName(), ex);
 
-            attachmentEventManager.fireScriptError(scriptPath.getFileName().toString(), ex);
+            AttachmentManager.getInstance().getScriptAttachments(scriptPath.getFileName().toString()).forEach(scriptAttachment -> scriptAttachment.onScriptError(ex));
 
             String description = ScriptErrors.generateErrorDescription(ex);
             ScriptErrors.addError(scriptPath.getFileName().toString(), ex.getMessage(), description);

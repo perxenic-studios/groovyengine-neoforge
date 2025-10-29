@@ -1,98 +1,239 @@
 package io.github.luckymcdev.groovyengine.threads.api.attachments;
 
-import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentManagerImpl;
+import io.github.luckymcdev.groovyengine.GE;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.global.*;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.local.BlockAttachment;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.local.EntityAttachment;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.local.ItemAttachment;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
-public interface AttachmentManager {
+/**
+ * Central registry for all attachments.
+ * Manages registration, lookup, and dispatching of attachment events.
+ */
+public class AttachmentManager {
 
-    static AttachmentManager getInstance() {
-        return AttachmentManagerImpl.INSTANCE;
+    private static final AttachmentManager INSTANCE = new AttachmentManager();
+
+    // Separate registries for each attachment type for faster lookup
+    private final Set<BlockAttachment> blockAttachments = ConcurrentHashMap.newKeySet();
+    private final Set<ItemAttachment> itemAttachments = ConcurrentHashMap.newKeySet();
+    private final Set<EntityAttachment> entityAttachments = ConcurrentHashMap.newKeySet();
+    private final Set<ScriptAttachment> scriptAttachments = ConcurrentHashMap.newKeySet();
+    private final Set<ClientAttachment> clientAttachments = ConcurrentHashMap.newKeySet();
+    private final Set<ServerAttachment> serverAttachments = ConcurrentHashMap.newKeySet();
+    private final Set<RegistryAttachment> registryAttachments = ConcurrentHashMap.newKeySet();
+    private final Set<RecipeAttachment> recipeAttachments = ConcurrentHashMap.newKeySet();
+
+    // Cached lookups for better performance
+    private final Map<Block, List<BlockAttachment>> blockCache = new ConcurrentHashMap<>();
+    private final Map<Item, List<ItemAttachment>> itemCache = new ConcurrentHashMap<>();
+    private final Map<EntityType<?>, List<EntityAttachment>> entityCache = new ConcurrentHashMap<>();
+
+    public static AttachmentManager getInstance() {
+        return INSTANCE;
+    }
+
+    // ============= REGISTRATION =============
+
+    /**
+     * Register a block attachment
+     */
+    public void registerBlock(BlockAttachment attachment) {
+        if (blockAttachments.add(attachment)) {
+            blockCache.clear(); // Invalidate cache
+            attachment.onInit();
+            GE.THREADS_LOG.info("Registered block attachment: {}", attachment.getClass().getSimpleName());
+        }
     }
 
     /**
-     * Registers the given attachment with the attachment manager.
-     * <p>
-     * The attachment manager will store the attachment and call its
-     * {@link BaseAttachment#onInit()} method.
-     * <p>
-     * Attachments can only be registered once.
-     * <p>
-     * If the attachment is already registered, the method will do nothing.
-     *
-     * @param attachment The attachment to register
+     * Register an item attachment
      */
-    void register(BaseAttachment attachment);
+    public void registerItem(ItemAttachment attachment) {
+        if (itemAttachments.add(attachment)) {
+            itemCache.clear(); // Invalidate cache
+            attachment.onInit();
+            GE.THREADS_LOG.info("Registered item attachment: {}", attachment.getClass().getSimpleName());
+        }
+    }
 
     /**
-     * Unregisters the given attachment.
-     *
-     * @param attachment The attachment to unregister
+     * Register an entity attachment
      */
-    void unregister(BaseAttachment attachment);
-
-
-    /**
-     * Retrieves all attachments associated with the given target.
-     *
-     * @param <T> target The target to retrieve attachments for
-     * @return A list of attachments associated with the target
-     */
-    <T> List<BaseAttachment> getAttachments(T target);
+    public void registerEntity(EntityAttachment attachment) {
+        if (entityAttachments.add(attachment)) {
+            entityCache.clear(); // Invalidate cache
+            attachment.onInit();
+            GE.THREADS_LOG.info("Registered entity attachment: {}", attachment.getClass().getSimpleName());
+        }
+    }
 
     /**
-     * Retrieves all attachments associated with the given block.
-     *
-     * @param block The block to retrieve attachments for
-     * @return A list of attachments associated with the block
+     * Register a script attachment
      */
-    List<BaseAttachment> getBlockAttachments(Block block);
+    public void registerScript(io.github.luckymcdev.groovyengine.threads.api.attachments.global.ScriptAttachment attachment) {
+        if (scriptAttachments.add(attachment)) {
+            attachment.onInit();
+            GE.THREADS_LOG.info("Registered script attachment: {}", attachment.getClass().getSimpleName());
+        }
+    }
 
     /**
-     * Retrieves all attachments associated with the given item.
-     *
-     * @param item The item to retrieve attachments for
-     * @return A list of attachments associated with the item
+     * Register a client attachment
      */
-    List<BaseAttachment> getItemAttachments(Item item);
+    public void registerClient(io.github.luckymcdev.groovyengine.threads.api.attachments.global.ClientAttachment attachment) {
+        if (clientAttachments.add(attachment)) {
+            attachment.onInit();
+            GE.THREADS_LOG.info("Registered client attachment: {}", attachment.getClass().getSimpleName());
+        }
+    }
 
     /**
-     * Retrieves all attachments associated with the given entity type.
-     *
-     * @param entityType The entity type to retrieve attachments for
-     * @return A list of attachments associated with the entity type
+     * Register a server attachment
      */
-    List<BaseAttachment> getEntityAttachments(EntityType<?> entityType);
+    public void registerServer(io.github.luckymcdev.groovyengine.threads.api.attachments.global.ServerAttachment attachment) {
+        if (serverAttachments.add(attachment)) {
+            attachment.onInit();
+            GE.THREADS_LOG.info("Registered server attachment: {}", attachment.getClass().getSimpleName());
+        }
+    }
 
     /**
-     * Retrieves all attachments associated with the given script ID.
-     *
-     * @param scriptId The script ID to retrieve attachments for
-     * @return A list of attachments associated with the script ID
+     * Register a registry attachment
      */
-    List<BaseAttachment> getScriptAttachments(String scriptId);
+    public void registerRegistry(io.github.luckymcdev.groovyengine.threads.api.attachments.global.RegistryAttachment attachment) {
+        if (registryAttachments.add(attachment)) {
+            attachment.onInit();
+            GE.THREADS_LOG.info("Registered registry attachment: {}", attachment.getClass().getSimpleName());
+        }
+    }
 
     /**
-     * Retrieves all attachments associated with the client.
-     *
-     * @return A list of attachments associated with the client
+     * Register a recipe attachment
      */
-    List<BaseAttachment> getClientAttachments();
+    public void registerRecipe(io.github.luckymcdev.groovyengine.threads.api.attachments.global.RecipeAttachment attachment) {
+        if (recipeAttachments.add(attachment)) {
+            attachment.onInit();
+            GE.THREADS_LOG.info("Registered recipe attachment: {}", attachment.getClass().getSimpleName());
+        }
+    }
+
+
+    public void unregister(Object attachment) {
+        boolean removed = blockAttachments.remove(attachment) ||
+                itemAttachments.remove(attachment) ||
+                entityAttachments.remove(attachment) ||
+                scriptAttachments.remove(attachment) ||
+                clientAttachments.remove(attachment) ||
+                serverAttachments.remove(attachment) ||
+                registryAttachments.remove(attachment) ||
+                recipeAttachments.remove(attachment);
+
+        if (removed) {
+            // Clear caches
+            blockCache.clear();
+            itemCache.clear();
+            entityCache.clear();
+
+            if (attachment instanceof BaseAttachment) {
+                ((BaseAttachment<?>) attachment).onDestroy();
+            }
+            GE.THREADS_LOG.info("Unregistered attachment: {}", attachment.getClass().getSimpleName());
+        }
+    }
+
+    // ============= LOOKUP METHODS =============
 
     /**
-     * Retrieves all attachments associated with the server.
-     *
-     * @return A list of attachments associated with the server
+     * Get all block attachments that apply to the given block.
+     * Results are cached for performance.
      */
-    List<BaseAttachment> getServerAttachments();
+    public List<BlockAttachment> getBlockAttachments(Block block) {
+        return blockCache.computeIfAbsent(block, b ->
+                blockAttachments.stream()
+                        .filter(att -> att.appliesTo(b))
+                        .sorted(Comparator.comparingInt(BlockAttachment::getPriority).reversed())
+                        .collect(Collectors.toList())
+        );
+    }
 
     /**
-     * Retrieves all attachments associated with the registry.
-     *
-     * @return A list of attachments associated with the registry
+     * Get all item attachments that apply to the given item.
+     * Results are cached for performance.
      */
-    List<BaseAttachment> getRegistryAttachments();
+    public List<ItemAttachment> getItemAttachments(Item item) {
+        return itemCache.computeIfAbsent(item, i ->
+                itemAttachments.stream()
+                        .filter(att -> att.appliesTo(i))
+                        .sorted(Comparator.comparingInt(ItemAttachment::getPriority).reversed())
+                        .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * Get all entity attachments that apply to the given entity type.
+     * Results are cached for performance.
+     */
+    public List<EntityAttachment> getEntityAttachments(EntityType<?> entityType) {
+        return entityCache.computeIfAbsent(entityType, et ->
+                entityAttachments.stream()
+                        .filter(att -> att.appliesTo(et))
+                        .sorted(Comparator.comparingInt(EntityAttachment::getPriority).reversed())
+                        .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * Get all script attachments that apply to the given script ID
+     */
+    public List<ScriptAttachment> getScriptAttachments(String scriptId) {
+        return scriptAttachments.stream()
+                .filter(att -> att.appliesTo(scriptId))
+                .sorted(Comparator.comparingInt(ScriptAttachment::getPriority).reversed())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get all client attachments
+     */
+    public List<ClientAttachment> getClientAttachments() {
+        return new ArrayList<>(clientAttachments);
+    }
+
+    /**
+     * Get all server attachments
+     */
+    public List<ServerAttachment> getServerAttachments() {
+        return new ArrayList<>(serverAttachments);
+    }
+
+    /**
+     * Get all registry attachments
+     */
+    public List<RegistryAttachment> getRegistryAttachments() {
+        return new ArrayList<>(registryAttachments);
+    }
+
+    /**
+     * Get all recipe attachments
+     */
+    public List<RecipeAttachment> getRecipeAttachments() {
+        return new ArrayList<>(recipeAttachments);
+    }
+
+    /**
+     * Clear all caches. Call this if you modify attachments at runtime.
+     */
+    public void clearCaches() {
+        blockCache.clear();
+        itemCache.clear();
+        entityCache.clear();
+    }
 }

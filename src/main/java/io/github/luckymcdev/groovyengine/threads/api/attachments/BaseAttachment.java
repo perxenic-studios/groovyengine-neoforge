@@ -1,38 +1,42 @@
 package io.github.luckymcdev.groovyengine.threads.api.attachments;
 
-import java.util.List;
-
-public interface BaseAttachment {
-    /**
-     * Get the primary target this attachment is for
-     */
-    default Object getTarget() {
-        return null;
-    }
+/**
+ * Base interface for all attachments.
+ * Attachments provide a way to add custom behavior to game objects without modifying their classes.
+ *
+ * @param <T> The type of object this attachment targets
+ */
+public interface BaseAttachment<T> {
 
     /**
-     * Get all targets this attachment applies to (for multi-target attachments)
-     */
-    default List<Object> getTargets() {
-        return getTarget() != null ? List.of(getTarget()) : List.of();
-    }
-
-    /**
-     * Check if this attachment applies to the given target
-     */
-    default boolean appliesTo(Object target) {
-        return getTargets().contains(target);
-    }
-
-    /**
-     * Called when the attachment manager is initialized, allowing attachments to initialize themselves if needed.
+     * Called when this attachment is registered with the attachment manager.
+     * Use this to perform any initialization logic.
      */
     default void onInit() {
     }
 
     /**
-     * Called when the attachment manager is being shut down, allowing attachments to clean up after themselves if needed.
+     * Called when this attachment is unregistered from the attachment manager.
+     * Use this to perform any cleanup logic.
      */
     default void onDestroy() {
+    }
+
+    /**
+     * Determines if this attachment should handle events for the given target.
+     *
+     * @param target The object to check
+     * @return true if this attachment applies to the target
+     */
+    boolean appliesTo(T target);
+
+    /**
+     * Get the priority of this attachment. Higher priority attachments are executed first.
+     * Default priority is 0.
+     *
+     * @return The priority value
+     */
+    default int getPriority() {
+        return 0;
     }
 }

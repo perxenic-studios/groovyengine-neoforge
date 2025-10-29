@@ -4,8 +4,8 @@ import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.WindowManager;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.systems.module.Module;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
 import io.github.luckymcdev.groovyengine.threads.client.editor.ThreadsWindow;
-import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManager;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.core.ScriptManager;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -26,7 +26,7 @@ public class ThreadsModule implements Module {
 
         ScriptManager.initialize();
 
-        AttachmentEventManager.getInstance().fireOnRegister(modEventBus);
+        AttachmentManager.getInstance().getRegistryAttachments().forEach(att -> att.onRegister(modEventBus));
 
     }
 

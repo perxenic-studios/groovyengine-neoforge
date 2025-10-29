@@ -6,12 +6,13 @@ import io.github.luckymcdev.groovyengine.core.CoreModule;
 import io.github.luckymcdev.groovyengine.core.config.Config;
 import io.github.luckymcdev.groovyengine.core.registry.ModRegistry;
 import io.github.luckymcdev.groovyengine.core.systems.module.ModuleManager;
+import io.github.luckymcdev.groovyengine.core.systems.module.RegisterModuleEvent;
 import io.github.luckymcdev.groovyengine.core.systems.packs.generator.GroovyDatagen;
 import io.github.luckymcdev.groovyengine.core.systems.structure.FileTreeGenerator;
 import io.github.luckymcdev.groovyengine.lens.LensModule;
 import io.github.luckymcdev.groovyengine.threads.ThreadsModule;
 import io.github.luckymcdev.groovyengine.threads.core.logging.LogCapture;
-import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManager;
+import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventDispatcher;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.core.ScriptManager;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -51,6 +52,7 @@ public class GroovyEngine {
         modEventBus.addListener(this::onAddPackFinders);
 
         NeoForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(new AttachmentEventDispatcher());
 
         // Module setup pipeline
         setupRegistries(modEventBus);
@@ -98,13 +100,9 @@ public class GroovyEngine {
      * @param modEventBus the event bus to register to
      */
     private void setupModules(IEventBus modEventBus) {
-        ModuleManager.registerModules(List.of(
-                new CoreModule(),
-                new ThreadsModule(),
-                new LensModule(),
-                new ConstructModule()
-        ));
-
+        final RegisterModuleEvent event = new RegisterModuleEvent();
+        NeoForge.EVENT_BUS.post(event);
+        ModuleManager.registerModules(event.getModules());
         moduleManager.runInit(modEventBus);
     }
 
@@ -168,7 +166,6 @@ public class GroovyEngine {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         moduleManager.runOnServerStarting();
-        AttachmentEventManager.getInstance().fireServerStart();
 
         try {
             GroovyDatagen.run();
@@ -189,7 +186,6 @@ public class GroovyEngine {
      */
     @SubscribeEvent
     public void onServerStopping(ServerStoppingEvent event) {
-        AttachmentEventManager.getInstance().fireServerStop();
     }
 
     @SubscribeEvent
@@ -205,5 +201,13 @@ public class GroovyEngine {
                 ScriptManager.reloadScripts();
             }
         });
+    }
+
+    @SubscribeEvent
+    public void onRegisterModules(RegisterModuleEvent event) {
+        event.register(new CoreModule());
+        event.register(new ThreadsModule());
+        event.register(new LensModule());
+        event.register(new ConstructModule());
     }
 }
