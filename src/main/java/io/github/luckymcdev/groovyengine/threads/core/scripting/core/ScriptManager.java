@@ -91,8 +91,6 @@ public class ScriptManager {
      * run it. The result of the script will be posted to a
      * {@link ScriptEvent.PostExecutionEvent}.</p>
      *
-     * <p>If an error occurs while evaluating the script, an error message will be logged,
-     * and a {@link ScriptEvent} will be fired to allow other mods to handle the error.
      * The error message, along with the error description and the script name, will be added
      * to the {@link ScriptErrors} list.</p>
      *
