@@ -328,27 +328,30 @@ public class ShaderEffectTest {
      * Create a PostProcessChain effect for depth visualization
      */
     public static PostProcessChain.PostProcessEffect createDepthVisualizationEffect(int depthTexture, int visualizationMode) {
-        return () -> {
-            if (!initialized) initialize();
-            initializeDepthVisualization();
+        return new PostProcessChain.PostProcessEffect() {
+            @Override
+            public void apply() {
+                if (!initialized) initialize();
+                initializeDepthVisualization();
 
-            depthVisualizationShader.bind();
+                depthVisualizationShader.bind();
 
-            // Set common uniforms
-            ShaderUtils.CommonUniforms.setScreenUniforms(depthVisualizationShader);
+                // Set common uniforms
+                ShaderUtils.CommonUniforms.setScreenUniforms(depthVisualizationShader);
 
-            // Bind depth texture
-            RenderSystem.activeTexture(com.mojang.blaze3d.platform.GlConst.GL_TEXTURE1);
-            RenderSystem.bindTexture(depthTexture);
-            RenderSystem.activeTexture(com.mojang.blaze3d.platform.GlConst.GL_TEXTURE0);
+                // Bind depth texture
+                RenderSystem.activeTexture(com.mojang.blaze3d.platform.GlConst.GL_TEXTURE1);
+                RenderSystem.bindTexture(depthTexture);
+                RenderSystem.activeTexture(com.mojang.blaze3d.platform.GlConst.GL_TEXTURE0);
 
-            depthVisualizationShader.setUniform("depthTexture", 1);
-            depthVisualizationShader.setUniform("visualizationMode", visualizationMode);
+                depthVisualizationShader.setUniform("depthTexture", 1);
+                depthVisualizationShader.setUniform("visualizationMode", visualizationMode);
 
-            depthVisualizationShader.setUniform("nearPlane", 0.05f);
-            depthVisualizationShader.setUniform("farPlane", (float) Minecraft.getInstance().options.getEffectiveRenderDistance() * 16.0f);
+                depthVisualizationShader.setUniform("nearPlane", 0.05f);
+                depthVisualizationShader.setUniform("farPlane", (float) Minecraft.getInstance().options.getEffectiveRenderDistance() * 16.0f);
 
-            depthVisualizationShader.drawFullscreenQuad();
+                depthVisualizationShader.drawFullscreenQuad();
+            }
         };
     }
 
@@ -379,13 +382,16 @@ public class ShaderEffectTest {
      * Create a PostProcessChain effect for chromatic aberration
      */
     public static PostProcessChain.PostProcessEffect createChromaticEffect(float aberrationAmount, float vignetteStrength) {
-        return () -> {
-            if (!initialized) initialize();
-            chromaticShader.bind();
-            ShaderUtils.CommonUniforms.setScreenUniforms(chromaticShader);
-            ShaderUtils.CommonUniforms.setTimeUniforms(chromaticShader);
-            ShaderUtils.UniformPresets.setChromaticAberrationUniforms(chromaticShader, aberrationAmount, vignetteStrength);
-            chromaticShader.drawFullscreenQuad();
+        return new PostProcessChain.PostProcessEffect() {
+            @Override
+            public void apply() {
+                if (!initialized) initialize();
+                chromaticShader.bind();
+                ShaderUtils.CommonUniforms.setScreenUniforms(chromaticShader);
+                ShaderUtils.CommonUniforms.setTimeUniforms(chromaticShader);
+                ShaderUtils.UniformPresets.setChromaticAberrationUniforms(chromaticShader, aberrationAmount, vignetteStrength);
+                chromaticShader.drawFullscreenQuad();
+            }
         };
     }
 
@@ -393,13 +399,16 @@ public class ShaderEffectTest {
      * Create a PostProcessChain effect for wave distortion
      */
     public static PostProcessChain.PostProcessEffect createWaveEffect(float strength, float frequency) {
-        return () -> {
-            if (!initialized) initialize();
-            waveShader.bind();
-            ShaderUtils.CommonUniforms.setScreenUniforms(waveShader);
-            ShaderUtils.CommonUniforms.setTimeUniforms(waveShader);
-            ShaderUtils.UniformPresets.setWaveUniforms(waveShader, strength, frequency);
-            waveShader.drawFullscreenQuad();
+        return new PostProcessChain.PostProcessEffect() {
+            @Override
+            public void apply() {
+                if (!initialized) initialize();
+                waveShader.bind();
+                ShaderUtils.CommonUniforms.setScreenUniforms(waveShader);
+                ShaderUtils.CommonUniforms.setTimeUniforms(waveShader);
+                ShaderUtils.UniformPresets.setWaveUniforms(waveShader, strength, frequency);
+                waveShader.drawFullscreenQuad();
+            }
         };
     }
 
@@ -407,13 +416,16 @@ public class ShaderEffectTest {
      * Create a PostProcessChain effect for glitch
      */
     public static PostProcessChain.PostProcessEffect createGlitchEffect(float intensity) {
-        return () -> {
-            if (!initialized) initialize();
-            glitchShader.bind();
-            ShaderUtils.CommonUniforms.setScreenUniforms(glitchShader);
-            ShaderUtils.CommonUniforms.setTimeUniforms(glitchShader);
-            ShaderUtils.UniformPresets.setGlitchUniforms(glitchShader, intensity);
-            glitchShader.drawFullscreenQuad();
+        return new PostProcessChain.PostProcessEffect() {
+            @Override
+            public void apply() {
+                if (!initialized) initialize();
+                glitchShader.bind();
+                ShaderUtils.CommonUniforms.setScreenUniforms(glitchShader);
+                ShaderUtils.CommonUniforms.setTimeUniforms(glitchShader);
+                ShaderUtils.UniformPresets.setGlitchUniforms(glitchShader, intensity);
+                glitchShader.drawFullscreenQuad();
+            }
         };
     }
 }

@@ -234,14 +234,13 @@ public class PostProcessChain {
     }
 
     /**
-     * Functional interface for a post-processing effect
+     * Abstract class for a post-processing effect
      */
-    @FunctionalInterface
-    public interface PostProcessEffect {
+    public static abstract class PostProcessEffect {
         /**
          * Apply the effect. The input texture is already bound to texture unit 0.
          * Just bind your shader, set uniforms, and draw the fullscreen quad.
          */
-        void apply();
+        public abstract void apply();
     }
 }
