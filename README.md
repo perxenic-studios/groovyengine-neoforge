@@ -11,6 +11,8 @@ A powerful and flexible modding engine for Minecraft, built on NeoForge. Groovy 
 
 ## Getting Started
 
+### If You are a user looking for the Wiki go to [HomePage](wiki/HomePage.md)
+
 ### Prerequisites
 
 - Java 21 or later
@@ -22,7 +24,7 @@ A powerful and flexible modding engine for Minecraft, built on NeoForge. Groovy 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/LuckyMcDev/groovyengine-neoforge.git
+   git clone https://github.com/perxenic-studios/groovyengine-neoforge.git
    cd groovyengine-neoforge
    ```
 2. Build the project:
@@ -47,10 +49,6 @@ groovyengine-neoforge/
 └── libs/                     # External library dependencies
 ```
 
-## Documentation
-
-See the documentation starting in [Home Page](wiki/HomePage.md)
-
 ## License
 
 This project is licensed under the ![GitHub License](https://img.shields.io/github/license/perxenic-studios/groovyengine-neoforge).
@@ -65,7 +63,3 @@ Or visit the Discord: [Discord](https://discord.gg/dUefmxFvWr)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/perxenic-studios/groovyengine-neoforge)
 ![GitHub](https://img.shields.io/github/license/perxenic-studios/groovyengine-neoforge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/perxenic-studios/groovyengine-neoforge)
-
----
-
-Made with Love by LuckyMcDev

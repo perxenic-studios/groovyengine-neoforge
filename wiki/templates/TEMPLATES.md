@@ -61,3 +61,6 @@ Use a danger admonition to warn against actions that could have serious conseque
 > ![DANGER](https://img.shields.io/badge/DANGER-red?style=for-the-badge)
 >
 > Your danger message here
+
+
+> See Also [NAME](TEMPLATES.md)

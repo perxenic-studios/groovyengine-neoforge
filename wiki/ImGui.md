@@ -13,7 +13,7 @@ For GroovyEngine-specific ImGui documentation, see the [ImGe Javadoc](../html/cl
 
 ## Creating Custom Windows
 
-To create a custom ImGui window, you must create a class that extends the `EditorWindow` class. You can see an example of this in the `DemoWindow` and its subclasses.
+To create a custom ImGui window, you must create a class that extends the `EditorWindow` class. You can see an example of this in the [DemoWindows](../html/classio_1_1github_1_1luckymcdev_1_1groovyengine_1_1core_1_1client_1_1editor_1_1windows_1_1_demo_windows.html) and its subclasses.
 
 ```java
 public class MyCustomWindow extends EditorWindow {

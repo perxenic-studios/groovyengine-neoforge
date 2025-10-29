@@ -8,10 +8,11 @@ For example, the `ResourceLocation` for the furnace GUI texture is:
 - **Namespace:** `minecraft`
 - **Path:** `textures/gui/container/furnace.png`
 
-In GroovyEngine, you will use `ResourceLocation`s to reference assets within your project's `resources` folder. The namespace for your project is defined by the `mod.id` in your `build.gradle` file. By default, this is `groovyengine`.
+In GroovyEngine, you will use `ResourceLocation`s to reference assets within your project's `resources` folder. 
+The namespace for your project is defined by the `module_name` in your `gradle.properties` file. By default, this is `mymodule`.
 
 For example, if you have an image located at:
-`.../resources/assets/groovyengine/textures/custom_gui.png`
+`.../resources/assets/yourmodule/textures/custom_gui.png`
 
 The `ResourceLocation` for this texture would be:
-`"groovyengine:textures/custom_gui.png"`
+`"yourmodule:textures/custom_gui.png"`
