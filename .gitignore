@@ -20,20 +20,20 @@ build
 # other
 eclipse
 run/*
-!run/groovyengine/
-run/groovyengine/*
-!run/groovyengine/**
+!run/GroovyEngine/
+run/GroovyEngine/*
+!run/GroovyEngine/**
 runs
 run-data
 
 repo
-/run/groovyengine/src/main/resources/.cache
+/run/GroovyEngine/src/main/resources/.cache
 /logs
-/run/groovyengine/gradlew
-/run/groovyengine/.gradle/
-/run/groovyengine/gradle/
-/run/groovyengine/gradlew.bat
-/run/groovyengine/src/resources/.cache
-/run/groovyengine/.idea
-/run/groovyengine/build
+/run/GroovyEngine/gradlew
+/run/GroovyEngine/.gradle/
+/run/GroovyEngine/gradle/
+/run/GroovyEngine/gradlew.bat
+/run/GroovyEngine/src/resources/.cache
+/run/GroovyEngine/.idea
+/run/GroovyEngine/build
 /docs
