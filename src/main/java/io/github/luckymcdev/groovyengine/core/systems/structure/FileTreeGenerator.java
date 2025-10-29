@@ -25,18 +25,19 @@ import java.util.List;
 
 public class FileTreeGenerator {
 
+    private static final String MAPPINGS_VERSION = "2024.11.17";
     private static String neoforgeVersion = "21.1.201";
     private static String minecraftVersion = "1.21.1";
-    private static final String MAPPINGS_VERSION = "2024.11.17";
 
     /**
      * A Debug Deprecated method to just generate the file structure without having to launch the game.
+     *
      * @param args args
      */
     @Deprecated
     public static void main(String[] args) {
 
-        if(!validateStructure()) {
+        if (!validateStructure()) {
             GE.CORE_LOG.info("File structure is not valid, attempting to generate file structure");
             generateFileStructure();
         } else {
@@ -71,15 +72,15 @@ public class FileTreeGenerator {
         // Create all directories
         GE.CORE_LOG.info("Creating directories");
         List.of(
-            FileConstants.WORKSPACE_DIR,
-            FileConstants.MOD_ROOT,
-            FileConstants.SRC_DIR,
-            FileConstants.RESOURCES_DIR,
-            FileConstants.SCRIPTS_DIR,
-            FileConstants.COMMON_SCRIPTS_DIR,
-            FileConstants.CLIENT_SCRIPTS_DIR,
-            FileConstants.SERVER_SCRIPTS_DIR,
-            FileConstants.MODULES_DIR
+                FileConstants.WORKSPACE_DIR,
+                FileConstants.MOD_ROOT,
+                FileConstants.SRC_DIR,
+                FileConstants.RESOURCES_DIR,
+                FileConstants.SCRIPTS_DIR,
+                FileConstants.COMMON_SCRIPTS_DIR,
+                FileConstants.CLIENT_SCRIPTS_DIR,
+                FileConstants.SERVER_SCRIPTS_DIR,
+                FileConstants.MODULES_DIR
         ).forEach(FileTreeGenerator::createDirectory);
 
         // Create default files
@@ -282,7 +283,7 @@ public class FileTreeGenerator {
                 GE.LOG.info('Hello from server scripts!')
                 // Add your server-side script logic here
                 """);
-    }    
+    }
 
     /**
      * Creates a file at the specified path with the given content if it does not already exist.
@@ -291,9 +292,9 @@ public class FileTreeGenerator {
      * This method will log a message to the console if the file is successfully created or if an error occurs.
      * </p>
      *
-     * @param path The path to the file to create.
+     * @param path     The path to the file to create.
      * @param fileType A descriptive name for the file type being created (e.g., "Gradle file", "sample script").
-     * @param content The content of the file.
+     * @param content  The content of the file.
      */
     private static void createFile(Path path, String fileType, String content) {
         try {
@@ -319,11 +320,11 @@ public class FileTreeGenerator {
         boolean valid = true;
 
         for (Path dir : List.of(
-            FileConstants.MOD_ROOT,
-            FileConstants.SCRIPTS_DIR,
-            FileConstants.COMMON_SCRIPTS_DIR,
-            FileConstants.CLIENT_SCRIPTS_DIR,
-            FileConstants.SERVER_SCRIPTS_DIR
+                FileConstants.MOD_ROOT,
+                FileConstants.SCRIPTS_DIR,
+                FileConstants.COMMON_SCRIPTS_DIR,
+                FileConstants.CLIENT_SCRIPTS_DIR,
+                FileConstants.SERVER_SCRIPTS_DIR
         )) {
             if (!Files.exists(dir)) {
                 GE.CORE_LOG.warn("Required directory does not exist: {}", dir);

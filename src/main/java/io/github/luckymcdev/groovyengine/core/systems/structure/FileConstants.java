@@ -35,15 +35,13 @@ public class FileConstants {
     public static final Path COMMON_SCRIPTS_DIR = SCRIPTS_DIR.resolve("common");
     public static final Path CLIENT_SCRIPTS_DIR = SCRIPTS_DIR.resolve("client");
     public static final Path SERVER_SCRIPTS_DIR = SCRIPTS_DIR.resolve("server");
-
-    // Module directory
-    public static final Path MODULES_DIR = MOD_ROOT.resolve("modules");
-
     // Gradle files
     public static final Path BUILD_GRADLE = WORKSPACE_DIR.resolve("build.gradle");
     public static final Path INTERNAL_GRADLE = WORKSPACE_DIR.resolve("internal.gradle");
     public static final Path SETTINGS_GRADLE = WORKSPACE_DIR.resolve("settings.gradle");
     public static final Path GRADLE_PROPERTIES = WORKSPACE_DIR.resolve("gradle.properties");
+    // Module directory
+    public static final Path MODULES_DIR = MOD_ROOT.resolve("modules");
 
     /**
      * Gets the mod root directory, handling both in-game and standalone execution.

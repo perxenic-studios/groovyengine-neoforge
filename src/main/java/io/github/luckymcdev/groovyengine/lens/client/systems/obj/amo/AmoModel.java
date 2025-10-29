@@ -51,12 +51,11 @@ public class AmoModel extends ObjModel {
     /**
      * Loads the animated model from the resource location.
      *
+     * @throws RuntimeException if the resource is not found.
      * @implSpec
      * @implNote This method loads the animated model from the resource location.
      * It first checks if the resource is present, and if so, it parses the OBJ file
      * and loads the model data. Finally, it logs the loaded model data.
-     *
-     * @throws RuntimeException if the resource is not found.
      */
     @Override
     public void loadModel() {

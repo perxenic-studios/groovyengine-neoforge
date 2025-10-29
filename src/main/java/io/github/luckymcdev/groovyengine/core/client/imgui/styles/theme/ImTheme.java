@@ -28,6 +28,7 @@ public interface ImTheme {
 
     /**
      * Applies the theme to the given ImGui style.
+     *
      * @param style the ImGui style to apply the theme to
      */
     void applyTheme(ImGuiStyle style);

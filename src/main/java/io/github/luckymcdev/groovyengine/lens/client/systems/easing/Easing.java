@@ -310,7 +310,7 @@ public abstract class Easing {
         EASINGS.put(name, this);
     }
 
-    /////////// ELASTIC EASING: exponentially decaying sine wave  //////////////
+    /// //////// ELASTIC EASING: exponentially decaying sine wave  //////////////
 
     public static Easing valueOf(String name) {
         return EASINGS.get(name);
@@ -347,7 +347,7 @@ public abstract class Easing {
         return clamped((float) value, (float) min, (float) max, (float) time);
     }
 
-    /////////// BACK EASING: overshooting cubic easing: (s+1)*t^3 - s*t^2  //////////////
+    /// //////// BACK EASING: overshooting cubic easing: (s+1)*t^3 - s*t^2  //////////////
 
     public float clamped(float value, float min, float max) {
         return clamped(value, min, max, 1);

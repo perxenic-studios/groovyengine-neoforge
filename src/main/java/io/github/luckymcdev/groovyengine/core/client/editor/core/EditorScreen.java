@@ -32,7 +32,7 @@ public class EditorScreen extends Screen {
 
     /**
      * Initializes the screen.
-     *
+     * <p>
      * Does not automatically enable ImGui when opening the screen.
      * Instead, lets the user control it via keybind or buttons.
      */
@@ -43,13 +43,13 @@ public class EditorScreen extends Screen {
 
     /**
      * Renders the screen.
-     *
+     * <p>
      * This method does not call the super class's render method to avoid rendering the default background.
      * Instead, it makes the screen transparent so you can see the game behind it.
      *
      * @param guiGraphics the graphics handler for the screen
-     * @param mouseX the x-coordinate of the mouse in screen coordinates
-     * @param mouseY the y-coordinate of the mouse in screen coordinates
+     * @param mouseX      the x-coordinate of the mouse in screen coordinates
+     * @param mouseY      the y-coordinate of the mouse in screen coordinates
      * @param partialTick the partial tick value for the render operation
      */
     @Override
@@ -58,7 +58,7 @@ public class EditorScreen extends Screen {
 
     /**
      * Closes the screen without disabling ImGui.
-     *
+     * <p>
      * This method does not automatically disable ImGui when closing the screen.
      * Instead, it lets the user control it via keybind or buttons.
      */
@@ -72,8 +72,8 @@ public class EditorScreen extends Screen {
      * This keeps the game visible behind the screen.
      *
      * @param guiGraphics the graphics handler for the screen
-     * @param mouseX the x-coordinate of the mouse in screen coordinates
-     * @param mouseY the y-coordinate of the mouse in screen coordinates
+     * @param mouseX      the x-coordinate of the mouse in screen coordinates
+     * @param mouseY      the y-coordinate of the mouse in screen coordinates
      * @param partialTick the partial tick value for the render operation
      */
     @Override
@@ -95,7 +95,7 @@ public class EditorScreen extends Screen {
 
     /**
      * Returns whether the screen should close when the Escape key is pressed.
-     *
+     * <p>
      * If this method returns true, the screen will close when the Escape key is pressed.
      * If this method returns false, the screen will not close when the Escape key is pressed.
      *

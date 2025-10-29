@@ -37,12 +37,12 @@ public class ImGuiImpl {
     private static ImFont defaultFont;
 
     /**
-    * Initialize ImGui, ImPlot and ImNodes context.
-    * Set configuration flags for docking and viewports.
-    * Initialize ImGuiImplGlfw and ImGuiImplGl3.
-    *
-    * @param handle the window handle
-    */
+     * Initialize ImGui, ImPlot and ImNodes context.
+     * Set configuration flags for docking and viewports.
+     * Initialize ImGuiImplGlfw and ImGuiImplGl3.
+     *
+     * @param handle the window handle
+     */
     public static void create(final long handle) {
         ImGui.createContext();
         ImPlot.createContext();
@@ -61,12 +61,12 @@ public class ImGuiImpl {
     }
 
     /**
-    * Load ImGui fonts.
-    * Set configuration flags for docking and viewports.
-    * Initialize ImGuiImplGlfw and ImGuiImplGl3.
-    *
-    * @param resourceManager the resource manager
-    */
+     * Load ImGui fonts.
+     * Set configuration flags for docking and viewports.
+     * Initialize ImGuiImplGlfw and ImGuiImplGl3.
+     *
+     * @param resourceManager the resource manager
+     */
     public static void loadFonts(net.minecraft.server.packs.resources.ResourceManager resourceManager) {
         GE.CORE_LOG.debug("Loading ImGui fonts...");
         final ImGuiIO io = ImGui.getIO();
@@ -156,6 +156,7 @@ public class ImGuiImpl {
      * It takes a render interface as a parameter, which is called once per frame.
      * The render interface is responsible for rendering the UI of the ImGui context.
      * It is passed the ImGui IO context, which can be used to access the ImGui state and handle input/output operations.
+     *
      * @param runnable the render interface to call once per frame
      */
     public static void draw(final RenderInterface runnable) {

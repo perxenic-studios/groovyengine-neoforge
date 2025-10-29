@@ -32,6 +32,7 @@ public class ObjModelManager {
 
     /**
      * Registers an OBJ model instance to be loaded after the client setup event.
+     *
      * @param objModel The OBJ model instance to register.
      * @return The registered OBJ model instance.
      */

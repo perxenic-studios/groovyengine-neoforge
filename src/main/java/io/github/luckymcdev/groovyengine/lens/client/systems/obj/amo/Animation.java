@@ -44,10 +44,10 @@ public class Animation {
      * The duration of the animation is updated to be the maximum of its current value and the given timestamp.
      *
      * @param jointIndex The index of the joint to add the keyframe for.
-     * @param timestamp The timestamp of the keyframe in seconds.
-     * @param x The x component of the position at the keyframe.
-     * @param y The y component of the position at the keyframe.
-     * @param z The z component of the position at the keyframe.
+     * @param timestamp  The timestamp of the keyframe in seconds.
+     * @param x          The x component of the position at the keyframe.
+     * @param y          The y component of the position at the keyframe.
+     * @param z          The z component of the position at the keyframe.
      */
     public void addPositionKeyframe(int jointIndex, float timestamp, float x, float y, float z) {
         positionKeyframes.computeIfAbsent(jointIndex, k -> new ArrayList<>())
@@ -62,11 +62,11 @@ public class Animation {
      * The duration of the animation is updated to be the maximum of its current value and the given timestamp.
      *
      * @param jointIndex The index of the joint to add the keyframe for.
-     * @param timestamp The timestamp of the keyframe in seconds.
-     * @param x The x component of the quaternion at the keyframe.
-     * @param y The y component of the quaternion at the keyframe.
-     * @param z The z component of the quaternion at the keyframe.
-     * @param w The w component of the quaternion at the keyframe.
+     * @param timestamp  The timestamp of the keyframe in seconds.
+     * @param x          The x component of the quaternion at the keyframe.
+     * @param y          The y component of the quaternion at the keyframe.
+     * @param z          The z component of the quaternion at the keyframe.
+     * @param w          The w component of the quaternion at the keyframe.
      */
     public void addRotationKeyframe(int jointIndex, float timestamp, float x, float y, float z, float w) {
         rotationKeyframes.computeIfAbsent(jointIndex, k -> new ArrayList<>())
@@ -81,7 +81,7 @@ public class Animation {
      * It then applies the position and rotation keyframes at the given time
      * to the corresponding joints, and updates the joint hierarchy transforms.
      *
-     * @param time The time at which to apply the animation.
+     * @param time   The time at which to apply the animation.
      * @param joints The joints to apply the animation to.
      */
     public void applyAtTime(float time, Joint[] joints) {
@@ -121,7 +121,7 @@ public class Animation {
      * If the time is exactly on a keyframe, it returns that keyframe's position.
      *
      * @param keyframes The list of position keyframes to interpolate.
-     * @param time The time at which to interpolate the position.
+     * @param time      The time at which to interpolate the position.
      * @return The interpolated position at the given time.
      */
     private Vector3f interpolatePosition(List<PositionKeyframe> keyframes, float time) {
@@ -158,7 +158,7 @@ public class Animation {
      * If the time is exactly on a keyframe, it returns that keyframe's rotation.
      *
      * @param keyframes The list of rotation keyframes to interpolate.
-     * @param time The time at which to interpolate the rotation.
+     * @param time      The time at which to interpolate the rotation.
      * @return The interpolated rotation at the given time.
      */
     private Quaternionf interpolateRotation(List<RotationKeyframe> keyframes, float time) {
@@ -205,6 +205,7 @@ public class Animation {
 
     /**
      * Returns the name of the animation.
+     *
      * @return The name of the animation.
      */
     public String getName() {
@@ -222,16 +223,18 @@ public class Animation {
 
     /**
      * A record for a Position keyframe
+     *
      * @param timestamp the Timestamp of the Keyframe
-     * @param position the Position of the Keyframe
+     * @param position  the Position of the Keyframe
      */
     private record PositionKeyframe(float timestamp, Vector3f position) {
     }
 
     /**
      * A record for a Rotation keyframe
+     *
      * @param timestamp the Timestamp of the Keyframe
-     * @param rotation the Rotation of the Keyframe
+     * @param rotation  the Rotation of the Keyframe
      */
     private record RotationKeyframe(float timestamp, Quaternionf rotation) {
     }

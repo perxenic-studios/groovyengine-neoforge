@@ -106,7 +106,7 @@ public class ScriptManager {
      * attach to the script evaluation process. After that, it will parse the script and
      * run it. The result of the script will be posted to a
      * {@link ScriptEvent.PostExecutionEvent}.</p>
-     *
+     * <p>
      * The error message, along with the error description and the script name, will be added
      * to the {@link ScriptErrors} list.</p>
      *

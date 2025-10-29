@@ -50,7 +50,7 @@ public class Renderer {
      * Registers a sub-renderer with the given class.
      *
      * @param rendererClass the class of the sub-renderer to register
-     * @param renderer the instance of the sub-renderer to register
+     * @param renderer      the instance of the sub-renderer to register
      */
     private <T extends BaseRenderer> void registerRenderer(Class<T> rendererClass, T renderer) {
         renderers.put(rendererClass, renderer);

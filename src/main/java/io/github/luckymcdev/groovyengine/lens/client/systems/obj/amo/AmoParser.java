@@ -55,6 +55,7 @@ public class AmoParser extends ObjParser {
      * </ul>
      * <p>
      * All other elements are ignored, including standard OBJ elements (v, vn, vt, o).
+     *
      * @param resource The resource to read from.
      * @throws IOException If an I/O error occurs while reading the file.
      */
@@ -168,6 +169,7 @@ public class AmoParser extends ObjParser {
      * </ul>
      * <p>
      * If the line does not start with any of the above prefixes, it is ignored.
+     *
      * @param line The line to parse.
      */
     private void parseStandardObjLine(String line) {
@@ -210,6 +212,7 @@ public class AmoParser extends ObjParser {
      * Each vertex is specified by its index in the vertices list, texture coordinate index in the uvs list, normal index in the normals list, joint indices in the vertexJoints list, and weights in the vertexWeights list.
      * <p>
      * If any index is out of range or if the line does not conform to the specified format, the face is not added to the parser's face list.
+     *
      * @param line The line to parse.
      * @return The parsed face, or null if the line is invalid.
      */
@@ -241,6 +244,7 @@ public class AmoParser extends ObjParser {
     /**
      * Safely retrieves a joint index vector from the vertexJoints list at the given index.
      * If the index is out of range, returns a default vector with all components set to zero.
+     *
      * @param index The index to retrieve the joint index vector from.
      * @return The retrieved joint index vector, or a default vector if the index is out of range.
      */
@@ -254,6 +258,7 @@ public class AmoParser extends ObjParser {
     /**
      * Safely retrieves a weight vector from the vertexWeights list at the given index.
      * If the index is out of range, returns a default vector with the first component set to 1 and the rest set to 0.
+     *
      * @param index The index to retrieve the weight vector from.
      * @return The retrieved weight vector, or a default vector if the index is out of range.
      */
@@ -266,6 +271,7 @@ public class AmoParser extends ObjParser {
 
     /**
      * Returns a list of all joints in the skeleton.
+     *
      * @return A list of all joints in the skeleton.
      */
     public List<Joint> getJoints() {
@@ -274,6 +280,7 @@ public class AmoParser extends ObjParser {
 
     /**
      * Returns a map of all animations in the model, where the key is the animation name and the value is the animation object.
+     *
      * @return A map of all animations in the model.
      */
     public Map<String, Animation> getAnimations() {
@@ -282,6 +289,7 @@ public class AmoParser extends ObjParser {
 
     /**
      * Retrieves an animation by name from the model.
+     *
      * @param name The name of the animation to retrieve.
      * @return The animation with the given name, or null if no such animation exists.
      */

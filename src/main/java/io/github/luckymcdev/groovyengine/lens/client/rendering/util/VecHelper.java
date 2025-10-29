@@ -114,7 +114,7 @@ public class VecHelper {
      * If the block is not solid in a given direction, the position is not added to the list.
      *
      * @param level The level in which to generate the outline positions.
-     * @param pos The position of the block to generate outline positions for.
+     * @param pos   The position of the block to generate outline positions for.
      * @return A list of Vec3 positions which outline the block at the given position in the given level.
      */
     public static ArrayList<Vec3> blockOutlinePositions(Level level, BlockPos pos) {
@@ -138,6 +138,7 @@ public class VecHelper {
      * Returns a vector that represents a plane aligned with the given axis.
      * The returned vector is calculated by subtracting the absolute values of the input vector's components from a vector of (1,1,1).
      * This results in a vector that is perpendicular to the input vector and has the same absolute values for its components.
+     *
      * @param vec The input vector
      * @return A vector representing a plane aligned with the given axis
      */
@@ -148,8 +149,9 @@ public class VecHelper {
 
     /**
      * Rotates a given vector around a given axis by a given angle in degrees.
-     * @param vec The vector to rotate
-     * @param deg The angle to rotate by in degrees
+     *
+     * @param vec  The vector to rotate
+     * @param deg  The angle to rotate by in degrees
      * @param axis The axis to rotate around
      * @return The rotated vector
      */

@@ -37,6 +37,7 @@ public class AnimationWindow extends EditorWindow {
      * This method renders two sections: a section to control the animation of the animated model and a section to control the animation of the Chupacabra animations.
      * The first section contains three buttons: "Play animation", "Resume animation", and "Stop animation".
      * The second section contains a slider to adjust the speed of the Chupacabra animations and a text display of the current speed.
+     *
      * @param io the ImGuiIO to use for rendering
      */
     @Override
@@ -51,6 +52,7 @@ public class AnimationWindow extends EditorWindow {
      * The "Play animation" button plays the "rotate_x" animation of the animated model.
      * The "Resume animation" button resumes the animation of the animated model.
      * The "Stop animation" button stops the animation of the animated model.
+     *
      * @param io the ImGuiIO to use for rendering
      */
     private void renderAmoController(ImGuiIO io) {
@@ -74,6 +76,7 @@ public class AnimationWindow extends EditorWindow {
      * The locomotion animations section contains buttons to play the locomotion animations: "Walk", "Run".
      * The actions section contains buttons to play the actions: "Attack Bite", "Howl", "Sniff", "Crouch", "Jump", "Tail Wag".
      * The playback controls section contains buttons to pause, resume, stop, and reset the Chupacabra animations.
+     *
      * @param io the ImGuiIO to use for rendering
      */
     private void renderChupacabraAnimationController(ImGuiIO io) {

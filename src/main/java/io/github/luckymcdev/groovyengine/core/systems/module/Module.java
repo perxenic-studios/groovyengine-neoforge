@@ -19,6 +19,7 @@ package io.github.luckymcdev.groovyengine.core.systems.module;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
+
 /**
  * Represents a module in the module system.
  * A module is a self-contained unit of code that performs a specific function or set of functions.
@@ -30,6 +31,7 @@ public interface Module {
     /**
      * Initializes the module with the given event bus.
      * This method is typically used to register events, initialize systems, and perform other setup tasks.
+     *
      * @param modEventBus The event bus to use for registering events.
      */
     void init(IEventBus modEventBus);
