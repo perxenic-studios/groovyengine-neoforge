@@ -33,7 +33,7 @@ public class ThreadsErrorScreen extends ErrorScreen {
         this.setFocused(entryList);
 
         this.addRenderableWidget(
-                Button.builder(Component.literal("Close"), b -> this.minecraft.setScreen(null))
+                Button.builder(Component.literal("Close"), b -> this.minecraft.close())
                         .bounds(this.width / 2 - 50, this.height - 24, 100, 20)
                         .build()
         );
