@@ -36,4 +36,7 @@ repo
 /run/GroovyEngine/src/resources/.cache
 /run/GroovyEngine/.idea
 /run/GroovyEngine/build
+
+
 /docs
+!/docs/html/documentation.chm
