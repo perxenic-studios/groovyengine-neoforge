@@ -1,5 +1,10 @@
 # Welcome to GroovyEngine
 
+> ![INFO](https://img.shields.io/badge/NOTE-blue?style=for-the-badge)
+>
+> GroovyEngine is meant to be used in combination with Intellij. Visit [Intellij Download](https://www.jetbrains.com/idea/download) And download the Community edition.
+
+
 GroovyEngine is a Minecraft mod that transforms the game into a powerful game engine. It integrates the Groovy scripting language and provides a rich set of utilities for rendering, world manipulation, and more.
 
 When you first run GroovyEngine, it creates a `groovyengine` folder inside your `.minecraft` directory. To learn more about the project structure, see the [Folder Structure](FolderStructure.md) page.

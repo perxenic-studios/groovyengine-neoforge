@@ -40,3 +40,13 @@ repo
 
 /docs
 !/docs/html/documentation.chm
+/run/GroovyEngine/modules
+/run/GroovyEngine/workspace/.gradle
+/run/GroovyEngine/workspace/.idea
+/run/GroovyEngine/workspace/.idea
+/run/GroovyEngine/workspace/build/moddev
+/run/GroovyEngine/workspace/build
+/run/GroovyEngine/workspace/gradle
+run/GroovyEngine/workspace/gradlew
+run/GroovyEngine/workspace/gradlew.bat
+/run/GroovyEngine/workspace/.idea

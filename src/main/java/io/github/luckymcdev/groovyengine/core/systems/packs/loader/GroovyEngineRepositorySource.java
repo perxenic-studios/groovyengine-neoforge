@@ -37,21 +37,15 @@ public class GroovyEngineRepositorySource implements RepositorySource {
 
     private static final PackSource SOURCE = PackSource.create(packText -> packText, true);
     private final PackType type;
-    private final File modulesLocation; // Changed from packLocation to modulesLocation
+    private final File modulesLocation;
 
     public GroovyEngineRepositorySource(PackType type) {
         this.type = type;
-        this.modulesLocation = FileConstants.MODULES_DIR.toFile(); // Point to the modules directory
+        this.modulesLocation = FileConstants.MODULES_DIR.toFile();
 
         GE.CORE_LOG.info("GroovyEngine modules location for {}: {}", type.name(), modulesLocation.getAbsolutePath());
     }
 
-    /**
-     * Loads all packs from the modules directory and calls the given consumer for each valid pack.
-     * The consumer will be called with each pack that is successfully loaded from a module.
-     *
-     * @param consumer The consumer to call for each valid pack.
-     */
     @Override
     public void loadPacks(@NotNull Consumer<Pack> consumer) {
         GE.CORE_LOG.info("Scan started for {} in modules directory: {}", type.name(), modulesLocation.getAbsolutePath());
@@ -76,23 +70,14 @@ public class GroovyEngineRepositorySource implements RepositorySource {
         GE.CORE_LOG.info("Located {} packs. Took {}ms.", validPackCount, GE.DECIMAL_2.format((endTime - startTime) / 1000000d));
     }
 
-    /**
-     * Loads a pack from a specific module directory and calls the given consumer if valid.
-     *
-     * @param consumer The consumer to call for the valid pack.
-     * @param moduleDir The directory of the module to load.
-     * @return 1 if a valid pack was found and loaded, 0 otherwise.
-     */
     private int loadFromModule(@NotNull Consumer<Pack> consumer, File moduleDir) {
-        // Each module directory should contain a 'resources' subdirectory
-        File moduleResourcesDir = new File(moduleDir, "resources");
+        File moduleResourcesDir = new File(moduleDir, "src/main/resources");
 
         if (!moduleResourcesDir.exists() || !moduleResourcesDir.isDirectory()) {
-            GE.CORE_LOG.debug("Module '{}' does not contain a 'resources' directory or it's not a directory. Skipping.", moduleDir.getName());
+            GE.CORE_LOG.debug("Module '{}' does not contain a 'src/main/resources' directory or it's not a directory. Skipping.", moduleDir.getName());
             return 0;
         }
 
-        // Create pack.mcmeta if it doesn't exist in the module's resources directory
         File mcmetaFile = new File(moduleResourcesDir, "pack.mcmeta");
         if (!mcmetaFile.exists()) {
             try {

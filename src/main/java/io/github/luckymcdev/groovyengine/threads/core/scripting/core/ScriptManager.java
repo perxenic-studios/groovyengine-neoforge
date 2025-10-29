@@ -72,7 +72,7 @@ public class ScriptManager {
         try (Stream<Path> modulePaths = Files.list(MODULES_DIR)) {
             modulePaths.filter(Files::isDirectory).forEach(modulePath -> {
                 GE.THREADS_LOG.info("Loading scripts from module: {}", modulePath.getFileName());
-                Path moduleScriptsDir = modulePath.resolve("groovy");
+                Path moduleScriptsDir = modulePath.resolve("src/main/groovy");
                 runScriptsIn(moduleScriptsDir, "common");
                 if (dist.isClient()) runScriptsIn(moduleScriptsDir, "client");
                 else runScriptsIn(moduleScriptsDir, "server");

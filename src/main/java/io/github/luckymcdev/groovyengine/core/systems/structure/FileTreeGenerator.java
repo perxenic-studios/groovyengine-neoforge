@@ -213,10 +213,10 @@ public class FileTreeGenerator {
                     println "Module name determined as: $moduleName" // This runs at configuration time
                 
                     from 'src'
-                    into "modules/${moduleName}"
+                    into "../modules/${moduleName}"
                 
                     doFirst {
-                        println "Starting copy from src to ../modules/${moduleName}"
+                        println "Starting copy from src to ../../modules/${moduleName}"
                     }
                 
                     doLast {
