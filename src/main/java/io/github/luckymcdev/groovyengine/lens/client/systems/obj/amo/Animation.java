@@ -30,6 +30,10 @@ public class Animation {
     private final Map<Integer, List<RotationKeyframe>> rotationKeyframes;
     private float duration;
 
+    /**
+     * Creates a named animation.
+     * @param name the name for the animation.
+     */
     public Animation(String name) {
         this.name = name;
         this.positionKeyframes = new HashMap<>();

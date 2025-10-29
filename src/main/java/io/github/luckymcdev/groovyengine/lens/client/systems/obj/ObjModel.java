@@ -46,7 +46,6 @@ public class ObjModel {
      * It will also log the loaded model data.
      *
      * @throws RuntimeException if the resource is not found.
-     * @throws IOException      if there is an error reading the file
      */
     public void loadModel() {
         GE.LENS_LOG.info("Loading model: {}", modelLocation);

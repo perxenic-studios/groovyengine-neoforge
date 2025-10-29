@@ -130,11 +130,11 @@ public abstract class LightTextureMixin {
         return lightTexture;
     }
 
-    @Unique
     /**
      * Get the appropriate light color for a specific light level combination
      * This samples a smaller, more localized area to avoid sudden changes
      */
+    @Unique
     private Vector3f groovyengine$getLocalizedLightColor(ClientLevel level, int blockLightLevel) {
         if (level == null || this.minecraft.player == null) {
             // If no context, gradually transition to vanilla (white) lighting
@@ -191,7 +191,7 @@ public abstract class LightTextureMixin {
     }
 
     /**
-     * @author
+     * @author LuckyMcDev
      * @reason Custom block light coloring
      */
     @Overwrite

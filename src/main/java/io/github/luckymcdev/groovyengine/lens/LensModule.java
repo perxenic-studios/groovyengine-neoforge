@@ -44,8 +44,6 @@ public class LensModule implements Module {
      * Registers the windows for this module.
      * This method is only called on the client side, and is used to register the windows
      * for the Lens module.
-     *
-     * @implSpec
      * @implNote This method is only called on the client side, and is used to register the windows
      * for the Lens module. It registers the {@link RenderingDebuggingWindow} and the
      * {@link AnimationWindow} to the window manager.

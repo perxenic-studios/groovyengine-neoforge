@@ -35,6 +35,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 /**
+ * A class to make working with ImGui easier.
+ *
  * @author LatvianModder but changes by LuckyMcDev
  */
 @OnlyIn(Dist.CLIENT)

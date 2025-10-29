@@ -21,9 +21,14 @@ import org.joml.Vector3f;
 
 /**
  * Represents a single keyframe in an animation.
+ * A keyframe defines the state of an object at a specific point in time.
+ * This class is deprecated and will be removed in a future version.
  *
- * @param time   Time in seconds or ticks
- * @param easing Easing function to use when interpolating TO this keyframe
+ * @param time     Time in seconds or ticks at which this keyframe is located.
+ * @param position The position of the object at this keyframe.
+ * @param rotation The rotation of the object at this keyframe, represented as Euler angles in degrees.
+ * @param scale    The scale of the object at this keyframe.
+ * @param easing   Easing function to use when interpolating TO this keyframe from the previous one.
  */
 @Deprecated
 public record Keyframe(float time, Vector3f position, Vector3f rotation, Vector3f scale, Easing easing) {

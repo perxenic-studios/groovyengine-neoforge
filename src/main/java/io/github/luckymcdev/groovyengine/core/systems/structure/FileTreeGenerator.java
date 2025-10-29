@@ -248,7 +248,7 @@ public class FileTreeGenerator {
                 
                 ## Here is your Modules Definition
                 
-                module_name=myModule
+                module_name=mymodule
                 """.formatted(minecraftVersion, neoforgeVersion, MAPPINGS_VERSION));
     }
 

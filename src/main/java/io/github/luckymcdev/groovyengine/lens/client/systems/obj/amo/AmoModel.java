@@ -41,6 +41,10 @@ public class AmoModel extends ObjModel {
     private float animationTime;
     private boolean isPlaying;
 
+    /**
+     * Creates an AmoModel via a .amo File.
+     * @param modelLocation the location of the .amo file
+     */
     public AmoModel(ResourceLocation modelLocation) {
         super(modelLocation);
         this.objParser = new AmoParser();
@@ -52,7 +56,6 @@ public class AmoModel extends ObjModel {
      * Loads the animated model from the resource location.
      *
      * @throws RuntimeException if the resource is not found.
-     * @implSpec
      * @implNote This method loads the animated model from the resource location.
      * It first checks if the resource is present, and if so, it parses the OBJ file
      * and loads the model data. Finally, it logs the loaded model data.
@@ -193,6 +196,7 @@ public class AmoModel extends ObjModel {
 
     /**
      * Get the current animation.
+     * @return returns the current animation
      */
     public Animation getCurrentAnimation() {
         return currentAnimation;
@@ -200,6 +204,7 @@ public class AmoModel extends ObjModel {
 
     /**
      * Get current animation time.
+     * @return returns the current animation time.
      */
     public float getAnimationTime() {
         return animationTime;
@@ -207,6 +212,7 @@ public class AmoModel extends ObjModel {
 
     /**
      * Set animation time manually.
+     * @param time the time to set
      */
     public void setAnimationTime(float time) {
         this.animationTime = time;
@@ -217,6 +223,7 @@ public class AmoModel extends ObjModel {
 
     /**
      * Check if animation is playing.
+     * @return if an animation is playing
      */
     public boolean isPlaying() {
         return isPlaying;
@@ -233,6 +240,7 @@ public class AmoModel extends ObjModel {
 
     /**
      * Get all joints in the skeleton.
+     * @return all joints.
      */
     public Joint[] getJoints() {
         return joints;
@@ -240,6 +248,8 @@ public class AmoModel extends ObjModel {
 
     /**
      * Get a specific joint by index.
+     * @param index the index of which to get the joint.
+     * @return the joint by index.
      */
     public Joint getJoint(int index) {
         if (index >= 0 && index < joints.length) {
@@ -250,6 +260,8 @@ public class AmoModel extends ObjModel {
 
     /**
      * Find a joint by name.
+     * @param name the name to search for
+     * @return the joint
      */
     public Joint findJoint(String name) {
         for (Joint joint : joints) {

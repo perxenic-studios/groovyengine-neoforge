@@ -32,6 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Parser for Animated OBJ files with skeletal animation support.
+ */
 public class AmoParser extends ObjParser {
     private final List<Vector4i> vertexJoints = new ArrayList<>();
     private final List<Vector4f> vertexWeights = new ArrayList<>();

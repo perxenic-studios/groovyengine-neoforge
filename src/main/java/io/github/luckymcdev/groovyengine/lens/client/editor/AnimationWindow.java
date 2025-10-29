@@ -24,10 +24,20 @@ import io.github.luckymcdev.groovyengine.lens.LensRendering;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.AnimationController;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.ChupacabraAnimations;
 
+/**
+ * Window to modify the Animations for Amo Model.
+ */
 public class AnimationWindow extends EditorWindow {
+
+    {
+        this.setEnabled(false);
+    }
 
     private final float[] animationSpeed = new float[]{1.0f};
 
+    /**
+     * Creates a new AnimationWindow.
+     */
     public AnimationWindow() {
         super(ImIcons.ANIMATION.get() + " AnimationWindow");
     }

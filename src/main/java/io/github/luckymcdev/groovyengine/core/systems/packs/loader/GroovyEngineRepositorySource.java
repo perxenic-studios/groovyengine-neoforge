@@ -37,68 +37,85 @@ public class GroovyEngineRepositorySource implements RepositorySource {
 
     private static final PackSource SOURCE = PackSource.create(packText -> packText, true);
     private final PackType type;
-    private final File packLocation;
+    private final File modulesLocation; // Changed from packLocation to modulesLocation
 
     public GroovyEngineRepositorySource(PackType type) {
         this.type = type;
-        this.packLocation = FileConstants.RESOURCES_DIR.toFile();
+        this.modulesLocation = FileConstants.MODULES_DIR.toFile(); // Point to the modules directory
 
-        GE.CORE_LOG.info("GroovyEngine pack location for {}: {}", type.name(), packLocation.getAbsolutePath());
+        GE.CORE_LOG.info("GroovyEngine modules location for {}: {}", type.name(), modulesLocation.getAbsolutePath());
     }
 
     /**
-     * Loads all packs from the pack location directory and calls the given consumer for each valid pack.
-     * The consumer will be called with each pack that is successfully loaded from the pack location directory.
+     * Loads all packs from the modules directory and calls the given consumer for each valid pack.
+     * The consumer will be called with each pack that is successfully loaded from a module.
      *
      * @param consumer The consumer to call for each valid pack.
      */
     @Override
     public void loadPacks(@NotNull Consumer<Pack> consumer) {
-        GE.CORE_LOG.info("Scan started for {} in directory: {}", type.name(), packLocation.getAbsolutePath());
+        GE.CORE_LOG.info("Scan started for {} in modules directory: {}", type.name(), modulesLocation.getAbsolutePath());
         final long startTime = System.nanoTime();
 
-        int validPackCount = loadFromLocation(consumer);
+        int validPackCount = 0;
+        if (!modulesLocation.exists() || !modulesLocation.isDirectory()) {
+            GE.CORE_LOG.warn("Modules directory does not exist or is not a directory: {}", modulesLocation.getAbsolutePath());
+            final long endTime = System.nanoTime();
+            GE.CORE_LOG.info("Located {} packs. Took {}ms.", validPackCount, GE.DECIMAL_2.format((endTime - startTime) / 1000000d));
+            return;
+        }
+
+        File[] moduleDirs = modulesLocation.listFiles(File::isDirectory);
+        if (moduleDirs != null) {
+            for (File moduleDir : moduleDirs) {
+                validPackCount += loadFromModule(consumer, moduleDir);
+            }
+        }
 
         final long endTime = System.nanoTime();
         GE.CORE_LOG.info("Located {} packs. Took {}ms.", validPackCount, GE.DECIMAL_2.format((endTime - startTime) / 1000000d));
     }
 
     /**
-     * Loads all packs from the pack location directory and calls the given consumer for each valid pack.
+     * Loads a pack from a specific module directory and calls the given consumer if valid.
      *
-     * @param consumer The consumer to call for each valid pack.
-     * @return The number of valid packs found in the pack location directory.
+     * @param consumer The consumer to call for the valid pack.
+     * @param moduleDir The directory of the module to load.
+     * @return 1 if a valid pack was found and loaded, 0 otherwise.
      */
-    private int loadFromLocation(@NotNull Consumer<Pack> consumer) {
-        if (!packLocation.exists()) {
-            GE.CORE_LOG.warn("Resources directory does not exist: {}", packLocation.getAbsolutePath());
+    private int loadFromModule(@NotNull Consumer<Pack> consumer, File moduleDir) {
+        // Each module directory should contain a 'resources' subdirectory
+        File moduleResourcesDir = new File(moduleDir, "resources");
+
+        if (!moduleResourcesDir.exists() || !moduleResourcesDir.isDirectory()) {
+            GE.CORE_LOG.debug("Module '{}' does not contain a 'resources' directory or it's not a directory. Skipping.", moduleDir.getName());
             return 0;
         }
 
-        // Create pack.mcmeta if it doesn't exist
-        File mcmetaFile = new File(packLocation, "pack.mcmeta");
+        // Create pack.mcmeta if it doesn't exist in the module's resources directory
+        File mcmetaFile = new File(moduleResourcesDir, "pack.mcmeta");
         if (!mcmetaFile.exists()) {
             try {
                 String mcmetaContent = "{\n" +
                         "  \"pack\": {\n" +
                         "    \"pack_format\": 48,\n" +
-                        "    \"description\": \"GroovyEngine Resources\"\n" +
+                        "    \"description\": \"GroovyEngine Module Resources: " + moduleDir.getName() + "\"\n" +
                         "  }\n" +
                         "}";
                 Files.write(mcmetaFile.toPath(), mcmetaContent.getBytes());
-                GE.CORE_LOG.info("Created pack.mcmeta file at: {}", mcmetaFile.getAbsolutePath());
+                GE.CORE_LOG.info("Created pack.mcmeta file for module '{}' at: {}", moduleDir.getName(), mcmetaFile.getAbsolutePath());
             } catch (IOException e) {
-                GE.CORE_LOG.error("Failed to create pack.mcmeta file", e);
+                GE.CORE_LOG.error("Failed to create pack.mcmeta file for module '{}'", moduleDir.getName(), e);
                 return 0;
             }
         }
 
-        PackContentType contentType = PackContentType.fromResourcesDirectory(packLocation.toPath());
+        PackContentType contentType = PackContentType.fromResourcesDirectory(moduleResourcesDir.toPath());
 
         if (contentType.isFor(this.type)) {
             final PackLocationInfo locationInfo = new PackLocationInfo(
-                    GE.MODID + "/" + type.name().toLowerCase(),
-                    Component.literal("GroovyEngine " + type.name()),
+                    GE.MODID + "/" + moduleDir.getName() + "/" + type.name().toLowerCase(),
+                    Component.literal("GroovyEngine Module: " + moduleDir.getName() + " (" + type.name() + ")"),
                     SOURCE,
                     Optional.empty()
             );
@@ -106,20 +123,20 @@ public class GroovyEngineRepositorySource implements RepositorySource {
 
             Pack pack = Pack.readMetaAndCreate(
                     locationInfo,
-                    PackFileType.FOLDER.createPackSupplier(packLocation),
+                    PackFileType.FOLDER.createPackSupplier(moduleResourcesDir),
                     this.type,
                     selectionConfig
             );
 
             if (pack != null) {
                 consumer.accept(pack);
-                GE.CORE_LOG.info("Successfully loaded GroovyEngine pack for {}", type.name());
+                GE.CORE_LOG.info("Successfully loaded GroovyEngine pack for module '{}' ({})", moduleDir.getName(), type.name());
                 return 1;
             } else {
-                GE.CORE_LOG.warn("Failed to create pack for {}", type.name());
+                GE.CORE_LOG.warn("Failed to create pack for module '{}' ({})", moduleDir.getName(), type.name());
             }
         } else {
-            GE.CORE_LOG.info("No content found for pack type {} in {}", type.name(), packLocation.getAbsolutePath());
+            GE.CORE_LOG.info("No content found for pack type {} in module '{}'", type.name(), moduleDir.getName());
         }
 
         return 0;

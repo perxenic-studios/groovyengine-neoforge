@@ -32,6 +32,10 @@ import java.util.List;
 public class AmoObject extends ObjObject {
     private final List<AmoFace> amoFaces;
 
+    /**
+     * Creates a new AmoObject with the given name.
+     * @param name the name.
+     */
     public AmoObject(String name) {
         super(name);
         this.amoFaces = new ArrayList<>();
@@ -53,6 +57,10 @@ public class AmoObject extends ObjObject {
 
     /**
      * Render with animation applied using joint transformations.
+     * @param poseStack the transformation pose stack to use.
+     * @param renderType the RenderType with which to render
+     * @param packedLight the packed light
+     * @param joints the joints to apply to the vertices for animation.
      */
     public void renderAnimated(PoseStack poseStack, RenderType renderType, int packedLight, Joint[] joints) {
 

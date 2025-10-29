@@ -68,6 +68,9 @@ public class Animation {
 
     /**
      * Get all transforms for this animation at the given time.
+     *
+     * @param time the time to get the transformations at
+     * @return the transformations.
      */
     public Map<String, KeyframeTransform> getTransformsAtTime(float time) {
         Map<String, KeyframeTransform> transforms = new HashMap<>();

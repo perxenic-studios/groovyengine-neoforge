@@ -20,6 +20,10 @@ import org.joml.Vector3f;
 
 /**
  * Holds transformation data from keyframe interpolation.
+ *
+ * @param position the position of the transformation
+ * @param rotation the rotation of the transformation
+ * @param scale the scale of the transformation
  */
 @Deprecated
 public record KeyframeTransform(Vector3f position, Vector3f rotation, Vector3f scale) {

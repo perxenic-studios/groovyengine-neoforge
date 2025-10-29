@@ -370,6 +370,10 @@ public class RenderUtils {
      * @param ps        The pose stack to draw with
      * @param lineWidth The width of the line
      * @param points    The points to draw between
+     * @param r red
+     * @param g green
+     * @param b blue
+     * @param a alpha
      **/
     public static void drawSteppedLineBetween(MultiBufferSource buffer, PoseStack ps, List<Vec3> points, float lineWidth, int r, int g, int b, int a) {
         Vec3 origin = points.getFirst();
@@ -390,6 +394,10 @@ public class RenderUtils {
      * @param steps         The number of steps to divide the line into
      * @param lineWidth     The width of the line
      * @param pointConsumer A consumer to call for each point in the line
+     * @param r red
+     * @param g green
+     * @param b blue
+     * @param a alpha
      */
     public static void drawSteppedLineBetween(MultiBufferSource buffer, PoseStack ps, Vec3 start, Vec3 end, int steps, float lineWidth, int r, int g, int b, int a, Consumer<Vec3> pointConsumer) {
         Vec3 origin = start;
@@ -409,6 +417,10 @@ public class RenderUtils {
      * @param local     The start point
      * @param target    The end point
      * @param lineWidth The width of the line
+     * @param r red
+     * @param g green
+     * @param b blue
+     * @param a alpha
      */
     public static void drawLineBetween(MultiBufferSource buffer, PoseStack ps, Vec3 local, Vec3 target, float lineWidth, int r, int g, int b, int a) {
         VertexConsumer builder = buffer.getBuffer(RenderType.leash());

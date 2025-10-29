@@ -18,12 +18,14 @@ package io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.Face;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -42,6 +44,11 @@ public class AmoFace extends Face {
 
     /**
      * Render the face with animation applied.
+     *
+     * @param poseStack the transformed pose stack.
+     * @param renderType the RenderType to render the modle.
+     * @param packedLight the light (eg using {@link RenderUtils#getPackedLightAt(Vec3 pos)}
+     * @param joints the joints to apply to the vertices for animation.
      */
     public void renderAnimated(PoseStack poseStack, RenderType renderType, int packedLight, Joint[] joints) {
         MultiBufferSource.BufferSource mcBufferSource = Minecraft.getInstance().renderBuffers().bufferSource();

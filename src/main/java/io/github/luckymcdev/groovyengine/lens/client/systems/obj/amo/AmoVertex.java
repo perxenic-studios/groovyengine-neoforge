@@ -24,6 +24,12 @@ import org.joml.Vector4i;
 
 /**
  * Extended vertex for animated models with joint influences.
+ *
+ * @param position the Position of the Vertex
+ * @param normal the Normal of the Vertex
+ * @param uv the UV of the Vertex
+ * @param joints the Joints of the Vertex - up to 4
+ * @param weights the Weights of the Joints
  */
 public record AmoVertex(
         Vector3f position,
@@ -34,6 +40,7 @@ public record AmoVertex(
 ) {
     /**
      * Convert to regular Vertex for non-animated rendering.
+     * @return The converted Vertex.
      */
     public Vertex toVertex() {
         return new Vertex(position, normal, uv);

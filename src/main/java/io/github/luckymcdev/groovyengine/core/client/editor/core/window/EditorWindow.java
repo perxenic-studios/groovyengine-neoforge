@@ -42,6 +42,7 @@ public abstract class EditorWindow {
 
     /**
      * Called every frame to render the window content
+     * @param io the ImGuiIo
      */
     public abstract void render(ImGuiIO io);
 

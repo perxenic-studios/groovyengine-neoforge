@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.github.luckymcdev.groovyengine.threads.core.scripting.core;
 
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 import io.github.luckymcdev.groovyengine.GE;
+import io.github.luckymcdev.groovyengine.core.systems.structure.FileConstants;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.global.ScriptAttachment;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
@@ -27,6 +27,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,83 +36,70 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.github.luckymcdev.groovyengine.core.systems.structure.FileConstants.MODULES_DIR;
 import static io.github.luckymcdev.groovyengine.core.systems.structure.FileConstants.SCRIPTS_DIR;
 
 public class ScriptManager {
     private static GroovyShell shell;
 
-    /**
-     * Initializes the script manager. This method is called when the mod is initialized.
-     * It creates a shared Groovy shell and loads all scripts.
-     */
     public static void initialize() {
         GE.THREADS_LOG.info("Initializing script manager");
         shell = ScriptShellFactory.createSharedShell();
         loadAllScripts();
     }
 
-    /**
-     * Reloads all scripts in the script manager. This method is called when the mod is reinitialized.
-     * It creates a new shared Groovy shell and loads all scripts.
-     */
     public static void reloadScripts() {
         GE.THREADS_LOG.info("Reloading scripts");
         shell = ScriptShellFactory.createSharedShell();
         loadAllScripts();
     }
 
-    /**
-     * Loads all scripts in the script manager. This method first loads all scripts in the
-     * "common" environment, and then loads all scripts in the "client" environment if
-     * the mod is running on the client, or the "server" environment if the mod is
-     * running on the server.
-     */
     private static void loadAllScripts() {
         Dist dist = FMLLoader.getDist();
-        runScriptsIn("common");
-        if (dist.isClient()) runScriptsIn("client");
-        else runScriptsIn("server");
+        runScriptsIn(SCRIPTS_DIR, "common");
+        if (dist.isClient()) runScriptsIn(SCRIPTS_DIR, "client");
+        else runScriptsIn(SCRIPTS_DIR, "server");
+
+        runScriptsInModules(dist);
     }
 
-    /**
-     * Runs all scripts in the given environment directory.
-     * The scripts are sorted by their priority, and then executed in order.
-     * If an error occurs while loading the scripts, an error message will be logged.
-     *
-     * @param environment The environment directory to load scripts from.
-     */
-    private static void runScriptsIn(String environment) {
-        Path envDir = SCRIPTS_DIR.resolve(environment);
+    private static void runScriptsInModules(Dist dist) {
+        if (!Files.exists(MODULES_DIR) || !Files.isDirectory(MODULES_DIR)) {
+            GE.THREADS_LOG.info("Modules directory not found, skipping module script loading.");
+            return;
+        }
+
+        try (Stream<Path> modulePaths = Files.list(MODULES_DIR)) {
+            modulePaths.filter(Files::isDirectory).forEach(modulePath -> {
+                GE.THREADS_LOG.info("Loading scripts from module: {}", modulePath.getFileName());
+                Path moduleScriptsDir = modulePath.resolve("groovy");
+                runScriptsIn(moduleScriptsDir, "common");
+                if (dist.isClient()) runScriptsIn(moduleScriptsDir, "client");
+                else runScriptsIn(moduleScriptsDir, "server");
+            });
+        } catch (IOException e) {
+            GE.THREADS_LOG.error("Error accessing modules directory", e);
+        }
+    }
+
+    private static void runScriptsIn(Path baseDir, String environment) {
+        Path envDir = baseDir.resolve(environment);
         if (!Files.exists(envDir)) return;
 
         try (Stream<Path> paths = Files.walk(envDir)) {
             List<Path> scripts = paths
-                    .filter(p -> p.toString().endsWith(".groovy"))
-                    .filter(p -> !ScriptMetadata.isDisabled(p))
-                    .collect(Collectors.toList());
+                .filter(p -> p.toString().endsWith(".groovy"))
+                .filter(p -> !ScriptMetadata.isDisabled(p))
+                .collect(Collectors.toList());
 
             scripts.sort(Comparator.comparingInt(ScriptMetadata::getPriority).reversed());
 
             scripts.forEach(ScriptManager::evaluateScript);
         } catch (IOException e) {
-            GE.THREADS_LOG.error("Error loading scripts from {}", environment, e);
+            GE.THREADS_LOG.error("Error loading scripts from {}:{}", baseDir.getFileName(), environment, e);
         }
     }
 
-    /**
-     * Evaluates a script and logs any errors that occur.
-     *
-     * <p>This method will first log an info message about the script being evaluated,
-     * and then fire a {@link ScriptEvent.PreExecutionEvent} to allow other mods to
-     * attach to the script evaluation process. After that, it will parse the script and
-     * run it. The result of the script will be posted to a
-     * {@link ScriptEvent.PostExecutionEvent}.</p>
-     * <p>
-     * The error message, along with the error description and the script name, will be added
-     * to the {@link ScriptErrors} list.</p>
-     *
-     * @param scriptPath The path to the script to evaluate.
-     */
     private static void evaluateScript(Path scriptPath) {
         GE.THREADS_LOG.info("Evaluating script: {}", scriptPath.getFileName());
 
@@ -132,7 +120,6 @@ public class ScriptManager {
             ScriptErrors.addError(scriptPath.getFileName().toString(), ex.getMessage(), description);
         }
     }
-
 
     public static GroovyShell getShell() {
         return shell;

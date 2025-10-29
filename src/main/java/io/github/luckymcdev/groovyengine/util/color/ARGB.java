@@ -16,6 +16,9 @@
 
 package io.github.luckymcdev.groovyengine.util.color;
 
+/**
+ * Utility class for ARGB to ABGR color values.
+ */
 public class ARGB {
     /**
      * Converts an ARGB color value to an ABGR color value.

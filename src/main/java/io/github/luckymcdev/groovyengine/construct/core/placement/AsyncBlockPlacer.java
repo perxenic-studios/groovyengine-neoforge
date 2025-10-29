@@ -69,6 +69,7 @@ public class AsyncBlockPlacer {
 
     /**
      * Handles server tick events to process queued block operations.
+     * @param event the Tick event.
      */
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Pre event) {
@@ -135,6 +136,8 @@ public class AsyncBlockPlacer {
 
     /**
      * Fills a selection with blocks from a specified pattern.
+     * @param selection the selection to fill
+     * @param pattern the pattern to fill the selection with.
      */
     public void fillSelection(Selection selection, BlockPattern pattern) {
         if (!selection.hasValidSelection()) return;
