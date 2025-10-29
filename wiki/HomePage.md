@@ -1,58 +1,26 @@
+# Welcome to GroovyEngine
 
+GroovyEngine is a Minecraft mod that transforms the game into a powerful game engine. It integrates the Groovy scripting language and provides a rich set of utilities for rendering, world manipulation, and more.
 
-# Welcome
-
-# Getting started with GroovyEngine
-
-Groovyengine is a mod, which aims to turn Minecraft into a Game engine. It does this by adding 
-Groovy scripting and a lot of utilities for Rendering, Editing the world and more.
-
-It adds a custom folder to your .minecraft folder, called "groovyengine".
-See more in [Folder Structure](FolderStructure)
-
+When you first run GroovyEngine, it creates a `groovyengine` folder inside your `.minecraft` directory. To learn more about the project structure, see the [Folder Structure](FolderStructure.md) page.
 
 > ![NOTE](https://img.shields.io/badge/NOTE-blue?style=for-the-badge)
 >
-> The Code is well Documented and for everything mentioned in this wiki, you should look at the source code and read through the javadoc!
+> The GroovyEngine source code is well-documented. For in-depth information on any of the features mentioned in this wiki, we encourage you to explore the source and read the Javadoc comments.
 
-# Features
+## Features
 
-## How do the features work?
+GroovyEngine's features are organized into modules, each designed for a specific purpose:
 
-They work via Modules. Each module contains a set of features. The modules are named after what they do.
-Construct is a module that contains all the features for constructing and editing the world.
-Lens is a module that contains all the features for Rendering.
-Core is a module that contains all the core features of groovyengine, not really important for users.
-Threads is a module, which contains all the core scripting part.
+- **[Construct](modules/Construct.md):** Tools for building and editing the game world.
+- **[Lens](modules/lens/Lens.md):** A powerful rendering toolkit.
+- **[Threads](modules/Threads.md):** Core scripting functionalities.
+- **[Core](modules/Core.md):** The foundational module of GroovyEngine, which is less relevant for general users.
 
-## Scripting
+## Scripting with Groovy
 
-Groovyengine uses Groovy as its scripting language. Groovy is a dynamic language, which is 
-very easy to learn and use. It is also very fast and has a lot of features. 
-see [Groovy Documentation](https://groovy-lang.org/)
-Most notably the [Syntax](https://groovy-lang.org/syntax.html) and [Operators](https://groovy-lang.org/operators.html)
+GroovyEngine uses [Groovy](https://groovy-lang.org/), a dynamic and easy-to-learn language that runs on the Java Virtual Machine (JVM). Its clean syntax and powerful features make it an excellent choice for scripting in Minecraft.
 
-For scripting there is also a few custom things added. Most of the things important for scripting are inside of 
-the Threads module. More notably in the 
-[Api](../docs/html/namespaceio_1_1github_1_1luckymcdev_1_1groovyengine_1_1threads_1_1api.html) package.
+For more details, refer to the official Groovy documentation, particularly the pages on [Syntax](https://groovy-lang.org/syntax.html) and [Operators](https://groovy-lang.org/operators.html).
 
-## Construct
-
-> See [Construct](modules/Construct)
-
-## Threads
-
-> See [Threads](modules/Threads)
-
-## Lens
-
-> See [Lens](modules/Lens)
-
-
-## Core
-
-> See [Core](modules/Core)
-
-
-
-
+Most of the scripting-related APIs are located in the `io.github.luckymcdev.groovyengine.threads.api` package within the [Threads](modules/Threads.md) module.

@@ -1,34 +1,38 @@
 # Sides
 
-Minecraft code runs in two conceptual layers — physical and logical — and understanding this helps you write side-safe scripts.
+Minecraft's code operates on two conceptual layers: the physical and the logical. Understanding this distinction is crucial for writing side-safe scripts.
 
-Logical vs. Physical Side
+## Logical vs. Physical Sides
 
-Physical side
-- The "physical client" is the running Minecraft client application (with rendering, input, and GUI).
-- The "physical server" is a dedicated server process (no client-only rendering classes).
-- When you run singleplayer, your physical client runs both a logical server and a logical client on the same machine.
+### Physical Side
+- The **physical client** is the Minecraft client application, responsible for rendering, input, and the graphical user interface (GUI).
+- The **physical server** is the dedicated server process, which lacks client-only rendering classes.
+- In single-player mode, the physical client runs both a logical server and a logical client on the same machine.
 
-Logical side
-- The logical server handles game state, ticks, entity updates, world changes, etc.
-- The logical client handles rendering and client-only behavior (render thread, GUI).
-- Code that touches rendering, textures, or net.minecraft.client.* classes must only run on the client logical/physical side.
+### Logical Side
+- The **logical server** manages the game state, including ticks, entity updates, and world changes.
+- The **logical client** handles rendering and other client-only behaviors, such as the render thread and GUI.
+- Code that interacts with rendering, textures, or classes within the `net.minecraft.client` package must only execute on the logical and physical client-side.
 
-Why this matters
-- Referencing client-only classes from server-side code will cause crashes (ClassNotFoundException / NoClassDefFoundError) on dedicated servers.
-- Static fields and shared singletons can behave unexpectedly if you assume a single JVM-side context; test on dedicated servers to ensure separation works.
+## Why This Matters
 
-Practical guidance
-- Separate scripts into `client/`, `common/`, and `server/` folders as appropriate.
-    - client/ — rendering, HUDs, shader code, client-only hooks
-    - common/ — logic usable on both sides
-    - server/ — world ticks, spawn logic, persistent state
-- Use side-checks when dynamic checks are needed:
-    - In NeoForge/Forge-like environments there are enums such as `Dist` (physical side) and `LogicalSide` (logical side). Use the runtime-provided checks to guard client-only code paths.
-- If you need to communicate between sides, use networking (packets) or the engine's provided synchronization APIs.
+- Referencing client-only classes from server-side code will lead to crashes (`ClassNotFoundException` or `NoClassDefFoundError`) on dedicated servers.
+- Static fields and shared singletons can behave unexpectedly if you assume a single JVM-side context. Always test on a dedicated server to ensure proper separation.
 
-Tip
-- Always test with a dedicated server in addition to singleplayer to catch side separation issues early.
+## Practical Guidance
 
-Credits
-- Courtesy to docs.neoforged.dev for conceptual reference.
+- Organize your scripts into `client/`, `common/`, and `server/` folders:
+    - `client/`: For rendering, HUDs, shader code, and client-only hooks.
+    - `common/`: For logic that can be used on both the client and server.
+    - `server/`: For world ticks, spawn logic, and persistent state.
+- When dynamic checks are necessary, use side-checks.
+    - In environments like NeoForge or Forge, use enums such as `Dist` (for the physical side) and `LogicalSide` to guard client-only code paths.
+- To communicate between sides, use networking (packets) or the engine's synchronization APIs.
+
+## Tip
+
+- Always test your code on a dedicated server in addition to single-player to identify side-separation issues early.
+
+## Credits
+
+- Conceptual reference from [docs.neoforged.dev](https.docs.neoforged.dev).

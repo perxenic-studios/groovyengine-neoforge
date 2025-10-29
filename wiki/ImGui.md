@@ -1,35 +1,41 @@
 # ImGui
 
-For general ImGui Documentation see [ImGui Documentation](https://github.com/ocornut/imgui/wiki).
+GroovyEngine integrates [Dear ImGui](https://github.com/ocornut/imgui), a powerful and easy-to-use graphical user interface library. This allows you to create custom in-game UIs for debugging, development, and more.
 
-For more Groovyengine ImGui related Documentation look at 
-[ImGe](..html/classio_1_1github_1_1luckymcdev_1_1groovyengine_1_1core_1_1client_1_1imgui_1_1_im_ge.html).
+For general information about ImGui, please refer to the official [ImGui Wiki](https://github.com/ocornut/imgui/wiki).
 
-## How to Access.
-To access ImGui, press `F6`. This will toggle ImGui displaying.
-To access the custom Screen which will stop all your input to the game press `G`.
+For GroovyEngine-specific ImGui documentation, see the [ImGe Javadoc](../html/classio_1_1github_1_1luckymcdev_1_1groovyengine_1_1core_1_1client_1_1imgui_1_1_im_ge.html).
 
-## Windows
+## Accessing ImGui
 
-GroovyEngine has a Windows system for imgui.
-Every Window the user wants to create is a class that extends 
-[EditorWindow](../html/classio_1_1github_1_1luckymcdev_1_1groovyengine_1_1core_1_1client_1_1editor_1_1core_1_1window_1_1_editor_window.html).
-An example of that would be 
-[Demo Windows and its subclasses](../html/classio_1_1github_1_1luckymcdev_1_1groovyengine_1_1core_1_1client_1_1editor_1_1windows_1_1_demo_windows.html).
+- **Toggle ImGui:** Press `F6` to show or hide the ImGui interface.
+- **Toggle Input:** Press `G` to open a custom screen that captures all input, allowing you to interact with ImGui windows without affecting the game.
 
-You have to register windows with the WindowManager.
+## Creating Custom Windows
+
+To create a custom ImGui window, you must create a class that extends the `EditorWindow` class. You can see an example of this in the `DemoWindow` and its subclasses.
+
+```java
+public class MyCustomWindow extends EditorWindow {
+    @Override
+    public void draw() {
+        ImGui.text("Hello, world!");
+    }
+}
+```
+
+Once you have created your window class, you must register it with the `WindowManager` in a custom module.
 
 ```java
 public static void registerWindows() {
-    WindowManager.registerWindow(new YourClassExtendingEditorWindow(), "category");
+    WindowManager.registerWindow(new MyCustomWindow(), "My Category");
 }
 ```
-This method will have to be called in a Module. see [Custom Modules](Modules.md) on how to create one.
+
+For more information on creating custom modules, see the [Modules](modules/Modules.md) page.
 
 ## ImGraphics
 
-[ImGraphics](../html/classio_1_1github_1_1luckymcdev_1_1groovyengine_1_1core_1_1client_1_1imgui_1_1styles_1_1_im_graphics.html)
-is a custom tool which makes it easier to work with some of ImGuis more finicky stuff. As always, read through the javadoc.
-Courtesy to [LatvianModder](https://github.com/LatvianModder) who inspired me to make this system.
+`ImGraphics` is a utility class that simplifies some of the more complex aspects of working with ImGui. We highly recommend reading through the Javadoc to learn more about what it can do.
 
-## 
+Credit for the inspiration for this system goes to [LatvianModder](https://github.com/LatvianModder).
