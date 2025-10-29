@@ -12,7 +12,11 @@ import io.github.luckymcdev.groovyengine.lens.LensModule;
 import io.github.luckymcdev.groovyengine.threads.ThreadsModule;
 import io.github.luckymcdev.groovyengine.threads.core.logging.LogCapture;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.attachment.AttachmentEventManager;
+import io.github.luckymcdev.groovyengine.threads.core.scripting.core.ScriptManager;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -22,12 +26,16 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 @Mod(GE.MODID)
@@ -182,5 +190,20 @@ public class GroovyEngine {
     @SubscribeEvent
     public void onServerStopping(ServerStoppingEvent event) {
         AttachmentEventManager.getInstance().fireServerStop();
+    }
+
+    @SubscribeEvent
+    public void onAddReloadListeners(AddReloadListenerEvent event) {
+        event.addListener(new SimplePreparableReloadListener<>() {
+            @Override
+            protected Object prepare(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
+                return null;
+            }
+
+            @Override
+            protected void apply(@NotNull Object object, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
+                ScriptManager.reloadScripts();
+            }
+        });
     }
 }
