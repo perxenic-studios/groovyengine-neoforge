@@ -17,6 +17,7 @@
 package io.github.luckymcdev.groovyengine.core.systems.packs.generator.recipe;
 
 
+import de.groovyengine.IAttachmentManager;
 import dev.perxenic.acidapi.api.datagen.AcidRecipeProvider;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
 import net.minecraft.core.HolderLookup;
@@ -33,6 +34,6 @@ public class AutoRecipeProvider extends AcidRecipeProvider {
 
     @Override
     public void buildRecipes(@NotNull RecipeOutput recipeOutput) {
-        AttachmentManager.getInstance().getRecipeAttachments().forEach(att -> att.onGenerate(recipeOutput));
+        IAttachmentManager.getInstance().getRecipeAttachments().forEach(att -> att.onGenerate(recipeOutput));
     }
 }

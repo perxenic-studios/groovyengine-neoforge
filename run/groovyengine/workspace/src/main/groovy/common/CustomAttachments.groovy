@@ -1,7 +1,7 @@
 //priority=1000
 package common
 
-import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager
+import de.groovyengine.IAttachmentManager
 import io.github.luckymcdev.groovyengine.threads.api.attachments.global.*
 import io.github.luckymcdev.groovyengine.threads.api.attachments.local.*
 import io.github.luckymcdev.groovyengine.GE
@@ -314,7 +314,7 @@ class TestClientAttachment extends ClientAttachment {
 
 // Main test execution
 SCRIPT_LOG.info("Starting Attachment Tests...")
-AttachmentManager manager = AttachmentManager.getInstance()
+IAttachmentManager manager = IAttachmentManager.getInstance()
 def toggles = [
         script  : false,
         server  : false,
