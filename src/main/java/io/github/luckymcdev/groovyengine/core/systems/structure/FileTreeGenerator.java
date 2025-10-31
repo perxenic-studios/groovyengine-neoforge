@@ -192,17 +192,8 @@ public class FileTreeGenerator {
                     task.group = 'Zinternal'
                 }
                 
-                // Optional: Configure specific task groups if needed
-                tasks.named('build') {
-                    group = 'build'
-                }
-                
                 tasks.named('test') {
                     group = 'verification'
-                }
-                
-                tasks.named('clean') {
-                    group = 'build'
                 }
                 
                 tasks.register('buildModule', Copy) {
@@ -221,6 +212,62 @@ public class FileTreeGenerator {
                 
                     doLast {
                         println "Copy completed!"
+                    }
+                }
+                
+                tasks.register('cleanWorkspace') {
+                    group = 'build'
+                    description = 'Cleans the workspace directory and rebuilds module (with confirmation)'
+                    
+                    dependsOn 'buildModule'
+                
+                    doFirst {
+                        def console = System.console()
+                        def answer = null
+                
+                        if (console) {
+                            // Running in terminal - use console
+                            answer = console.readLine('\\n WARNING: This will DELETE the entire workspace directory!\\n' +
+                                                      'Are you SURE you want to do this? (yes/no): ')
+                        } else {
+                            // Running in IDE - use Swing dialog
+                            try {
+                                javax.swing.SwingUtilities.invokeAndWait({
+                                    def result = javax.swing.JOptionPane.showConfirmDialog(
+                                        null,
+                                        "WARNING: This will DELETE the entire workspace directory!\\n\\nAre you SURE you want to do this?",
+                                        "Clean Workspace Confirmation",
+                                        javax.swing.JOptionPane.YES_NO_OPTION,
+                                        javax.swing.JOptionPane.WARNING_MESSAGE
+                                    )
+                                    answer = (result == javax.swing.JOptionPane.YES_OPTION) ? 'yes' : 'no'
+                                } as Runnable)
+                            } catch (Exception e) {
+                                println "Failed to show dialog: ${e.message}"
+                                throw new GradleException("Could not get user confirmation")
+                            }
+                        }
+                
+                        if (!answer?.toLowerCase()?.startsWith('y')) {
+                            throw new GradleException("Workspace cleanup cancelled by user")
+                        }
+                
+                        println "Confirmation received. Proceeding with workspace cleanup..."
+                    }
+                
+                    doLast {
+                        def workspaceDir = file('.')
+                        println "Deleting workspace directory: ${workspaceDir.absolutePath}"
+                
+                        // Delete all contents except .gradle directory
+                        workspaceDir.listFiles()?.each { file ->
+                            if (file.name != '.gradle' && file.name != 'gradle' && file.name != 'gradlew' && file.name != 'gradlew.bat') {
+                                println "Deleting: ${file.name}"
+                                project.delete(file)
+                            }
+                        }
+                
+                        println "Workspace cleaned successfully!"
                     }
                 }
                 
