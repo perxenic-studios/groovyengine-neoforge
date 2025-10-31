@@ -71,10 +71,10 @@ public class GroovyEngineRepositorySource implements RepositorySource {
     }
 
     private int loadFromModule(@NotNull Consumer<Pack> consumer, File moduleDir) {
-        File moduleResourcesDir = new File(moduleDir, "src/main/resources");
+        File moduleResourcesDir = new File(moduleDir, "main/resources");
 
         if (!moduleResourcesDir.exists() || !moduleResourcesDir.isDirectory()) {
-            GE.CORE_LOG.debug("Module '{}' does not contain a 'src/main/resources' directory or it's not a directory. Skipping.", moduleDir.getName());
+            GE.CORE_LOG.debug("Module '{}' does not contain a 'main/resources' directory or it's not a directory. Skipping.", moduleDir.getName());
             return 0;
         }
 
