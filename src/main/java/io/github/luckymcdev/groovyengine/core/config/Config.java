@@ -22,5 +22,9 @@ public class Config {
 
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
+    public static final ModConfigSpec.BooleanValue IN_DEV =
+            BUILDER.comment("Enable developer mode for GroovyEngine. Disables ImGui dev editor when false.")
+                    .define("general.inDev", true);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 }

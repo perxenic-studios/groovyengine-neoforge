@@ -29,6 +29,7 @@ import io.github.luckymcdev.groovyengine.core.client.editor.windows.DemoWindows;
 import io.github.luckymcdev.groovyengine.core.client.editor.windows.EditorControlWindow;
 import io.github.luckymcdev.groovyengine.core.client.editor.windows.MetricsWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
+import io.github.luckymcdev.groovyengine.core.config.Config;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -78,11 +79,11 @@ public class ImGuiRenderer {
 
         ImGuiImpl.draw(io -> {
             boolean isImGuiEnabled = GroovyEngineEditor.getEditorState() == EditorState.ENABLED;
+            boolean isConfigEnabled = Config.IN_DEV.get();
 
-            if (isImGuiEnabled) {
+            if (isImGuiEnabled && isConfigEnabled) {
                 setupDockingAndMainWindow();
                 renderMainMenuBar();
-
                 WindowManager.renderAllWindows(io);
             }
         });
