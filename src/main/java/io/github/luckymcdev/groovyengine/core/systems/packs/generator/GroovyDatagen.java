@@ -24,7 +24,6 @@ import io.github.luckymcdev.groovyengine.core.systems.packs.generator.block.Auto
 import io.github.luckymcdev.groovyengine.core.systems.packs.generator.item.AutoItemModelProvider;
 import io.github.luckymcdev.groovyengine.core.systems.packs.generator.item.AutoItemTagProvider;
 import io.github.luckymcdev.groovyengine.core.systems.packs.generator.recipe.AutoRecipeProvider;
-import io.github.luckymcdev.groovyengine.core.systems.packs.generator.unified.UnifiedDataProvider;
 import io.github.luckymcdev.groovyengine.core.systems.structure.FileConstants;
 import net.minecraft.SharedConstants;
 import net.minecraft.data.DataGenerator;
@@ -85,16 +84,5 @@ public class GroovyDatagen {
         INSTANCE.addItemTagsProvider(AutoItemTagProvider::new);
         INSTANCE.addItemModelProvider(AutoItemModelProvider::new);
         INSTANCE.addRecipeProvider(AutoRecipeProvider::new);
-    }
-
-
-    @Deprecated
-    public static void addUnified(UnifiedDataProvider provider) {
-        INSTANCE.addBlockStateProvider(provider::createBlockStateProvider);
-        INSTANCE.addBlockTagsProvider(provider::createBlockTagProvider);
-        INSTANCE.addLootTableProvider(provider::createBlockLootTableProvider);
-        INSTANCE.addItemTagsProvider(provider::createItemTagProvider);
-        INSTANCE.addItemModelProvider(provider::createItemModelProvider);
-        INSTANCE.addRecipeProvider(provider::createRecipeProvider);
     }
 }
