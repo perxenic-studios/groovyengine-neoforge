@@ -50,3 +50,4 @@ repo
 run/GroovyEngine/workspace/gradlew
 run/GroovyEngine/workspace/gradlew.bat
 /run/GroovyEngine/workspace/.idea
+/wiki/puml
