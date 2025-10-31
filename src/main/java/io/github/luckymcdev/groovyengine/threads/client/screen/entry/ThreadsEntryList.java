@@ -18,14 +18,18 @@ package io.github.luckymcdev.groovyengine.threads.client.screen.entry;
 
 import io.github.luckymcdev.groovyengine.threads.client.screen.ThreadsErrorScreen;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ThreadsEntryList extends ObjectSelectionList<ThreadsEntry> {
+    private final ThreadsErrorScreen parent;
+
     public ThreadsEntryList(ThreadsErrorScreen parent) {
         super(parent.getMinecraft(), parent.width, parent.height - 40, 35, 20);
+        this.parent = parent;
 
         for (ScriptErrors.ErrorEntry error : ScriptErrors.getErrors()) {
             this.addEntry(new ThreadsEntry(error));
@@ -53,5 +57,15 @@ public class ThreadsEntryList extends ObjectSelectionList<ThreadsEntry> {
     @Override
     public int getRowWidth() {
         return this.width - 15;
+    }
+
+    /**
+     * Render tooltip after the main render
+     */
+    public void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        ThreadsEntry hoveredEntry = this.getEntryAtPosition(mouseX, mouseY);
+        if (hoveredEntry != null) {
+            hoveredEntry.renderTooltip(guiGraphics, mouseX, mouseY);
+        }
     }
 }

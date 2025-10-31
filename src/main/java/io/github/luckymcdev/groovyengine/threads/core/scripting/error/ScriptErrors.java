@@ -36,10 +36,10 @@ public class ScriptErrors {
      *
      * @param scriptName  the name of the script that caused the error
      * @param message     a brief message describing the error
-     * @param description a detailed description of the error
+     * @param exception the exception of the error
      */
-    public static void addError(String scriptName, String message, String description) {
-        errors.add(new ErrorEntry(scriptName, message, description));
+    public static void addError(String scriptName, String message, Exception exception) {
+        errors.add(new ErrorEntry(scriptName, message, exception));
     }
 
     /**
@@ -113,8 +113,8 @@ public class ScriptErrors {
      *
      * @param scriptName  the name of the script where the error happened
      * @param message     the message of the error
-     * @param description the definition of the error
+     * @param exception the definition of the error
      */
-    public record ErrorEntry(String scriptName, String message, String description) {
+    public record ErrorEntry(String scriptName, String message, Exception exception) {
     }
 }

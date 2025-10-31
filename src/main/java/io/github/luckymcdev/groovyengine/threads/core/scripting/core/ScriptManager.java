@@ -117,7 +117,7 @@ public class ScriptManager {
             AttachmentManager.getInstance().getScriptAttachments(scriptPath.getFileName().toString()).forEach(scriptAttachment -> scriptAttachment.onScriptError(ex));
 
             String description = ScriptErrors.generateErrorDescription(ex);
-            ScriptErrors.addError(scriptPath.getFileName().toString(), ex.getMessage(), description);
+            ScriptErrors.addError(scriptPath.getFileName().toString(), ex.getMessage(), ex);
         }
     }
 

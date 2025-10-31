@@ -22,75 +22,121 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class ThreadsEntry extends ObjectSelectionList.Entry<ThreadsEntry> {
     private final ScriptErrors.ErrorEntry error;
+    private final List<FormattedCharSequence> tooltipLines = new ArrayList<>();
 
     public ThreadsEntry(ScriptErrors.ErrorEntry error) {
         this.error = error;
+        prepareTooltip();
     }
 
-    /**
-     * Renders the given entry in the ObjectSelectionList.
-     * This method is responsible for rendering the script name, error message, and fix description
-     * of the given script error.
-     *
-     * @param guiGraphics the GuiGraphics object to render to
-     * @param index       the index of the entry in the list
-     * @param y           the y position of the entry
-     * @param x           the x position of the entry
-     * @param width       the width of the entry
-     * @param height      the height of the entry
-     * @param mouseX      the x position of the mouse
-     * @param mouseY      the y position of the mouse
-     * @param hovered     whether the entry is currently hovered
-     * @param partialTick the partial tick of the render
-     */
+    private void prepareTooltip() {
+        Font font = Minecraft.getInstance().font;
+        int maxTooltipWidth = 700; // Reasonable max width for tooltips
+
+        // Script name
+        addWrappedText(font, "§cScript: " + error.scriptName(), maxTooltipWidth);
+        addWrappedText(font, "", maxTooltipWidth);
+
+        // Error message
+        addWrappedText(font, "§6Message:", maxTooltipWidth);
+        String message = error.exception().getMessage();
+        if (message != null && !message.isEmpty()) {
+            addWrappedText(font, "§e" + message, maxTooltipWidth);
+        } else {
+            addWrappedText(font, "§eNo message provided", maxTooltipWidth);
+        }
+        addWrappedText(font, "", maxTooltipWidth);
+
+        // Error type
+        addWrappedText(font, "§6Exception Type:", maxTooltipWidth);
+        addWrappedText(font, "§e" + error.exception().getClass().getSimpleName(), maxTooltipWidth);
+        addWrappedText(font, "", maxTooltipWidth);
+
+        // Human-readable description
+        String description = ScriptErrors.generateErrorDescription(error.exception());
+        addWrappedText(font, "§6Description:", maxTooltipWidth);
+        addWrappedText(font, "§a" + description, maxTooltipWidth);
+        addWrappedText(font, "", maxTooltipWidth);
+
+        // Stack trace (first few lines)
+        addWrappedText(font, "§6Stack Trace:", maxTooltipWidth);
+        String stackTrace = getStackTrace(error.exception());
+        String[] stackLines = stackTrace.split("\n");
+        for (int i = 0; i < Math.min(6, stackLines.length); i++) {
+            addWrappedText(font, "§7" + stackLines[i].trim(), maxTooltipWidth);
+        }
+        if (stackLines.length > 6) {
+            addWrappedText(font, "§7... and " + (stackLines.length - 6) + " more lines", maxTooltipWidth);
+        }
+    }
+
+    private void addWrappedText(Font font, String text, int maxWidth) {
+        if (text.isEmpty()) {
+            // Add empty line
+            tooltipLines.add(FormattedCharSequence.EMPTY);
+        } else {
+            // Split the text into multiple lines if needed
+            List<FormattedCharSequence> lines = font.split(Component.literal(text), maxWidth);
+            tooltipLines.addAll(lines);
+        }
+    }
+
     @Override
     public void render(GuiGraphics guiGraphics, int index, int y, int x, int width, int height,
                        int mouseX, int mouseY, boolean hovered, float partialTick) {
         Font font = Minecraft.getInstance().font;
-        int textWidth = width - 10;
-        int lineHeight = 12;
-        int currentY = y;
+        int maxWidth = width - 10;
 
+        // Script name
         String scriptText = "Script: " + error.scriptName();
-        if (font.width(scriptText) > textWidth) {
-            scriptText = font.plainSubstrByWidth(scriptText, textWidth - font.width("...")) + "...";
+        if (font.width(scriptText) > maxWidth) {
+            scriptText = font.plainSubstrByWidth(scriptText, maxWidth - font.width("...")) + "...";
         }
-        guiGraphics.drawString(font, scriptText, x + 5, currentY, 0xFFFF5555, false);
-        currentY += lineHeight;
+        guiGraphics.drawString(font, scriptText, x + 5, y + 2, 0xFFFF5555, false);
 
-        String messageText = "Message: " + error.message();
-        var messageLines = font.split(Component.literal(messageText), textWidth);
-        for (var line : messageLines) {
-            if (currentY + lineHeight > y + height) break; // Don't go beyond entry bounds
-            guiGraphics.drawString(font, line, x + 5, currentY, 0xFFFFFFFF, false);
-            currentY += lineHeight;
+        // Error message preview
+        String message = error.exception().getMessage();
+        if (message != null && !message.isEmpty()) {
+            String previewText = font.plainSubstrByWidth(message, maxWidth - font.width("...")) + "...";
+            guiGraphics.drawString(font, previewText, x + 5, y + 12, 0xFFFFFFAA, false);
+        } else {
+            guiGraphics.drawString(font, "No error message", x + 5, y + 12, 0xFFAAAAAA, false);
         }
 
-        String descText = "Fix: " + error.description();
-        var descLines = font.split(Component.literal(descText), textWidth);
-        for (var line : descLines) {
-            if (currentY + lineHeight > y + height) break; // Don't go beyond entry bounds
-            guiGraphics.drawString(font, line, x + 5, currentY, 0xFFAAAAAA, false);
-            currentY += lineHeight;
+        // Render hover effect
+        if (hovered) {
+            guiGraphics.fill(x, y, x + width, y + height, 0x20FFFFFF);
         }
     }
 
     /**
-     * Gets the narration for the entry, which is used to describe the entry to screen readers.
-     * <p>
-     * The narration is a short description of the entry that is read out to screen readers.
-     * <p>
-     * In this case, the narration is "Error in script {scriptName}", where {scriptName} is the name of the script
-     * that the error occurred in.
-     *
-     * @return the narration for the entry
+     * Render the tooltip when hovered
      */
+    public void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        if (!tooltipLines.isEmpty()) {
+            guiGraphics.renderTooltip(Minecraft.getInstance().font, tooltipLines, mouseX, mouseY);
+        }
+    }
+
+    private String getStackTrace(Exception ex) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        ex.printStackTrace(pw);
+        return sw.toString();
+    }
+
     @Override
     public Component getNarration() {
         return Component.literal("Error in script " + error.scriptName());

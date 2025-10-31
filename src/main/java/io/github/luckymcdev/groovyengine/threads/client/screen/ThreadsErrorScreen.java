@@ -17,6 +17,7 @@
 package io.github.luckymcdev.groovyengine.threads.client.screen;
 
 import io.github.luckymcdev.groovyengine.threads.client.screen.entry.ThreadsEntryList;
+import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ErrorScreen;
@@ -27,12 +28,14 @@ import net.neoforged.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class ThreadsErrorScreen extends ErrorScreen {
     private ThreadsEntryList entryList;
+    private final Component subtitle;
 
     public ThreadsErrorScreen() {
         super(
                 Component.literal("Script Errors Detected"),
-                Component.literal("Details are shown below")
+                Component.literal("Hover over errors for details")
         );
+        this.subtitle = Component.literal("Hover over errors for details");
     }
 
     /**
@@ -48,24 +51,21 @@ public class ThreadsErrorScreen extends ErrorScreen {
         this.addWidget(entryList);
         this.setFocused(entryList);
 
+        // Add clear errors button
         this.addRenderableWidget(
-                Button.builder(Component.literal("Close"), b -> this.minecraft.close())
-                        .bounds(this.width / 2 - 50, this.height - 24, 100, 20)
+                Button.builder(Component.literal("Clear Errors"), b -> {
+                            ScriptErrors.clear();
+                            this.minecraft.setScreen(null);
+                        })
+                        .bounds(this.width / 2 - 155, this.height - 24, 100, 20)
                         .build()
         );
-    }
 
-    /**
-     * Handles a key press event.
-     *
-     * @param keyCode   the key code of the key that was pressed
-     * @param scanCode  the scan code of the key that was pressed
-     * @param modifiers the modifier keys that were pressed
-     * @return whether the key press event was handled
-     */
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return false;
+        this.addRenderableWidget(
+                Button.builder(Component.literal("Close"), b -> this.minecraft.close())
+                        .bounds(this.width / 2 + 55, this.height - 24, 100, 20)
+                        .build()
+        );
     }
 
     /**
@@ -81,9 +81,13 @@ public class ThreadsErrorScreen extends ErrorScreen {
         this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 10, 0xFF5555);
+        guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 22, 0xFFFFFF);
 
         // render custom entries
         this.entryList.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        // render tooltip after everything else
+        this.entryList.renderTooltip(guiGraphics, mouseX, mouseY);
 
         // render buttons
         for (var widget : this.renderables) {
@@ -91,5 +95,5 @@ public class ThreadsErrorScreen extends ErrorScreen {
         }
     }
 
-}
 
+}
