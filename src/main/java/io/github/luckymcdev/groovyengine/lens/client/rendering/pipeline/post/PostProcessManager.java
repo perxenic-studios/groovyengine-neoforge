@@ -17,7 +17,6 @@
 package io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.perxenic.acidapi.api.guardian.Api;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -55,7 +54,6 @@ public class PostProcessManager {
      *
      * Add an {@link PostProcessShader} for a specific rendering stage
      */
-    @Api(status = Api.Status.EXPERIMENTAL)
     public static void addStageInstance(Stage stage, PostProcessShader instance) {
         stageInstances.computeIfAbsent(stage, k -> new ArrayList<>()).add(instance);
     }

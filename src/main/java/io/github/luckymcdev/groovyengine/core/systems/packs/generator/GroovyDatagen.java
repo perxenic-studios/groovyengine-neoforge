@@ -16,7 +16,6 @@
 
 package io.github.luckymcdev.groovyengine.core.systems.packs.generator;
 
-import dev.perxenic.acidapi.api.datagen.DataGeneratorHelper;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.core.systems.packs.generator.block.AutoBlockLootTableProvider;
 import io.github.luckymcdev.groovyengine.core.systems.packs.generator.block.AutoBlockStateProvider;

@@ -16,13 +16,15 @@
 
 package io.github.luckymcdev.groovyengine.core.systems.packs.generator.block;
 
-import dev.perxenic.acidapi.api.datagen.AcidBlockStateProvider;
 import net.minecraft.data.PackOutput;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredBlock;
 
 import static io.github.luckymcdev.groovyengine.GE.MODID;
 
-public class AutoBlockStateProvider extends AcidBlockStateProvider {
+public class AutoBlockStateProvider extends BlockStateProvider {
+
     public AutoBlockStateProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, MODID, existingFileHelper);
     }
@@ -30,5 +32,9 @@ public class AutoBlockStateProvider extends AcidBlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
 
+    }
+
+    public void defaultBlockWithItem(DeferredBlock<?> deferredBlock) {
+        simpleBlockWithItem(deferredBlock.get(), cubeAll(deferredBlock.get()));
     }
 }

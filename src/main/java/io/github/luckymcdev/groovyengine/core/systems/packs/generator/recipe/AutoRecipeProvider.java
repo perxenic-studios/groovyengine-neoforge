@@ -18,16 +18,16 @@ package io.github.luckymcdev.groovyengine.core.systems.packs.generator.recipe;
 
 
 import de.groovyengine.IAttachmentManager;
-import dev.perxenic.acidapi.api.datagen.AcidRecipeProvider;
-import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public class AutoRecipeProvider extends AcidRecipeProvider {
+public class AutoRecipeProvider extends RecipeProvider {
+
     public AutoRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries);
     }

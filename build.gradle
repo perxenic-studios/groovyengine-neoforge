@@ -194,8 +194,6 @@ dependencies {
     client2AdditionalRuntimeClasspath "io.github.spair:imgui-java-natives-macos:${imgui_version}"
 
     additionalRuntimeClasspath (groovyLibs)
-
-    implementation fileTree(dir: 'libs/acidapi', include: 'acidapi-neoforge-0.4.0.jar')
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
