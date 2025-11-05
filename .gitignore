@@ -26,7 +26,6 @@ run/GroovyEngine/*
 runs
 run-data
 
-repo
 /run/GroovyEngine/src/main/resources/.cache
 /logs
 /run/GroovyEngine/gradlew

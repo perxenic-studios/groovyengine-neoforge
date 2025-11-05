@@ -18,7 +18,6 @@ package io.github.luckymcdev.groovyengine.threads.core.scripting.core;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 import io.github.luckymcdev.groovyengine.GE;
-import io.github.luckymcdev.groovyengine.core.systems.structure.FileConstants;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.global.ScriptAttachment;
 import io.github.luckymcdev.groovyengine.threads.core.scripting.error.ScriptErrors;
@@ -27,7 +26,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,13 +42,13 @@ public class ScriptManager {
 
     public static void initialize() {
         GE.THREADS_LOG.info("Initializing script manager");
-        shell = ScriptShellFactory.createSharedShell();
+        shell = ScriptShellFactory.geSharedShell();
         loadAllScripts();
     }
 
     public static void reloadScripts() {
         GE.THREADS_LOG.info("Reloading scripts");
-        shell = ScriptShellFactory.createSharedShell();
+        shell = ScriptShellFactory.geSharedShell();
         loadAllScripts();
     }
 

@@ -16,6 +16,7 @@
 
 package io.github.luckymcdev.groovyengine.threads.core.scripting.event;
 
+import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import net.neoforged.bus.api.Event;
 
@@ -24,6 +25,10 @@ public abstract class ScriptEvent extends Event {
 
     public ScriptEvent(GroovyShell shell) {
         this.shell = shell;
+    }
+
+    public ScriptEvent(Binding binding) {
+        this.shell = new GroovyShell(binding);
     }
 
     /**
@@ -62,8 +67,8 @@ public abstract class ScriptEvent extends Event {
     }
 
     public static class BindingSetupEvent extends ScriptEvent {
-        public BindingSetupEvent(GroovyShell shell) {
-            super(shell);
+        public BindingSetupEvent(Binding binding) {
+            super(binding);
         }
     }
 }

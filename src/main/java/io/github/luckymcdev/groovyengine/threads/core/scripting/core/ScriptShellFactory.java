@@ -29,6 +29,12 @@ import org.codehaus.groovy.control.customizers.SecureASTCustomizer;
 import java.util.List;
 
 public class ScriptShellFactory {
+    private static final GroovyShell SHELL = new GroovyShell(
+            createClassLoader(),
+            createBinding(),
+            createCompilerConfig()
+    );
+
     public static GroovyClassLoader createClassLoader() {
         return new GroovyClassLoader(ScriptShellFactory.class.getClassLoader());
     }
@@ -36,7 +42,7 @@ public class ScriptShellFactory {
     /**
      * Creates a binding for use in a Groovy shell.
      * <p>
-     * The binding contains a single variable, "logger", which is set to
+     * The binding contains a single variable, "Logger", which is set to
      * {@link io.github.luckymcdev.groovyengine.GE#SCRIPT_LOG}.
      * <p>
      * After creating the binding, a {@link ScriptEvent.BindingSetupEvent} is fired
@@ -46,7 +52,7 @@ public class ScriptShellFactory {
      */
     public static Binding createBinding() {
         Binding binding = new Binding();
-        binding.setVariable("logger", GE.SCRIPT_LOG);
+        binding.setVariable("Logger", GE.SCRIPT_LOG);
 
         // Fire event to allow other mods to add their own bindings
         GroovyShell tempShell = new GroovyShell(createClassLoader(), binding);
@@ -90,12 +96,8 @@ public class ScriptShellFactory {
      *
      * @return the created shared Groovy shell
      */
-    public static GroovyShell createSharedShell() {
+    public static GroovyShell geSharedShell() {
         GE.THREADS_LOG.info("Creating shared Groovy shell");
-        return new GroovyShell(
-                createClassLoader(),
-                createBinding(),
-                createCompilerConfig()
-        );
+        return SHELL;
     }
 }
