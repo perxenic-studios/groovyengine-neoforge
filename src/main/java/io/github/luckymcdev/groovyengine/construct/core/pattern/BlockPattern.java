@@ -16,6 +16,7 @@
 
 package io.github.luckymcdev.groovyengine.construct.core.pattern;
 
+import io.github.luckymcdev.groovyengine.GE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -254,6 +255,12 @@ public interface BlockPattern {
         private final List<WeightedBlock> weightedBlocks;
         private final float totalWeight;
 
+        private void checkWeightTotalTo100() {
+            if (Math.abs(this.totalWeight - 100.0f) > 0.001f) {
+                GE.CONSTRUCT_LOG.info("Weights sum to %f, normalizing to 100%", this.totalWeight);
+            }
+        }
+
         public WeightedPattern(Object... blocks) {
             if (blocks.length % 2 != 0) {
                 throw new IllegalArgumentException("Must provide pairs of BlockState and weight");
@@ -282,9 +289,7 @@ public interface BlockPattern {
 
             this.totalWeight = sum;
 
-            if (Math.abs(totalWeight - 100.0f) > 0.001f) {
-                System.out.println("Weights sum to " + totalWeight + ", normalizing to 100%");
-            }
+            checkWeightTotalTo100();
         }
 
         public WeightedPattern(Map<BlockState, Float> blockWeights) {
@@ -301,9 +306,7 @@ public interface BlockPattern {
 
             this.totalWeight = sum;
 
-            if (Math.abs(totalWeight - 100.0f) > 0.001f) {
-                System.out.println("Weights sum to " + totalWeight + ", normalizing to 100%");
-            }
+            checkWeightTotalTo100();
         }
 
         /**

@@ -19,6 +19,7 @@ package io.github.luckymcdev.groovyengine.construct;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.construct.client.editor.ConstructChanges;
 import io.github.luckymcdev.groovyengine.construct.client.editor.ConstructEditorWindow;
+import io.github.luckymcdev.groovyengine.construct.registry.ConstructRegistry;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.WindowManager;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.core.systems.module.Module;
@@ -38,6 +39,8 @@ public class ConstructModule implements Module {
     public void init(IEventBus modEventBus) {
         // Construct initialization code here
         GE.CONSTRUCT_LOG.info("Construct Initialization");
+
+        ConstructRegistry.register(modEventBus);
     }
 
     /**

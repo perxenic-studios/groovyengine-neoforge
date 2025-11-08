@@ -19,6 +19,7 @@ package io.github.luckymcdev.groovyengine.construct.client.editor;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.type.ImBoolean;
+import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.construct.client.movement.MovementController;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
@@ -118,21 +119,21 @@ public class ConstructChanges extends EditorWindow {
         ImGe.title(ImIcons.WIDGETS.get() + " Building Settings");
 
         // Block Updates Toggle
-        ImGe.checkbox(ImIcons.BLOCK.get() + " Block Updates", blockUpdatesEnabled, () -> {
-            System.out.println("Block updates: " + blockUpdatesEnabled.get());
-        });
+        ImGe.checkbox(ImIcons.BLOCK.get() + " Block Updates", blockUpdatesEnabled, () ->
+            GE.CONSTRUCT_LOG.info("Block updates: " + blockUpdatesEnabled.get())
+        );
         ImGe.helpMarker("Disable block updates when placing blocks. This can significantly improve performance during large-scale building operations but may cause rendering issues with blocks that depend on updates (like redstone).");
 
         // Instant Placement Toggle
-        ImGe.checkbox(ImIcons.ADD.get() + " Instant Placement", instantPlacement, () -> {
-            System.out.println("Instant placement: " + instantPlacement.get());
-        });
+        ImGe.checkbox(ImIcons.ADD.get() + " Instant Placement", instantPlacement, () ->
+                GE.CONSTRUCT_LOG.info("Instant placement: " + instantPlacement.get())
+        );
         ImGe.helpMarker("Allows placing multiple blocks simultaneously without delay. Useful for fast construction but may feel less vanilla.");
 
         // Extended Reach Toggle
-        ImGe.checkbox(ImIcons.ARROW_RIGHT.get() + " Extended Reach", extendedReach, () -> {
-            System.out.println("Extended reach: " + extendedReach.get());
-        });
+        ImGe.checkbox(ImIcons.ARROW_RIGHT.get() + " Extended Reach", extendedReach, () ->
+                GE.CONSTRUCT_LOG.info("Extended reach: " + extendedReach.get())
+        );
         ImGe.helpMarker("Extends block interaction range from 3 blocks to 10 blocks. Useful for building tall structures or making precise placements from a distance. May affect PvP balance if enabled in multiplayer.");
     }
 
@@ -154,7 +155,7 @@ public class ConstructChanges extends EditorWindow {
             player.setData(ModAttachmentTypes.FLY_SPEED, flySpeedDecimal);
 
             // Optional: Add visual feedback or logging
-            System.out.println("Fly speed updated to: " + flySpeedInt[0] + "%");
+            GE.CONSTRUCT_LOG.info("Fly speed updated to: " + flySpeedInt[0] + "%");
         }
         ImGe.helpMarker("Controls flight movement speed as a percentage of maximum. 0% = No movement, 100% = Maximum flight speed. Adjust for precise building control or fast travel.");
     }

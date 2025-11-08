@@ -26,14 +26,17 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-@EventBusSubscriber(value = Dist.CLIENT)
-@OnlyIn(Dist.CLIENT)
+
 /**
  * Handles flying movement modifications.
  * This class is responsible for updating the player's flying speed
  * and applying custom flying behavior when the flying changes toggle is enabled.
  */
+@EventBusSubscriber(value = Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class MovementController {
+
+    private MovementController() {}
 
     /**
      * Whether custom flying behavior is enabled.

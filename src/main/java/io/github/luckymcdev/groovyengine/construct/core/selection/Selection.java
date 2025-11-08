@@ -16,6 +16,7 @@
 
 package io.github.luckymcdev.groovyengine.construct.core.selection;
 
+import io.github.luckymcdev.groovyengine.GE;
 import net.minecraft.core.BlockPos;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -174,7 +175,7 @@ public class Selection {
 
         // Ensure selection doesn't invert
         if (newMinX > newMaxX || newMinY > newMaxY || newMinZ > newMaxZ) {
-            System.out.println("Cannot contract selection: would become invalid");
+            GE.CONSTRUCT_LOG.info("Cannot contract selection: would become invalid");
             return;
         }
 

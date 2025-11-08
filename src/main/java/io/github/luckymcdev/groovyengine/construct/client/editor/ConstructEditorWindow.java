@@ -19,6 +19,7 @@ package io.github.luckymcdev.groovyengine.construct.client.editor;
 import imgui.ImGuiIO;
 import imgui.type.ImInt;
 import imgui.type.ImString;
+import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.construct.client.rendering.SelectionRenderer;
 import io.github.luckymcdev.groovyengine.construct.core.history.HistoryManager;
 import io.github.luckymcdev.groovyengine.construct.core.pattern.BlockPattern;
@@ -52,8 +53,6 @@ public class ConstructEditorWindow extends EditorWindow {
     private final HistoryManager historyManager = new HistoryManager();
     // UI State
     private final ImString blockIdInput = new ImString("minecraft:stone", 256);
-    private final ImInt blocksPerTick = new ImInt(blockPlacer.getBlocksPerTick());
-    private final ImInt updatesPerTick = new ImInt(blockPlacer.getUpdatesPerTick());
     private final ImString pos1Display = new ImString("Not set", 50);
     private final ImString pos2Display = new ImString("Not set", 50);
     // Pattern controls
@@ -195,6 +194,9 @@ public class ConstructEditorWindow extends EditorWindow {
                     if (ImGe.button("Create Cylinder")) createCylinder();
                     ImGe.helpMarker("Creates a vertical cylinder between Pos1 and Pos2");
                     break;
+                default:
+                    ImGe.text("Not a valid Shape Type.");
+                    break;
             }
         }
     }
@@ -213,17 +215,6 @@ public class ConstructEditorWindow extends EditorWindow {
 
             if (ImGe.button("Replace Blocks")) replaceBlocks();
             ImGe.helpMarker("Replace primary block with secondary block in selection");
-
-            /*
-            ImGe.separator();
-
-            if (ImGe.sliderInt("Blocks/Tick", blocksPerTick.getData(), 1, 100_000)) {
-                blockPlacer.setBlocksPerTick(blocksPerTick.get());
-            }
-            if (ImGe.sliderInt("Updates/Tick", updatesPerTick.getData(), 0, 50_000)) {
-                blockPlacer.setUpdatesPerTick(updatesPerTick.get());
-            }
-             */
         }
     }
 
@@ -270,7 +261,7 @@ public class ConstructEditorWindow extends EditorWindow {
             ImGe.text("Updates/Tick: " + blockPlacer.getUpdatesPerTick());
             ImGe.text("FPS: " + Minecraft.getInstance().getFps());
 
-            if (ImGe.button("Clear Queue")) blockPlacer.clearQueues();
+            ImGe.button("Clear Queue", blockPlacer::clearQueues);
         }
     }
 
@@ -585,13 +576,13 @@ public class ConstructEditorWindow extends EditorWindow {
             if (loc == null) throw new IllegalArgumentException("Invalid block ID");
 
             var block = BuiltInRegistries.BLOCK.get(loc);
-            if (block == null || (block == Blocks.AIR && !blockId.equals("minecraft:air"))) {
+            if (block == Blocks.AIR && !blockId.equals("minecraft:air")) {
                 System.out.println("Block not found: " + blockId);
                 return null;
             }
             return block;
         } catch (Exception e) {
-            System.out.println("Error parsing block ID: " + e.getMessage());
+            GE.CONSTRUCT_LOG.info("Error parsing block ID: " + e.getMessage());
             return null;
         }
     }

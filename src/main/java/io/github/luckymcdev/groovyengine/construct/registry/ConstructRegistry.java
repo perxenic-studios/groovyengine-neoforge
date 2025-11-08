@@ -23,6 +23,9 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ConstructRegistry {
+
+    private ConstructRegistry() {}
+
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(GE.MODID);
 
     public static final DeferredItem<Item> BRUSH = ITEMS.registerSimpleItem("brush");

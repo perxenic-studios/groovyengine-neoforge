@@ -55,8 +55,7 @@ public class ScriptShellFactory {
         binding.setVariable("Logger", GE.SCRIPT_LOG);
 
         // Fire event to allow other mods to add their own bindings
-        GroovyShell tempShell = new GroovyShell(createClassLoader(), binding);
-        NeoForge.EVENT_BUS.post(new ScriptEvent.BindingSetupEvent(tempShell));
+        NeoForge.EVENT_BUS.post(new ScriptEvent.BindingSetupEvent(binding));
 
         return binding;
     }

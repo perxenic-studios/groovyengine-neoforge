@@ -16,6 +16,7 @@
 
 package io.github.luckymcdev.groovyengine.construct.core.history;
 
+import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.construct.core.placement.AsyncBlockPlacer;
 import io.github.luckymcdev.groovyengine.construct.core.selection.Selection;
 import net.minecraft.client.Minecraft;
@@ -54,7 +55,7 @@ public class HistoryManager {
 
         // Limit snapshot size to prevent memory issues
         if (positions.size() > MAX_SNAPSHOT_SIZE) {
-            System.out.println("Warning: Selection too large for undo (" + positions.size() + " blocks). Undo disabled for this operation.");
+            GE.CONSTRUCT_LOG.info("Warning: Selection too large for undo (" + positions.size() + " blocks). Undo disabled for this operation.");
             return;
         }
 
@@ -74,7 +75,7 @@ public class HistoryManager {
             undoStack.removeLast();
         }
 
-        System.out.println("Saved state: " + blockStates.size() + " blocks");
+        GE.CONSTRUCT_LOG.info("Saved state: " + blockStates.size() + " blocks");
     }
 
     /**
@@ -94,7 +95,7 @@ public class HistoryManager {
         // Restore previous state
         restoreSnapshot(snapshot, blockPlacer);
 
-        System.out.println("Undo: Restored " + snapshot.getBlockStates().size() + " blocks");
+        GE.CONSTRUCT_LOG.info("Undo: Restored " + snapshot.getBlockStates().size() + " blocks");
     }
 
     /**
@@ -114,7 +115,7 @@ public class HistoryManager {
         // Restore redo state
         restoreSnapshot(snapshot, blockPlacer);
 
-        System.out.println("Redo: Restored " + snapshot.getBlockStates().size() + " blocks");
+        GE.CONSTRUCT_LOG.info("Redo: Restored " + snapshot.getBlockStates().size() + " blocks");
     }
 
     /**
@@ -167,7 +168,7 @@ public class HistoryManager {
     public void clearHistory() {
         undoStack.clear();
         redoStack.clear();
-        System.out.println("History cleared");
+        GE.CONSTRUCT_LOG.info("History cleared");
     }
 
 

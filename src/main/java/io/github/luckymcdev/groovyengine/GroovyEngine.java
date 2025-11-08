@@ -101,7 +101,6 @@ public class GroovyEngine {
      */
     private void setupRegistries(IEventBus modEventBus) {
         ModRegistry.register(modEventBus);
-        ConstructRegistry.register(modEventBus);
     }
 
     /**

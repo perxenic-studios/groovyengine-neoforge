@@ -20,6 +20,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.material.Material;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -68,7 +69,7 @@ public class AmoModel extends ObjModel {
         ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(modID, "obj/" + fileName + ".amo");
         Optional<Resource> resourceO = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
         if (resourceO.isEmpty()) {
-            throw new RuntimeException("Resource not found: " + resourceLocation);
+            throw new ResourceLocationException("Resource not found: " + resourceLocation);
         }
         Resource resource = resourceO.get();
         try {
@@ -157,7 +158,7 @@ public class AmoModel extends ObjModel {
         }
 
         List<AmoObject> amoObjects = objects.values().stream()
-                .filter(o -> o instanceof AmoObject)
+                .filter(AmoObject.class::isInstance)
                 .map(o -> (AmoObject) o)
                 .toList();
 

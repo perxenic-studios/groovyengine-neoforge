@@ -39,6 +39,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Asynchronous block placement thingiemajig
+ *
+ *
+ *
+ * TODO: Create a new second class, which handles the static event context, so that no singleton ABP is needed.
  */
 @EventBusSubscriber(value = Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
@@ -47,10 +51,10 @@ public class AsyncBlockPlacer {
     private final Queue<PlacementTask> immediatePlacementQueue = new ConcurrentLinkedQueue<>();
     private final Queue<PlacementTask> delayedUpdateQueue = new ConcurrentLinkedQueue<>();
     private final Random random = new Random();
-    private final int maxBlocksPerTick = 100000;
-    private final int fpsThreshold = 45;
-    private final int adjustmentInterval = 5;
-    private final int blocksPerTickIncrement = 250;
+    private static final int MAX_BLOCKS_PER_TICK = 100000;
+    private static final int FPS_THRESHOLD = 45;
+    private static final int ADJUSTMENT_INTERVAL = 5;
+    private static final int BLOCKS_PER_TICK_INCREMENT = 250;
     private int blocksPerTick = 1000;
     private int updatesPerTick = blocksPerTick / 2;
     private int tickCounter = 0;
@@ -83,7 +87,7 @@ public class AsyncBlockPlacer {
         if (INSTANCE.immediatePlacementQueue.isEmpty() && INSTANCE.delayedUpdateQueue.isEmpty()) return;
 
         INSTANCE.tickCounter++;
-        if (INSTANCE.immediatePlacementQueue.size() > 10000 && INSTANCE.tickCounter % INSTANCE.adjustmentInterval == 0) {
+        if (INSTANCE.immediatePlacementQueue.size() > 10000 && INSTANCE.tickCounter % ADJUSTMENT_INTERVAL == 0) {
             INSTANCE.adjustPerformanceParameters();
         }
 
@@ -339,7 +343,6 @@ public class AsyncBlockPlacer {
         if (level == null) return;
 
         Set<BlockPos> positions = selection.getSelectedBlocks();
-        BlockState targetState = targetBlock.defaultBlockState();
         BlockState replacementState = replacementBlock.defaultBlockState();
 
         for (BlockPos pos : positions) {
@@ -392,10 +395,10 @@ public class AsyncBlockPlacer {
      */
     private void adjustPerformanceParameters() {
         int currentFps = Minecraft.getInstance().getFps();
-        if (currentFps >= fpsThreshold) {
-            blocksPerTick = Math.min(blocksPerTick + blocksPerTickIncrement, maxBlocksPerTick);
+        if (currentFps >= FPS_THRESHOLD) {
+            blocksPerTick = Math.min(blocksPerTick + BLOCKS_PER_TICK_INCREMENT, MAX_BLOCKS_PER_TICK);
         } else {
-            blocksPerTick = Math.max(blocksPerTick - blocksPerTickIncrement, 1000);
+            blocksPerTick = Math.max(blocksPerTick - BLOCKS_PER_TICK_INCREMENT, 1000);
         }
         updatesPerTick = Math.max(1, blocksPerTick / 2);
     }

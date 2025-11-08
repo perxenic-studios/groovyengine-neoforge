@@ -30,6 +30,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Face for animated models with joint-influenced vertices.
@@ -38,7 +39,7 @@ public class AmoFace extends Face {
     private final List<AmoVertex> amoVertices;
 
     public AmoFace(List<AmoVertex> vertices) {
-        super(vertices.stream().map(AmoVertex::toVertex).collect(Collectors.toList()));
+        super(vertices.stream().map(AmoVertex::toVertex).toList());
         this.amoVertices = vertices;
     }
 
@@ -56,12 +57,13 @@ public class AmoFace extends Face {
 
         int vertexCount = amoVertices.size();
 
-        if (vertexCount == 4) {
-            renderQuadAnimated(poseStack, buffer, packedLight, joints);
-        } else if (vertexCount == 3) {
-            renderTriangleAnimated(poseStack, buffer, packedLight, joints);
-        } else {
-            throw new RuntimeException("Face has invalid number of vertices. Supported vertex counts are 3 and 4.");
+        switch(vertexCount) {
+            case 4:
+                renderQuadAnimated(poseStack, buffer, packedLight, joints);
+                break;
+            case 3:
+                renderTriangleAnimated(poseStack, buffer, packedLight, joints);
+                break;
         }
     }
 
