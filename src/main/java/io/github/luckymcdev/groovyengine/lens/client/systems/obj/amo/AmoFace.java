@@ -29,8 +29,6 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Face for animated models with joint-influenced vertices.
@@ -63,6 +61,8 @@ public class AmoFace extends Face {
                 break;
             case 3:
                 renderTriangleAnimated(poseStack, buffer, packedLight, joints);
+                break;
+            default:
                 break;
         }
     }

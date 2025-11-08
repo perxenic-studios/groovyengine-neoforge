@@ -32,7 +32,6 @@ import io.github.luckymcdev.groovyengine.lens.client.rendering.util.PoseScope;
 import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
 import io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo.AmoModel;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.ChupacabraAnimations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -121,9 +120,6 @@ public class LensRendering {
 
         registerObjModel(chupacabraModel);
         registerObjModel(animatedModel);
-
-        // Initialize animations
-        ChupacabraAnimations.initialize(chupacabraModel);
     }
 
     /**

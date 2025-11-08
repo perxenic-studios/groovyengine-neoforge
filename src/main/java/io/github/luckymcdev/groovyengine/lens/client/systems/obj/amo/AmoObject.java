@@ -74,11 +74,9 @@ public class AmoObject extends ObjObject {
         poseStack.scale(getScale().x, getScale().y, getScale().z);
 
         // Render each face with joint animation
-        int facesRendered = 0;
         for (AmoFace face : amoFaces) {
             try {
                 face.renderAnimated(poseStack, renderType, packedLight, joints);
-                facesRendered++;
             } catch (Exception e) {
                 GE.LENS_LOG.error("Error rendering AmoFace: {}", e.getMessage(), e);
             }

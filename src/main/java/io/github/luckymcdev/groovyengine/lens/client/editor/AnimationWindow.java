@@ -21,25 +21,18 @@ import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWi
 import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcons;
 import io.github.luckymcdev.groovyengine.lens.LensRendering;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.AnimationController;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.animation.ChupacabraAnimations;
 
 /**
  * Window to modify the Animations for Amo Model.
  */
 public class AnimationWindow extends EditorWindow {
 
-    {
-        this.setEnabled(false);
-    }
-
-    private final float[] animationSpeed = new float[]{1.0f};
-
     /**
      * Creates a new AnimationWindow.
      */
     public AnimationWindow() {
         super(ImIcons.ANIMATION.get() + " AnimationWindow");
+        this.setEnabled(false);
     }
 
     /**
@@ -52,8 +45,7 @@ public class AnimationWindow extends EditorWindow {
      */
     @Override
     public void render(ImGuiIO io) {
-        //renderChupacabraAnimationController(io);
-        renderAmoController(io);
+        renderAmoController();
     }
 
     /**
@@ -65,128 +57,13 @@ public class AnimationWindow extends EditorWindow {
      *
      * @param io the ImGuiIO to use for rendering
      */
-    private void renderAmoController(ImGuiIO io) {
+    private void renderAmoController() {
         ImGe.window(ImIcons.ANIMATION.get() + " Animation Controller", () -> {
             ImGe.button("Play animation", () -> LensRendering.animatedModel.playAnimation("rotate_x"));
 
             ImGe.button("Resume animation", LensRendering.animatedModel::resumeAnimation);
 
             ImGe.button("Stop animation", LensRendering.animatedModel::stopAnimation);
-        });
-    }
-
-    /**
-     * UNUSED / DEPRECATED
-     * <p>
-     * Renders the Chupacabra animation window.
-     * This method renders several sections: a section to adjust the speed of the Chupacabra animations, a section to display the current animation, a section for idle animations, a section for locomotion animations, a section for actions, and a section for playback controls.
-     * The speed section contains a slider to adjust the speed of the Chupacabra animations and a text display of the current speed.
-     * The current animation section displays the current animation and whether it is playing.
-     * The idle animations section contains buttons to play the idle animations: "Idle Breathing", "Idle Look Around", and "Idle Look Around".
-     * The locomotion animations section contains buttons to play the locomotion animations: "Walk", "Run".
-     * The actions section contains buttons to play the actions: "Attack Bite", "Howl", "Sniff", "Crouch", "Jump", "Tail Wag".
-     * The playback controls section contains buttons to pause, resume, stop, and reset the Chupacabra animations.
-     *
-     * @param io the ImGuiIO to use for rendering
-     */
-    private void renderChupacabraAnimationController(ImGuiIO io) {
-        ImGe.window(ImIcons.ANIMATION.get() + " Animation Controller", () -> {
-            ImGe.collapsingHeader("Chupacabra Animations", () -> {
-                AnimationController chupacabraController = ChupacabraAnimations.getController();
-
-                // Slider to adjust speed
-                if (ImGe.sliderFloat("Speed", animationSpeed, 0.0f, 2.0f)) {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                }
-
-                // Display current speed
-                ImGe.sameLine();
-                ImGe.text(String.format("%.2f", animationSpeed[0]));
-
-                ImGe.separator();
-
-                // Display current animation
-                String currentAnim = ChupacabraAnimations.getCurrentAnimationName();
-                ImGe.text("Current: " + (currentAnim != null ? currentAnim : "None"));
-                ImGe.text("Playing: " + ChupacabraAnimations.isPlaying());
-
-                ImGe.separator();
-                ImGe.text("Idle Animations");
-                ImGe.separator();
-
-                ImGe.button("Idle Breathing", () -> {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.IDLE_BREATHING);
-                });
-
-                ImGe.button("Idle Look Around", () -> {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.IDLE_LOOK_AROUND);
-                });
-
-                ImGe.separator();
-                ImGe.text("Locomotion");
-                ImGe.separator();
-
-                ImGe.button("Walk", () -> {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.WALK);
-                });
-
-                ImGe.button("Run", () -> {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.RUN);
-                });
-
-                ImGe.separator();
-                ImGe.text("Actions");
-                ImGe.separator();
-
-                ImGe.button("Attack Bite", () -> {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.ATTACK_BITE);
-                });
-
-                ImGe.button("Howl", () -> {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.HOWL);
-                });
-
-                ImGe.button("Sniff", () -> {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.SNIFF);
-                });
-
-                ImGe.button("Crouch", () -> {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.CROUCH);
-                });
-
-                ImGe.button("Jump", () -> {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.JUMP);
-                });
-
-                ImGe.button("Tail Wag", () -> {
-                    chupacabraController.setPlaybackSpeed(animationSpeed[0]);
-                    chupacabraController.play(ChupacabraAnimations.TAIL_WAG);
-                });
-
-                ImGe.separator();
-                ImGe.text("Playback Controls");
-                ImGe.separator();
-
-                ImGe.button("Pause", chupacabraController::pause);
-                ImGe.sameLine();
-
-                ImGe.button("Resume", chupacabraController::resume);
-                ImGe.sameLine();
-
-                ImGe.button("Stop", chupacabraController::stop);
-                ImGe.sameLine();
-
-                ImGe.button("Reset", chupacabraController::reset);
-            });
         });
     }
 }
