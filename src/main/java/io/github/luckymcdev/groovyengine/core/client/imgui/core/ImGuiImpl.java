@@ -25,6 +25,7 @@ import imgui.glfw.ImGuiImplGlfw;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.core.client.imgui.styles.ImGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
@@ -67,15 +68,20 @@ public class ImGuiImpl {
      *
      * @param resourceManager the resource manager
      */
-    public static void loadFonts(net.minecraft.server.packs.resources.ResourceManager resourceManager) {
+    public static void loadFonts(ResourceManager resourceManager) {
         GE.CORE_LOG.debug("Loading ImGui fonts...");
         final ImGuiIO io = ImGui.getIO();
         final ImFontAtlas fonts = io.getFonts();
 
+        // Build combined glyph ranges
         ImFontGlyphRangesBuilder builder = new ImFontGlyphRangesBuilder();
         builder.addRanges(fonts.getGlyphRangesDefault());    // Basic + Extended Latin
         builder.addRanges(fonts.getGlyphRangesCyrillic());   // Cyrillic characters
         short[] combinedGlyphRanges = builder.buildRanges();
+
+        // Important: Keep config objects alive until after fonts.build()
+        ImFontConfig fontConfig = null;
+        ImFontConfig iconConfig = null;
 
         try {
             // Load JetBrains Mono
@@ -88,12 +94,12 @@ public class ImGuiImpl {
                 }
 
                 if (fontData.length > 0) {
-                    ImFontConfig config = new ImFontConfig();
-                    config.setName("JetBrains Mono");
-                    config.setGlyphRanges(combinedGlyphRanges);
+                    fontConfig = new ImFontConfig();
+                    fontConfig.setName("JetBrains Mono");
+                    fontConfig.setGlyphRanges(combinedGlyphRanges);
+                    // Don't destroy config yet!
 
-                    defaultFont = fonts.addFontFromMemoryTTF(fontData, 16f, config);
-                    config.destroy();
+                    defaultFont = fonts.addFontFromMemoryTTF(fontData, 16f, fontConfig);
                     GE.CORE_LOG.debug("Loaded JetBrains Mono font ({} bytes)", fontData.length);
                 } else {
                     defaultFont = fonts.addFontDefault();
@@ -114,14 +120,14 @@ public class ImGuiImpl {
                 }
 
                 if (iconData.length > 0) {
-                    ImFontConfig iconConfig = new ImFontConfig();
+                    iconConfig = new ImFontConfig();
                     iconConfig.setMergeMode(true);
                     iconConfig.setPixelSnapH(true);
                     iconConfig.setName("Material Icons");
+                    // Don't destroy config yet!
 
                     short[] iconRanges = new short[]{(short) 0xE000, (short) 0xF8FF, 0};
                     fonts.addFontFromMemoryTTF(iconData, 16f, iconConfig, iconRanges);
-                    iconConfig.destroy();
                     GE.CORE_LOG.debug("Merged Material Icons font ({} bytes)", iconData.length);
                 } else {
                     GE.CORE_LOG.debug("Material Icons font is empty, skipping merge");
@@ -130,11 +136,25 @@ public class ImGuiImpl {
                 GE.CORE_LOG.debug("Material Icons font not found, skipping merge");
             }
 
-            fonts.build(); // build once after all fonts added
-        } catch (Exception e) {
-            GE.CORE_LOG.error("Failed to load fonts: {}", e.getMessage());
-            defaultFont = fonts.addFontDefault();
+            // Build the font atlas BEFORE destroying configs
             fonts.build();
+            GE.CORE_LOG.debug("Font atlas built successfully");
+
+        } catch (Exception e) {
+            GE.CORE_LOG.error("Failed to load fonts: {}", e.getMessage(), e);
+            // If we haven't set a default font yet, add one
+            if (defaultFont == null) {
+                defaultFont = fonts.addFontDefault();
+                fonts.build();
+            }
+        } finally {
+            // NOW it's safe to destroy configs after build() is complete
+            if (fontConfig != null) {
+                fontConfig.destroy();
+            }
+            if (iconConfig != null) {
+                iconConfig.destroy();
+            }
         }
     }
 
