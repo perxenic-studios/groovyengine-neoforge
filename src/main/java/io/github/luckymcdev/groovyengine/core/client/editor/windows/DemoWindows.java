@@ -17,6 +17,7 @@
 package io.github.luckymcdev.groovyengine.core.client.editor.windows;
 
 import imgui.ImGuiIO;
+import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.core.client.editor.core.window.EditorWindow;
 import io.github.luckymcdev.groovyengine.core.client.imgui.ImGe;
 import io.github.luckymcdev.groovyengine.core.client.imgui.icon.ImIcon;
@@ -28,6 +29,7 @@ import java.lang.reflect.Field;
 
 @OnlyIn(Dist.CLIENT)
 public class DemoWindows {
+    private DemoWindows() {}
 
     public static class AboutWindow extends EditorWindow {
         public AboutWindow() {
@@ -281,7 +283,7 @@ public class DemoWindows {
                         iconCount++;
                     }
                 } catch (Exception e) {
-                    System.err.println("Icon not found: " + iconName);
+                    GE.CONSTRUCT_LOG.error("Icon not found: " + iconName);
                 }
             }
 

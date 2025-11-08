@@ -175,4 +175,7 @@ public class ImIcons {
     public static final ImIcon CLICK = new ImIcon('\ue25d', "CLICK");
     public static final ImIcon SELECT_ALL = new ImIcon('\ue162', "SELECT_ALL");
     public static final ImIcon SPACE = new ImIcon('\ue256', "SPACE");
+
+    private ImIcons() {
+    }
 }

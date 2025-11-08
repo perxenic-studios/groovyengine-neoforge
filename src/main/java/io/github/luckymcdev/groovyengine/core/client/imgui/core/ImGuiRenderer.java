@@ -45,6 +45,9 @@ public class ImGuiRenderer {
 
     private static boolean initialized = false;
 
+    private ImGuiRenderer() {
+    }
+
     /**
      * Initializes the windows managed by the Window Manager.
      * This method registers the EditorControlWindow and MetricsWindow with the Window Manager.
@@ -97,7 +100,6 @@ public class ImGuiRenderer {
      */
     private static void setupDockingAndMainWindow() {
         Minecraft mc = Minecraft.getInstance();
-        Window window = mc.getWindow();
 
         // Setup docking
         ImGui.setNextWindowBgAlpha(0);

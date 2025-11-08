@@ -25,6 +25,8 @@ public class FileConstants {
     // Root directory - handles both in-game and standalone execution
     public static final Path MOD_ROOT = getModRoot();
 
+    private FileConstants() {}
+
     // Source directories
     public static final Path WORKSPACE_DIR = MOD_ROOT.resolve("workspace");
     public static final Path SRC_DIR = WORKSPACE_DIR.resolve("src/main");

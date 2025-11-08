@@ -32,6 +32,8 @@ public class WindowManager {
     private static final Map<String, EditorWindow> windows = new LinkedHashMap<>();
     private static final Map<String, String> categories = new HashMap<>();
 
+    private WindowManager() {}
+
     /**
      * Register a window with the manager
      */

@@ -31,8 +31,8 @@ import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
 public class ImGuiImpl {
-    private final static ImGuiImplGlfw imGuiImplGlfw = new ImGuiImplGlfw();
-    private final static ImGuiImplGl3 imGuiImplGl3 = new ImGuiImplGl3();
+    private static final ImGuiImplGlfw imGuiImplGlfw = new ImGuiImplGlfw();
+    private static final ImGuiImplGl3 imGuiImplGl3 = new ImGuiImplGl3();
 
     private static ImFont defaultFont;
 

@@ -17,7 +17,6 @@
 package io.github.luckymcdev.groovyengine.core.systems.packs.generator.item;
 
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -30,7 +29,7 @@ public class AutoItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-
+        //This is not implemented, as I don't have a way to fix the modid being hardcoded.
     }
 
     protected String defaultItemPath(String name) {

@@ -31,17 +31,6 @@ public class EditorScreen extends Screen {
     }
 
     /**
-     * Initializes the screen.
-     * <p>
-     * Does not automatically enable ImGui when opening the screen.
-     * Instead, lets the user control it via keybind or buttons.
-     */
-    @Override
-    protected void init() {
-        super.init();
-    }
-
-    /**
      * Renders the screen.
      * <p>
      * This method does not call the super class's render method to avoid rendering the default background.
@@ -54,17 +43,7 @@ public class EditorScreen extends Screen {
      */
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-    }
-
-    /**
-     * Closes the screen without disabling ImGui.
-     * <p>
-     * This method does not automatically disable ImGui when closing the screen.
-     * Instead, it lets the user control it via keybind or buttons.
-     */
-    @Override
-    public void onClose() {
-        super.onClose();
+        //Empty to not call any render from super, and only do imgui rendering
     }
 
     /**
@@ -78,6 +57,7 @@ public class EditorScreen extends Screen {
      */
     @Override
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        //Empty to not call any render from super, and only do imgui rendering
     }
 
     /**

@@ -31,6 +31,8 @@ import org.lwjgl.glfw.GLFW;
 @OnlyIn(Dist.CLIENT)
 public class KeybindManager {
 
+    private KeybindManager() {}
+
     /**
      * Keybind for toggling ImGui rendering.
      * Default to F6, can be changed by user.

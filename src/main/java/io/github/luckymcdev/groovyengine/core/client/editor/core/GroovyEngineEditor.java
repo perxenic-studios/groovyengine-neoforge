@@ -26,6 +26,7 @@ import net.neoforged.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class GroovyEngineEditor {
+    private GroovyEngineEditor() {}
 
     private static EditorState editorState = EditorState.DISABLED;
 

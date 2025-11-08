@@ -19,6 +19,7 @@ package io.github.luckymcdev.groovyengine.core.config;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Config {
+    private Config() {}
 
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 

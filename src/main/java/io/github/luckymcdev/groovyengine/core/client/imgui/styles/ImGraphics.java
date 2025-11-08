@@ -41,7 +41,7 @@ import java.util.Arrays;
  */
 @OnlyIn(Dist.CLIENT)
 public class ImGraphics {
-    public static ImGraphics INSTANCE = new ImGraphics(Minecraft.getInstance());
+    public static final ImGraphics INSTANCE = new ImGraphics(Minecraft.getInstance());
     public final Minecraft mc;
     public final boolean inGame;
     private VarStackStack stack;
@@ -209,7 +209,7 @@ public class ImGraphics {
      */
     public void popStack() {
         if (stack == null) {
-            throw new RuntimeException("popStack() called without a matching pushStack()");
+            throw new NullPointerException("popStack() called without a matching pushStack()");
         }
 
         if (stack.pushedStyle > 0) {

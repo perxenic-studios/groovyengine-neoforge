@@ -31,7 +31,7 @@ public class AutoBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-
+        //This is not implemented, as I don't have a way to fix the modid being hardcoded.
     }
 
     public void defaultBlockWithItem(DeferredBlock<?> deferredBlock) {

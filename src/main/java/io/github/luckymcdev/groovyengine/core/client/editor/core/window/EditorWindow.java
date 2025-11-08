@@ -31,12 +31,12 @@ public abstract class EditorWindow {
     protected final String id;
     protected boolean enabled = false;
 
-    public EditorWindow(String title, String id) {
+    protected EditorWindow(String title, String id) {
         this.title = title;
         this.id = id;
     }
 
-    public EditorWindow(String title) {
+    protected EditorWindow(String title) {
         this(title, title.toLowerCase().replace(' ', '_'));
     }
 

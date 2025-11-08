@@ -19,6 +19,7 @@ package io.github.luckymcdev.groovyengine.core.registry;
 import net.neoforged.bus.api.IEventBus;
 
 public class ModRegistry {
+    private ModRegistry() {}
     /**
      * Registers the mod's attachment types with the event bus.
      * <p>

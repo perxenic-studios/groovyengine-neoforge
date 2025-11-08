@@ -56,10 +56,8 @@ public record PackContentType(boolean data, boolean resources) {
             }
         }
         // Folder
-        else if (Files.isDirectory(filePath)) {
-            if (Files.isRegularFile(filePath.resolve("pack.mcmeta"))) {
-                return new PackContentType(Files.isDirectory(filePath.resolve("data")), Files.isDirectory(filePath.resolve("assets")));
-            }
+        else if (Files.isDirectory(filePath) && Files.isRegularFile(filePath.resolve("pack.mcmeta"))) {
+            return new PackContentType(Files.isDirectory(filePath.resolve("data")), Files.isDirectory(filePath.resolve("assets")));
         }
         return INVALID;
     }

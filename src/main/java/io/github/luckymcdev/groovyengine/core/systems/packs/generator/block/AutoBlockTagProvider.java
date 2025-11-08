@@ -19,8 +19,6 @@ package io.github.luckymcdev.groovyengine.core.systems.packs.generator.block;
 import groovyjarjarantlr4.v4.runtime.misc.Nullable;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -36,6 +34,6 @@ public class AutoBlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-
+        //This is not implemented, as I don't have a way to fix the modid being hardcoded.
     }
 }

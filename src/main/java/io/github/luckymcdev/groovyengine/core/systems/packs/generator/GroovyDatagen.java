@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
 public class GroovyDatagen {
+    private GroovyDatagen() {}
     private static final Path outputPath = FileConstants.RESOURCES_DIR;
     private static final boolean includeClient = FMLEnvironment.dist.isClient();
 

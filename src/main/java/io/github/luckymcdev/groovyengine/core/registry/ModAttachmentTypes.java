@@ -31,6 +31,8 @@ public class ModAttachmentTypes {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
             DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, GE.MODID);
 
+    private ModAttachmentTypes() {}
+
     /**
      * The attachment type for fly speed.
      * This attachment type is used to store the fly speed of a player.

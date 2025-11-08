@@ -38,7 +38,7 @@ public class AutoBlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-
+        //This is not implemented, as I don't have a way to fix the modid being hardcoded.
     }
 
     @Override

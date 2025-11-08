@@ -18,12 +18,9 @@ package io.github.luckymcdev.groovyengine.core.systems.packs.generator.item;
 
 
 import groovyjarjarantlr4.v4.runtime.misc.Nullable;
-import io.github.luckymcdev.groovyengine.GE;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -41,6 +38,6 @@ public class AutoItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-
+        //This is not implemented, as I don't have a way to fix the modid being hardcoded.
     }
 }

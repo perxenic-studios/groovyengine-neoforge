@@ -82,10 +82,8 @@ public class EditorControlWindow extends EditorWindow {
                     Minecraft.getInstance().setScreen(new EditorScreen());
                 }
 
-                if (ImGui.button("Close Current Screen")) {
-                    if (Minecraft.getInstance().screen != null) {
-                        Minecraft.getInstance().setScreen(null);
-                    }
+                if (ImGui.button("Close Current Screen") && Minecraft.getInstance().screen != null) {
+                    Minecraft.getInstance().setScreen(null);
                 }
             }
         }

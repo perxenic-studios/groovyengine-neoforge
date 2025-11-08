@@ -45,9 +45,8 @@ public class MetricsWindow extends EditorWindow {
     private final double[] frameTimeHistory = new double[HISTORY_SIZE];
     private final double[] entityHistory = new double[HISTORY_SIZE];
     // Graph settings
-    private final boolean autoScaleFPS = false;
-    private final boolean autoScaleMemory = false;
-    private final boolean showCombinedGraph = true;
+    private static final boolean AUTO_SCALE_FPS = false;
+    private static final boolean AUTO_SCALE_MEMORY = false;
     private int historyIndex = 0;
     private int sampleCount = 0;
     // Frame time tracking
@@ -71,9 +70,9 @@ public class MetricsWindow extends EditorWindow {
     @Override
     public void render(ImGuiIO io) {
         if (mc.player == null || mc.level == null) {
-            ImGe.window(title, () -> {
-                ImGe.textColored(0xFFFF8800, ImIcons.WARNING.get() + " Waiting for world to load...");
-            });
+            ImGe.window(title, () ->
+                ImGe.textColored(0xFFFF8800, ImIcons.WARNING.get() + " Waiting for world to load...")
+            );
             return;
         }
 
@@ -393,9 +392,9 @@ public class MetricsWindow extends EditorWindow {
         ImGe.spacing();
 
         // Graph options
-        ImGe.checkbox("Auto-scale FPS", autoScaleFPS);
+        ImGe.checkbox("Auto-scale FPS", AUTO_SCALE_FPS);
         ImGe.sameLine();
-        ImGe.checkbox("Auto-scale Memory", autoScaleMemory);
+        ImGe.checkbox("Auto-scale Memory", AUTO_SCALE_MEMORY);
 
         ImGe.spacing();
         ImGe.separator();
@@ -407,7 +406,7 @@ public class MetricsWindow extends EditorWindow {
             ImPlot.setupAxis(ImPlotAxis.Y1, "", ImPlotAxisFlags.None);
 
             ImPlot.setupAxisLimits(ImPlotAxis.X1, 0, HISTORY_SIZE, ImPlotCond.Always);
-            if (!autoScaleFPS) {
+            if (!AUTO_SCALE_FPS) {
                 ImPlot.setupAxisLimits(ImPlotAxis.Y1, 0, 120, ImPlotCond.Always);
             }
 
@@ -452,7 +451,7 @@ public class MetricsWindow extends EditorWindow {
             ImPlot.setupAxis(ImPlotAxis.Y1, "MB", ImPlotAxisFlags.None);
 
             ImPlot.setupAxisLimits(ImPlotAxis.X1, 0, HISTORY_SIZE, ImPlotCond.Always);
-            if (!autoScaleMemory) {
+            if (!AUTO_SCALE_MEMORY) {
                 ImPlot.setupAxisLimits(ImPlotAxis.Y1, 0, maxMemory * 1.2, ImPlotCond.Always);
             }
 

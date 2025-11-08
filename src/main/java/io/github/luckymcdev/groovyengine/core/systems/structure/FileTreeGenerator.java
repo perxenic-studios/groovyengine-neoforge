@@ -33,6 +33,7 @@ public class FileTreeGenerator {
      * A Debug Deprecated method to just generate the file structure without having to launch the game.
      *
      * @param args args
+     * @deprecated Deprecated because its not supposed to be used by anyone.
      */
     @Deprecated
     public static void main(String[] args) {
