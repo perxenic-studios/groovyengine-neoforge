@@ -16,5 +16,10 @@
 
 package io.github.luckymcdev.groovyengine.threads.api;
 
+import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
+
 public class ThreadsApi {
+    public static AttachmentManager getAttachmentManager() {
+        return AttachmentManager.getInstance();
+    }
 }

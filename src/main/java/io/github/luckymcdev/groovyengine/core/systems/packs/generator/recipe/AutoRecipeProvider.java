@@ -17,7 +17,7 @@
 package io.github.luckymcdev.groovyengine.core.systems.packs.generator.recipe;
 
 
-import de.groovyengine.IAttachmentManager;
+import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManager;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -34,6 +34,6 @@ public class AutoRecipeProvider extends RecipeProvider {
 
     @Override
     public void buildRecipes(@NotNull RecipeOutput recipeOutput) {
-        IAttachmentManager.getInstance().getRecipeAttachments().forEach(att -> att.onGenerate(recipeOutput));
+        AttachmentManager.getInstance().getRecipeAttachments().forEach(att -> att.onGenerate(recipeOutput));
     }
 }

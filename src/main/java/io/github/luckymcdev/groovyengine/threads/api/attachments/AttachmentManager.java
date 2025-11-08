@@ -16,7 +16,6 @@
 
 package io.github.luckymcdev.groovyengine.threads.api.attachments;
 
-import de.groovyengine.IAttachmentManager;
 import io.github.luckymcdev.groovyengine.GE;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.global.*;
 import io.github.luckymcdev.groovyengine.threads.api.attachments.local.BlockAttachment;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
  * Central registry for all attachments.
  * Manages registration, lookup, and dispatching of attachment events.
  */
-public class AttachmentManager implements IAttachmentManager {
+public class AttachmentManager {
 
     private static final AttachmentManager INSTANCE = new AttachmentManager();
 
@@ -57,7 +56,6 @@ public class AttachmentManager implements IAttachmentManager {
         return INSTANCE;
     }
 
-    @Override
     public void register(BaseAttachment<?> attachment) {
         // Use a switch expression for cleaner type-based registration
         switch (attachment) {
@@ -73,7 +71,6 @@ public class AttachmentManager implements IAttachmentManager {
         }
     }
 
-    @Override
     public void registerBlock(BlockAttachment attachment) {
         if (blockAttachments.add(attachment)) {
             blockCache.clear(); // Invalidate cache
@@ -82,7 +79,6 @@ public class AttachmentManager implements IAttachmentManager {
         }
     }
 
-    @Override
     public void registerItem(ItemAttachment attachment) {
         if (itemAttachments.add(attachment)) {
             itemCache.clear(); // Invalidate cache
@@ -91,7 +87,6 @@ public class AttachmentManager implements IAttachmentManager {
         }
     }
 
-    @Override
     public void registerEntity(EntityAttachment attachment) {
         if (entityAttachments.add(attachment)) {
             entityCache.clear(); // Invalidate cache
@@ -100,7 +95,6 @@ public class AttachmentManager implements IAttachmentManager {
         }
     }
 
-    @Override
     public void registerScript(io.github.luckymcdev.groovyengine.threads.api.attachments.global.ScriptAttachment attachment) {
         if (scriptAttachments.add(attachment)) {
             attachment.onInit();
@@ -108,7 +102,6 @@ public class AttachmentManager implements IAttachmentManager {
         }
     }
 
-    @Override
     public void registerClient(io.github.luckymcdev.groovyengine.threads.api.attachments.global.ClientAttachment attachment) {
         if (clientAttachments.add(attachment)) {
             attachment.onInit();
@@ -116,7 +109,6 @@ public class AttachmentManager implements IAttachmentManager {
         }
     }
 
-    @Override
     public void registerServer(io.github.luckymcdev.groovyengine.threads.api.attachments.global.ServerAttachment attachment) {
         if (serverAttachments.add(attachment)) {
             attachment.onInit();
@@ -124,7 +116,6 @@ public class AttachmentManager implements IAttachmentManager {
         }
     }
 
-    @Override
     public void registerRegistry(io.github.luckymcdev.groovyengine.threads.api.attachments.global.RegistryAttachment attachment) {
         if (registryAttachments.add(attachment)) {
             attachment.onInit();
@@ -132,7 +123,6 @@ public class AttachmentManager implements IAttachmentManager {
         }
     }
 
-    @Override
     public void registerRecipe(io.github.luckymcdev.groovyengine.threads.api.attachments.global.RecipeAttachment attachment) {
         if (recipeAttachments.add(attachment)) {
             attachment.onInit();
@@ -140,7 +130,6 @@ public class AttachmentManager implements IAttachmentManager {
         }
     }
 
-    @Override
     public void unregister(Object attachment) {
         boolean removed = blockAttachments.remove(attachment) ||
                 itemAttachments.remove(attachment) ||
@@ -164,7 +153,6 @@ public class AttachmentManager implements IAttachmentManager {
         }
     }
 
-    @Override
     public List<BlockAttachment> getBlockAttachments(Block block) {
         return blockCache.computeIfAbsent(block, b ->
                 blockAttachments.stream()
@@ -174,7 +162,6 @@ public class AttachmentManager implements IAttachmentManager {
         );
     }
 
-    @Override
     public List<ItemAttachment> getItemAttachments(Item item) {
         return itemCache.computeIfAbsent(item, i ->
                 itemAttachments.stream()
@@ -184,7 +171,6 @@ public class AttachmentManager implements IAttachmentManager {
         );
     }
 
-    @Override
     public List<EntityAttachment> getEntityAttachments(EntityType<?> entityType) {
         return entityCache.computeIfAbsent(entityType, et ->
                 entityAttachments.stream()
@@ -194,7 +180,6 @@ public class AttachmentManager implements IAttachmentManager {
         );
     }
 
-    @Override
     public List<ScriptAttachment> getScriptAttachments(String scriptId) {
         return scriptAttachments.stream()
                 .filter(att -> att.appliesTo(scriptId))
@@ -202,27 +187,22 @@ public class AttachmentManager implements IAttachmentManager {
                 .collect(Collectors.toList());
     }
 
-    @Override
     public List<ClientAttachment> getClientAttachments() {
         return new ArrayList<>(clientAttachments);
     }
 
-    @Override
     public List<ServerAttachment> getServerAttachments() {
         return new ArrayList<>(serverAttachments);
     }
 
-    @Override
     public List<RegistryAttachment> getRegistryAttachments() {
         return new ArrayList<>(registryAttachments);
     }
 
-    @Override
     public List<RecipeAttachment> getRecipeAttachments() {
         return new ArrayList<>(recipeAttachments);
     }
 
-    @Override
     public void clearCaches() {
         blockCache.clear();
         itemCache.clear();
