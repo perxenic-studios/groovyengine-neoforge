@@ -5,7 +5,7 @@ import io.github.luckymcdev.groovyengine.threads.api.attachments.AttachmentManag
 
 GE.LOG.info('Hello from common scripts!')
 
-a
+
 
 
 // Get the attachment manager for common use
