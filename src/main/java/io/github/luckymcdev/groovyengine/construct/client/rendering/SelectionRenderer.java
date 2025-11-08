@@ -124,7 +124,7 @@ public class SelectionRenderer {
             int maxY = Math.max(min.getY(), max.getY());
             int maxZ = Math.max(min.getZ(), max.getZ());
 
-            AABB box = new AABB(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
+            AABB box = new AABB(minX, minY, minZ, maxX + 1.0, maxY + 1.0, maxZ + 1.0);
 
             LevelRenderer.renderLineBox(poseStack, builder, box,
                     SELECTION_RED, SELECTION_GREEN, SELECTION_BLUE, SELECTION_ALPHA);
@@ -148,7 +148,7 @@ public class SelectionRenderer {
     private void renderBlockOutline(PoseStack poseStack, VertexConsumer builder,
                                     BlockPos pos, float r, float g, float b, float a) {
         AABB box = new AABB(pos.getX(), pos.getY(), pos.getZ(),
-                pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+                pos.getX() + 1.0, pos.getY() + 1.0, pos.getZ() + 1.0);
         LevelRenderer.renderLineBox(poseStack, builder, box, r, g, b, a);
     }
 }
