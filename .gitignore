@@ -50,3 +50,4 @@ run/GroovyEngine/workspace/gradlew
 run/GroovyEngine/workspace/gradlew.bat
 /run/GroovyEngine/workspace/.idea
 /wiki/puml
+/run/groovyengine/workspace/src/main/resources/.cache

@@ -18,20 +18,20 @@ package io.github.luckymcdev.groovyengine.lens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.luckymcdev.groovyengine.GE;
-import io.github.luckymcdev.groovyengine.lens.client.editor.RenderingDebuggingWindow;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.core.VFXBuilders;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.material.Material;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.particle.ParticleBuilder;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.PostProcessChain;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.compute.ComputeShader;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.core.test.TestShader;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.effect.ShaderEffectTest;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.renderer.core.Renderer;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.util.PoseScope;
-import io.github.luckymcdev.groovyengine.lens.client.rendering.util.RenderUtils;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModel;
-import io.github.luckymcdev.groovyengine.lens.client.systems.obj.amo.AmoModel;
+import io.github.luckymcdev.groovyengine.lens.editor.RenderingDebuggingWindow;
+import io.github.luckymcdev.groovyengine.lens.rendering.core.GeMaterials;
+import io.github.luckymcdev.groovyengine.lens.rendering.core.VFXBuilders;
+import io.github.luckymcdev.groovyengine.lens.rendering.material.Material;
+import io.github.luckymcdev.groovyengine.lens.rendering.particle.ParticleBuilder;
+import io.github.luckymcdev.groovyengine.lens.rendering.pipeline.PostProcessChain;
+import io.github.luckymcdev.groovyengine.lens.rendering.pipeline.compute.ComputeShader;
+import io.github.luckymcdev.groovyengine.lens.rendering.pipeline.core.test.TestShader;
+import io.github.luckymcdev.groovyengine.lens.rendering.pipeline.effect.ShaderEffectTest;
+import io.github.luckymcdev.groovyengine.lens.rendering.renderer.core.Renderer;
+import io.github.luckymcdev.groovyengine.lens.rendering.util.PoseScope;
+import io.github.luckymcdev.groovyengine.lens.rendering.util.RenderUtils;
+import io.github.luckymcdev.groovyengine.lens.systems.obj.ObjModel;
+import io.github.luckymcdev.groovyengine.lens.systems.obj.amo.AmoModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -51,9 +51,9 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 
-import static io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials.DEBUG_TRIANGLES;
-import static io.github.luckymcdev.groovyengine.lens.client.rendering.core.GeMaterials.OBJ_MODEL;
-import static io.github.luckymcdev.groovyengine.lens.client.systems.obj.ObjModelManager.registerObjModel;
+import static io.github.luckymcdev.groovyengine.lens.rendering.core.GeMaterials.DEBUG_TRIANGLES;
+import static io.github.luckymcdev.groovyengine.lens.rendering.core.GeMaterials.OBJ_MODEL;
+import static io.github.luckymcdev.groovyengine.lens.systems.obj.ObjModelManager.registerObjModel;
 
 @EventBusSubscriber
 public class LensRendering {

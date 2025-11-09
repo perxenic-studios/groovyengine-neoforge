@@ -16,7 +16,7 @@
 
 package io.github.luckymcdev.groovyengine.mixin.lens.rendering;
 
-import io.github.luckymcdev.groovyengine.lens.client.rendering.pipeline.post.PostProcessManager;
+import io.github.luckymcdev.groovyengine.lens.rendering.pipeline.post.PostProcessManager;
 import net.minecraft.client.renderer.GameRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;

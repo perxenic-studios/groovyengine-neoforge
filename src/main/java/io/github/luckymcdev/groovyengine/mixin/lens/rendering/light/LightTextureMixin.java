@@ -17,7 +17,7 @@
 package io.github.luckymcdev.groovyengine.mixin.lens.rendering.light;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import io.github.luckymcdev.groovyengine.lens.client.editor.RenderingDebuggingWindow;
+import io.github.luckymcdev.groovyengine.lens.editor.RenderingDebuggingWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
